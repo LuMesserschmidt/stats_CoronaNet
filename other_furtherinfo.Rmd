@@ -1,0 +1,224 @@
+---
+title: "Further Information"
+---
+<script src="hideOutput.js"></script>
+
+# Next steps
+
+Of course, this page provided only a glimpse into the basics of coding with R. 
+
+Nevertheless, I am fairly confident that this page is a good basis for all standard data tasks (data management, visualizations, regressions) and that >80% of all of those tasks are covered by the packages and functions which are on this page. 
+
+There are seemingly endless possibilities to go on from here. To provide some orientation, this page lists a couple of (free online) resources (see below).
+
+## If we had a little more time...
+
+If we had an additional day or so, I would have covered the topics in the list below. This list is an indication of what I consider to be "logical" next learning steps. **At least the looping architecture is something you should consider learning one day** even if you want to stick to the basics of data management, visualizations, and regressions. 
+
+- [Loops/Apply Family](https://www.datacamp.com/community/tutorials/tutorial-on-loops-in-r): This free DataCamp Intro familiarizes you with loops and their alternatives. Loops are about automating a multi-step process by organizing sequences of actions or ‘batch’ processes and by grouping the parts that need to be repeated.
+
+- [Functions](https://www.tutorialspoint.com/r/r_functions.htm): Quick and intuitive overview on how to write your own functions.
+
+- [Shiny](https://shiny.rstudio.com/articles/basics.html): Intro into shiny - learn it from the developers. Shiny is a R package that makes it easy to build interactive web apps straight from R. 
+
+# A glimpse into new stuff
+
+<div class="fold s">
+
+```{r, message=FALSE}
+library("tidyverse")
+library("rvest")
+library("tidytext")
+library("SnowballC")
+library("wordcloud2")
+
+# get list via https://www.xml-sitemaps.com/
+ma <- c("jenny-bennett", 
+        "dr-dietrich-engels", 
+        "ferzaneh-fakdani", 
+        "stefan-feldens", 
+        "dr-philipp-fuchs", 
+        "katrin-hunger", 
+        "lisa-huppertz", 
+        "georg-kalvelage", 
+        "dr-regine-koeller", 
+        "kunze", 
+        "christian-loschelder", 
+        "vanita-matta", 
+        "christine-maur", 
+        "uta-micic", 
+        "franziska-porwol", 
+        "marco-puxi", 
+        "eva-roth", 
+        "friedrich-scheller", 
+        "alina-schmitz", 
+        "anne-marie-scholz", 
+        "katja-seidel", 
+        "hans-verbeek", 
+        "juergen-viedenz", 
+        "wellmer", 
+        "kunze")
+
+# url parameters
+base_url <- "https://www.isg-institut.de/autor/"
+
+# scrap profiles  
+data <- lapply(ma, function(person) {
+  url <- paste0(base_url, person)
+  
+  html <- read_html(url, verbose = TRUE)
+  
+  core <- html %>%
+    html_nodes(".ma-text p") %>% 
+    html_text()
+})
+
+# create dataframe
+text <- tibble(profil = unlist(data))
+
+# list of stopwords
+stopwords_de <- enframe(stopwords::stopwords("de"), name = NULL, value = "words")
+
+# tokenize / remove stopwords and numbers 
+token <- text %>%
+  filter(profil != "") %>%
+  unnest_tokens(input = profil, output = words, to_lower = FALSE) %>%
+  filter(str_detect(words, "[A-Z]+")) %>%
+  mutate(lower = str_to_lower(words, locale = "de")) %>%
+  anti_join(stopwords_de, by = c("lower" = "words"))
+
+# aggregate words / filter freqs
+wordcounts <- token %>%
+  count(words) %>%
+  arrange(desc(n)) %>%
+  filter(words != "Seit") %>% # quick fix
+  filter(n > 2)
+
+# generate wordcloud
+wordcloud2(wordcounts, shuffle = FALSE, color = "blue") 
+
+
+```
+
+</div>
+
+# Important Resources
+
+As you cannot emphasize this enough, here again a list of resources to help you in your workflow. 
+
+[Stackoverflow](https://www.stackoverflow.com/):
+A general discussion forum for programmers, including many R users.
+Just google your question and make sure to place an "R" in the beginning of your question. Most often you will be directed to stackoverflow. 
+
+[DataCamp](https://www.datacamp.com/):
+Online tutorials with in-browser coding tasks. Everything beyond beginners levels is behind a paywall. 
+If you want to avoid DataCamp, [here](https://docs.google.com/spreadsheets/d/1LtaeWPzEhRiy-kdNZBn0gPwc6aTYkWtt6Cau6PzcXuo/edit#gid=0) is a list of DataCamp tutorials with mostly free alternatives.
+
+**Cheat Sheets**:
+Cheat Sheets are a great way to get a concise overview over the functionality and logic of the R topic they cover. to the best of my knowledge, all major packages have one. Some examples
+
+* [Cheat Sheet Base R](https://www.rstudio.com/wp-content/uploads/2016/05/base-r.pdf)
+* [Cheat Sheet dplyr](https://www.rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf)
+* [Cheat Sheet ggplot](https://www.rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf)
+
+
+## Individual Trouble Shooting
+
+Learning how to find out about stuff in R by yourself is one of the key techniques for smooth coding. 
+
+If you have any questions, one of the following might help:
+
+* `?functionname` (and press enter) to retrieve the official documentation
+* google (make sure to type r somewhere into your query; stackoverflow results are preferable)
+* Ask us ;) 
+
+
+# (Online) Books
+Credits for gathering most of these books go to [TheRBootcamp](https://therbootcamp.github.io/) - see this [page](https://therbootcamp.github.io/R4DS_2019Feb/_sessions/NextSteps/NextSteps.html#13).
+
+Most but not all of the books are free and online accessible. 
+
+Books are ordered by complexity, beginning with user-friendly books on learning statistics in R and ending with books focusing on the more advanced topics of the R language.
+
+
+<table width="100%" style="cellspacing:0; cellpadding:0; border:none">
+  <tr>    
+  
+  <td>
+  <a href="https://bookdown.org/ndphillips/YaRrr/"><img border="0" alt="W3Schools" src="https://bookdown.org/ndphillips/YaRrr/images/YaRrr_Cover.jpg" height="180" width="120" ></a>
+  <td>
+
+<td>  
+  <a href="http://www.urfie.net/"><img border="0" alt="W3Schools" src="http://www.urfie.net/URfIE-Front-sm.png" height="180" width="120" ></a>
+<td>
+
+<td>  
+  <a href="https://uk.sagepub.com/en-gb/eur/discovering-statistics-using-r/book236067"><img border="0" alt="W3Schools" src="https://i2.wp.com/www.discoveringstatistics.com/wp-content/uploads/2017/01/dsur_cover.png?w=366&ssl=1" height="180" width="120" ></a>
+<td>
+  
+<td>
+  <a href="http://r4ds.had.co.nz/"><img border="0" alt="W3Schools" src="http://r4ds.had.co.nz/cover.png" height="180" width="120" ></a>
+<td>
+
+  <tr>
+
+  <td>
+  <a href="https://rstudio-education.github.io/hopr/"><img border="0" alt="W3Schools" src="https://covers.oreillystatic.com/images/0636920028574/cat.gif" height="180" width="120" ></a>
+  <td>
+  
+  <td>
+  <a href="https://www.springer.com/de/book/9780387981413"><img border="0" alt="W3Schools" src="http://t1.gstatic.com/images?q=tbn:ANd9GcQNvhEpXp9OwvqVosEh-UecM3TNbhdb1eVZp3LywUcXGeVC3scQ" height="180" width="120" ></a>
+  <td>  
+  
+    <td>
+  <a href="https://socviz.co/"><img border="0" alt="W3Schools" src="https://images-na.ssl-images-amazon.com/images/I/410TgmQuARL._SX398_BO1,204,203,200_.jpg" height="180" width="120" ></a>
+  <td>  
+  
+  <td>
+  <a href="https://www.tidytextmining.com/"><img border="0" alt="W3Schools" src="https://www.tidytextmining.com/images/cover.png" height="180" width="120" ></a>
+  <td>
+  
+  <tr>
+  
+  <td>
+  <a href="http://appliedpredictivemodeling.com/"><img border="0" alt="W3Schools" src="http://static1.squarespace.com/static/51156277e4b0b8b2ffe11c00/t/51157487e4b0b8b2ffe16829/1528129266590/?format=1500w" height="180" width="120" ></a>
+  <td>
+
+  <td>
+  <a href="http://www-bcf.usc.edu/~gareth/ISL/ISLR%20First%20Printing.pdf"><img border="0" alt="W3Schools" src="https://images-na.ssl-images-amazon.com/images/I/41EaH4W9LVL._SX332_BO1,204,203,200_.jpg" height="180" width="120" ></a>
+  <td>
+    
+  <td>
+  <a href="https://www.amazon.com/Doing-Bayesian-Data-Analysis-Second/dp/0124058884"><img border="0" alt="W3Schools" src="https://images-na.ssl-images-amazon.com/images/I/41JJqbhHZuL._SX404_BO1,204,203,200_.jpg" height="180" width="120" ></a>
+  <td>
+  
+  <td>
+  <a href="https://www.manning.com/books/deep-learning-with-r"><img border="0" alt="W3Schools" src="https://images-na.ssl-images-amazon.com/images/I/51h5d4dYaoL._SX396_BO1,204,203,200_.jpg" height="180" width="120" ></a>
+  <td>
+  
+  <tr>
+
+  <td>
+  <a href="https://csgillespie.github.io/efficientR/"><img border="0" alt="W3Schools" src="https://csgillespie.github.io/efficientR/figures/f0_web.png" height="180" width="120" ></a>
+  <td>
+  
+  <td>
+  <a href="http://www.rcpp.org/book/"><img border="0" alt="W3Schools" src="http://t3.gstatic.com/images?q=tbn:ANd9GcSO9T6JQYtpQgcaCXudbqMB-fnvTjGowsnmeh9-BQku3zveR4-J" height="180" width="120" ></a>
+  <td>
+  
+  <td>
+  <a href="https://www.wiley.com/en-us/The+R+Book%2C+2nd+Edition-p-9780470973929"><img border="0" alt="W3Schools" src="https://media.wiley.com/product_data/coverImage300/27/04709739/0470973927.jpg" height="180" width="120" ></a>
+  <td>
+  
+  <td>
+  <a href="http://adv-r.had.co.nz/"><img border="0" alt="W3Schools" src="https://images.tandf.co.uk/common/jackets/amazon/978146658/9781466586963.jpg" height="180" width="120" ></a>
+  <td>
+  
+  <tr>
+
+  <td>
+  <a href="http://r-pkgs.had.co.nz/"><img border="0" alt="W3Schools" src="http://t3.gstatic.com/images?q=tbn:ANd9GcQdwOQxaWZnTc2s55ltS2NL8jpxbnD0sEC6QNPiHKPrIM-AHmAB" height="180" width="120" ></a>
+  <td>
+  
+</table>
+ 

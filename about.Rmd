@@ -1,0 +1,20 @@
+---
+title: "About This Website"
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+***
+
+The content of this page builds upon [Econometrics with R](https://schliebs.github.io/Applied_Econometrics_with_R) - a tutorial for students at Zeppelin University. Credits go to my friends and colleagues [Marcel Schliebs](https://github.com/schliebs) and [Benedikt Sebastian Ludwig Fritz](https://github.com/BeSeLuFri) for their initial work. 
+
+Luca Messerschmidt is responsible for the main content.
+Cindy Cheng contributed to the CoronaNet examples.
+
+"Objects and Data" examples and explanations are inspired by [Econometrics for R](http://www.urfie.net/).
+
+"Outlier analysis" is using text elements from [R-Bloggers](https://www.r-bloggers.com/outlier-detection-and-treatment-with-r/).
+
+The Data Viz Introduction is inspired by [The R Bootcamp](https://therbootcamp.github.io/) who employ the widely used mpg dataset and the accompanying coding instructions (see for example [R for Data Science](https://r4ds.had.co.nz/data-visualisation.html)) for their data visualization tutorial. 
+

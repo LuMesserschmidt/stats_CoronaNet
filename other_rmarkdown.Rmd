@@ -1,0 +1,41 @@
+---
+title: "RMarkdown / RNotebook"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,warning = FALSE)
+```
+
+# Intro
+
+* R Markdown is a file format for making dynamic documents with R. 
+* An R Markdown document is written in markdown (an easy-to-write plain text format) and contains chunks of embedded R code. In general, there are three parts (look at the cheat sheet below):
+    + Header
+    + Text
+    + Codue chunks 
+* The cool thing about RMarkdown is that it offers a plain and easy to understand way to link code and documentation.   
+* Furthermore, it is also very straight forward to produce html, pdf or docx outputs from RMarkdow. For example, this website is mainly based on Markdown.
+
+***
+
+# Setup
+The cheat sheet offers a pretty good introduction: 
+ 
+![](Files/rmarkdown-screenshot.PNG)
+
+***
+
+# RNotebook
+
+Actually, I would highly recommend you to use instead of R Markdown the more convenient R Notebook. It has all the functionality of R Markdown plus
+
+* code chunks can be rendered independently and step by step
+* You do not `knit` but `preview` documents - this makes sharing work easier
+
+Basically, it works in the exact same way as R Markdown (see example below).
+
+***
+
+# Example
+You can download an example R Notebook [here](https://raw.githubusercontent.com/LuMesserschmidt/stats_TUM/master/Files/Course%20Scripts/R_Markdown_Example.Rmd) 

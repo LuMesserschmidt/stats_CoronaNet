@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>CoronaNet Example</title>
+
+<script src="site_libs/header-attrs-2.1/header-attrs.js"></script>
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Learning Platform CoronaNet</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Introduction</a>
+</li>
+<li>
+  <a href="objectsndata.html">Objects and Data</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Data Management
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="datamanagement.html">Data Management Introduction</a>
+    </li>
+    <li>
+      <a href="datamanagement_corona.html">CoronaNet Example</a>
+    </li>
+    <li>
+      <a href="datamanagement_others.html">Data Examples</a>
+    </li>
+    <li>
+      <a href="datamanagement_eurostat.html">Eurostat Example</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Descriptives and Bivariate
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="descriptives.html">Descriptive Stats</a>
+    </li>
+    <li>
+      <a href="bivariate.html">Bivariate Stats</a>
+    </li>
+    <li>
+      <a href="descriptives_corona.html">CoronaNet Example</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Regression
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="other_regressions.html">Regression</a>
+    </li>
+    <li>
+      <a href="other_outlier.html">Outlier Analysis</a>
+    </li>
+    <li>
+      <a href="regression_corona.html">CoronaNet Example</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Data Viz
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="dataviz.html">Data Viz Introduction</a>
+    </li>
+    <li>
+      <a href="dataviz_eurostat.html">Eurostat Example</a>
+    </li>
+    <li>
+      <a href="dataviz_map.html">Map Example</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">CoronaNet Example</h1>
+
+</div>
+
+
+<p>Download the script <a href="https://raw.githubusercontent.com/LuMesserschmidt/stats_TUM/master/Files/Course%20Scripts/R_code_CoronaNet_2.R">here</a></p>
+<hr />
+<div id="set-up" class="section level1" number="1">
+<h1 number="1"><span class="header-section-number">1</span> Set up</h1>
+<pre class="r"><code>rm(list=ls())
+
+library(readr)
+library(tidyverse)</code></pre>
+<hr />
+</div>
+<div id="loading-the-dataset" class="section level1" number="2">
+<h1 number="2"><span class="header-section-number">2</span> Loading the dataset</h1>
+<div id="explore-the-data-with-dplyr" class="section level2" number="2.1">
+<h2 number="2.1"><span class="header-section-number">2.1</span> Explore the data (with dplyr)</h2>
+<pre class="r"><code># https://r4ds.had.co.nz/transform.html
+#https://garthtarr.github.io/meatR/dplyr.html
+
+# the dplyr counterpart to the str() function is the &#39;glimpse&#39; function
+glimpse(coronaNet)</code></pre>
+<pre><code>## Rows: 2,249
+## Columns: 38
+## $ record_id          &lt;chr&gt; &quot;1000775Ds&quot;, &quot;1000775Dm&quot;, &quot;1003875NA&quot;, &quot;1004103NA&quot;…
+## $ policy_id          &lt;dbl&gt; 1342691, 1342691, 1003875, 1004103, 2575122, 10052…
+## $ recorded_date      &lt;dttm&gt; 2020-04-04 15:43:15, 2020-04-04 15:43:15, 2020-04…
+## $ date_updated       &lt;date&gt; 2020-04-04, 2020-04-04, 2020-04-15, 2020-05-15, 2…
+## $ date_announced     &lt;date&gt; 2020-03-14, 2020-03-14, 2020-04-07, 2020-05-15, 2…
+## $ date_start         &lt;date&gt; 2020-03-14, 2020-03-14, 2020-04-07, 2020-05-15, 2…
+## $ date_end           &lt;date&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, 2020-…
+## $ entry_type         &lt;chr&gt; &quot;update&quot;, &quot;update&quot;, &quot;new_entry&quot;, &quot;new_entry&quot;, &quot;upd…
+## $ update_type        &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…
+## $ event_description  &lt;chr&gt; &quot;Chile extends mandatory quarantine for people fro…
+## $ domestic_policy    &lt;dbl&gt; 0, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,…
+## $ type               &lt;chr&gt; &quot;Quarantine&quot;, &quot;Quarantine&quot;, &quot;Other Policy Not List…
+## $ type_sub_cat       &lt;chr&gt; &quot;Self-Quarantine (i.e. quarantine at home)&quot;, &quot;Quar…
+## $ type_text          &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…
+## $ index_high_est     &lt;dbl&gt; 52.03633, 52.03633, 56.17884, NA, 54.14313, 55.981…
+## $ index_med_est      &lt;dbl&gt; 51.22552, 51.22552, 54.83055, NA, 53.08173, 54.901…
+## $ index_low_est      &lt;dbl&gt; 50.20661, 50.20661, 53.59422, NA, 52.28079, 53.777…
+## $ index_country_rank &lt;dbl&gt; 113, 113, 181, NA, 144, 182, 168, NA, NA, NA, 130,…
+## $ correct_type       &lt;chr&gt; &quot;original&quot;, &quot;original&quot;, &quot;original&quot;, &quot;original&quot;, &quot;o…
+## $ country            &lt;chr&gt; &quot;Chile&quot;, &quot;Chile&quot;, &quot;Guatemala&quot;, &quot;Turkey&quot;, &quot;Kenya&quot;, …
+## $ init_country_level &lt;chr&gt; &quot;National&quot;, &quot;National&quot;, &quot;National&quot;, &quot;National&quot;, &quot;N…
+## $ province           &lt;chr&gt; NA, NA, NA, NA, NA, &quot;Bern&quot;, NA, NA, NA, NA, &quot;Sardi…
+## $ city               &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…
+## $ source_corr_type   &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…
+## $ target_country     &lt;chr&gt; &quot;China,France,Germany,Iran,Italy,Japan,North Korea…
+## $ target_geog_level  &lt;chr&gt; &quot;One or more countries, but not all countries&quot;, &quot;O…
+## $ target_region      &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…
+## $ target_province    &lt;chr&gt; NA, NA, NA, NA, NA, &quot;Bern&quot;, NA, NA, NA, NA, &quot;Sardi…
+## $ target_city        &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…
+## $ target_other       &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…
+## $ target_who_what    &lt;chr&gt; &quot;All Travelers (Citizen Travelers + Foreign Travel…
+## $ target_direction   &lt;chr&gt; &quot;Inbound&quot;, &quot;Inbound&quot;, NA, NA, &quot;Inbound&quot;, NA, NA, N…
+## $ travel_mechanism   &lt;chr&gt; &quot;All kinds of transport&quot;, &quot;All kinds of transport&quot;…
+## $ compliance         &lt;chr&gt; &quot;Mandatory with Fines&quot;, &quot;Mandatory with Fines&quot;, &quot;M…
+## $ enforcer           &lt;chr&gt; &quot;National Government,Ministry/Department of Health…
+## $ link               &lt;chr&gt; &quot;https://www.gob.cl/noticias/covid-19-ministerio-d…
+## $ ISO_A3             &lt;chr&gt; &quot;CHL&quot;, &quot;CHL&quot;, &quot;GTM&quot;, &quot;TUR&quot;, &quot;KEN&quot;, &quot;CHE&quot;, &quot;ITA&quot;, &quot;…
+## $ ISO_A2             &lt;chr&gt; &quot;CL&quot;, &quot;CL&quot;, &quot;GT&quot;, &quot;TR&quot;, &quot;KE&quot;, &quot;CH&quot;, &quot;IT&quot;, &quot;VN&quot;, &quot;V…</code></pre>
+<pre class="r"><code># dplyr counterpart to the &#39;which&#39; function is the &#39;filter&#39; function
+filter(coronaNet, type == &quot;Closure and Regulation of Schools&quot;)</code></pre>
+<pre><code>## # A tibble: 205 x 38
+##    record_id policy_id recorded_date       date_updated date_announced
+##    &lt;chr&gt;         &lt;dbl&gt; &lt;dttm&gt;              &lt;date&gt;       &lt;date&gt;        
+##  1 1005610Dc   1005610 2020-05-29 07:51:28 2020-05-29   2020-05-07    
+##  2 1005610Dd   1005610 2020-05-29 07:51:28 2020-05-29   2020-05-07    
+##  3 1005610Dr   1005610 2020-05-29 07:51:28 2020-05-29   2020-05-07    
+##  4 1033361Dd   1033361 2020-04-29 03:46:29 2020-04-29   2020-04-17    
+##  5 1033361Dr   1033361 2020-04-29 03:46:29 2020-04-29   2020-04-17    
+##  6 1043355Dc   1043355 2020-04-03 09:44:07 2020-04-03   2020-03-20    
+##  7 1043355Dd   1043355 2020-04-03 09:44:07 2020-04-03   2020-03-20    
+##  8 1043355Dr   1043355 2020-04-03 09:44:07 2020-04-03   2020-03-20    
+##  9 1047400Dc   1047400 2020-04-03 00:29:03 2020-04-03   2020-03-18    
+## 10 1047400Dd   1047400 2020-04-03 00:29:03 2020-04-03   2020-03-18    
+## # … with 195 more rows, and 33 more variables: date_start &lt;date&gt;,
+## #   date_end &lt;date&gt;, entry_type &lt;chr&gt;, update_type &lt;chr&gt;,
+## #   event_description &lt;chr&gt;, domestic_policy &lt;dbl&gt;, type &lt;chr&gt;,
+## #   type_sub_cat &lt;chr&gt;, type_text &lt;dbl&gt;, index_high_est &lt;dbl&gt;,
+## #   index_med_est &lt;dbl&gt;, index_low_est &lt;dbl&gt;, index_country_rank &lt;dbl&gt;,
+## #   correct_type &lt;chr&gt;, country &lt;chr&gt;, init_country_level &lt;chr&gt;,
+## #   province &lt;chr&gt;, city &lt;chr&gt;, source_corr_type &lt;lgl&gt;, target_country &lt;chr&gt;,
+## #   target_geog_level &lt;chr&gt;, target_region &lt;chr&gt;, target_province &lt;chr&gt;,
+## #   target_city &lt;chr&gt;, target_other &lt;lgl&gt;, target_who_what &lt;chr&gt;,
+## #   target_direction &lt;chr&gt;, travel_mechanism &lt;chr&gt;, compliance &lt;chr&gt;,
+## #   enforcer &lt;chr&gt;, link &lt;chr&gt;, ISO_A3 &lt;chr&gt;, ISO_A2 &lt;chr&gt;</code></pre>
+<pre class="r"><code># Class question: what if you want to find all observations that fits the condition above but only if the initiating country (country) is Germany?
+
+# Class question: what if you want to find all observations that fits the condition above AND the type of policy (type) is &#39;External Border Restrictions&#39;?
+
+
+# Class question: what if you want to find all observations that fits the condition above that are not NA for the end of policy field (date_end)
+
+
+
+# the dplyr counterpart to the &#39;[ ]&#39; command to subset by rows is the slice function
+slice(coronaNet, 1:10)</code></pre>
+<pre><code>## # A tibble: 10 x 38
+##    record_id policy_id recorded_date       date_updated date_announced
+##    &lt;chr&gt;         &lt;dbl&gt; &lt;dttm&gt;              &lt;date&gt;       &lt;date&gt;        
+##  1 1000775Ds   1342691 2020-04-04 15:43:15 2020-04-04   2020-03-14    
+##  2 1000775Dm   1342691 2020-04-04 15:43:15 2020-04-04   2020-03-14    
+##  3 1003875NA   1003875 2020-04-15 11:04:50 2020-04-15   2020-04-07    
+##  4 1004103NA   1004103 2020-05-15 11:04:46 2020-05-15   2020-05-15    
+##  5 1004681NA   2575122 2020-04-03 08:33:25 2020-04-03   2020-03-22    
+##  6 100526NA     100526 2020-04-11 03:45:41 2020-04-11   2020-04-02    
+##  7 4866080NA   1005278 2020-03-30 05:21:44 2020-03-30   2020-03-20    
+##  8 1005610Dc   1005610 2020-05-29 07:51:28 2020-05-29   2020-05-07    
+##  9 1005610Dd   1005610 2020-05-29 07:51:28 2020-05-29   2020-05-07    
+## 10 1005610Dr   1005610 2020-05-29 07:51:28 2020-05-29   2020-05-07    
+## # … with 33 more variables: date_start &lt;date&gt;, date_end &lt;date&gt;,
+## #   entry_type &lt;chr&gt;, update_type &lt;chr&gt;, event_description &lt;chr&gt;,
+## #   domestic_policy &lt;dbl&gt;, type &lt;chr&gt;, type_sub_cat &lt;chr&gt;, type_text &lt;dbl&gt;,
+## #   index_high_est &lt;dbl&gt;, index_med_est &lt;dbl&gt;, index_low_est &lt;dbl&gt;,
+## #   index_country_rank &lt;dbl&gt;, correct_type &lt;chr&gt;, country &lt;chr&gt;,
+## #   init_country_level &lt;chr&gt;, province &lt;chr&gt;, city &lt;chr&gt;,
+## #   source_corr_type &lt;lgl&gt;, target_country &lt;chr&gt;, target_geog_level &lt;chr&gt;,
+## #   target_region &lt;chr&gt;, target_province &lt;chr&gt;, target_city &lt;chr&gt;,
+## #   target_other &lt;lgl&gt;, target_who_what &lt;chr&gt;, target_direction &lt;chr&gt;,
+## #   travel_mechanism &lt;chr&gt;, compliance &lt;chr&gt;, enforcer &lt;chr&gt;, link &lt;chr&gt;,
+## #   ISO_A3 &lt;chr&gt;, ISO_A2 &lt;chr&gt;</code></pre>
+<pre class="r"><code># the dplyr counterpart to the &#39;sort&#39; function is the arrange function
+
+arrange(coronaNet, date_start)</code></pre>
+<pre><code>## # A tibble: 2,249 x 38
+##    record_id policy_id recorded_date       date_updated date_announced
+##    &lt;chr&gt;         &lt;dbl&gt; &lt;dttm&gt;              &lt;date&gt;       &lt;date&gt;        
+##  1 1074096NA   1074096 2020-04-14 06:04:49 2020-04-14   2019-12-31    
+##  2 1747784NA   1747784 2020-04-05 10:20:16 2020-04-05   2020-03-11    
+##  3 8098722NA   1428806 2020-04-02 11:26:23 2020-04-02   2020-01-02    
+##  4 1518388Bn   1518388 2020-04-14 06:46:27 2020-04-14   2020-01-09    
+##  5 1921058NA   1921058 2020-04-02 18:30:56 2020-04-02   2020-01-09    
+##  6 1989552NA   1989552 2020-03-31 04:56:40 2020-03-31   2020-01-10    
+##  7 1654091NA   1654091 2020-05-05 09:56:24 2020-05-05   2020-01-13    
+##  8 1523205NA   1523205 2020-04-02 20:19:50 2020-04-02   2020-01-18    
+##  9 1990707NA   1990707 2020-04-02 20:45:50 2020-04-02   2020-01-20    
+## 10 1024919NA   1024919 2020-04-03 11:19:15 2020-04-03   2020-01-21    
+## # … with 2,239 more rows, and 33 more variables: date_start &lt;date&gt;,
+## #   date_end &lt;date&gt;, entry_type &lt;chr&gt;, update_type &lt;chr&gt;,
+## #   event_description &lt;chr&gt;, domestic_policy &lt;dbl&gt;, type &lt;chr&gt;,
+## #   type_sub_cat &lt;chr&gt;, type_text &lt;dbl&gt;, index_high_est &lt;dbl&gt;,
+## #   index_med_est &lt;dbl&gt;, index_low_est &lt;dbl&gt;, index_country_rank &lt;dbl&gt;,
+## #   correct_type &lt;chr&gt;, country &lt;chr&gt;, init_country_level &lt;chr&gt;,
+## #   province &lt;chr&gt;, city &lt;chr&gt;, source_corr_type &lt;lgl&gt;, target_country &lt;chr&gt;,
+## #   target_geog_level &lt;chr&gt;, target_region &lt;chr&gt;, target_province &lt;chr&gt;,
+## #   target_city &lt;chr&gt;, target_other &lt;lgl&gt;, target_who_what &lt;chr&gt;,
+## #   target_direction &lt;chr&gt;, travel_mechanism &lt;chr&gt;, compliance &lt;chr&gt;,
+## #   enforcer &lt;chr&gt;, link &lt;chr&gt;, ISO_A3 &lt;chr&gt;, ISO_A2 &lt;chr&gt;</code></pre>
+<pre class="r"><code>arrange(coronaNet, desc(date_start))</code></pre>
+<pre><code>## # A tibble: 2,249 x 38
+##    record_id policy_id recorded_date       date_updated date_announced
+##    &lt;chr&gt;         &lt;dbl&gt; &lt;dttm&gt;              &lt;date&gt;       &lt;date&gt;        
+##  1 1886438NA   6801359 2020-05-17 14:54:56 2020-05-17   2020-05-13    
+##  2 1010884NA   1010884 2020-04-22 16:50:38 2020-04-22   2020-04-10    
+##  3 1061496NA   1061496 2020-05-29 04:58:03 2020-05-29   2020-05-11    
+##  4 1291080Eb   1291080 2020-05-28 08:49:15 2020-05-28   2020-05-22    
+##  5 1401604Db   1401604 2020-05-09 09:12:24 2020-05-09   2020-04-24    
+##  6 14907NA       14907 2020-05-22 07:00:55 2020-05-22   2020-05-22    
+##  7 1556359Dc   1556359 2020-05-30 16:43:31 2020-05-30   2020-05-27    
+##  8 1556359Dd   1556359 2020-05-30 16:43:31 2020-05-30   2020-05-27    
+##  9 1556359Dr   1556359 2020-05-30 16:43:31 2020-05-30   2020-05-27    
+## 10 1691517NA   1691517 2020-05-27 06:12:51 2020-05-27   2020-05-13    
+## # … with 2,239 more rows, and 33 more variables: date_start &lt;date&gt;,
+## #   date_end &lt;date&gt;, entry_type &lt;chr&gt;, update_type &lt;chr&gt;,
+## #   event_description &lt;chr&gt;, domestic_policy &lt;dbl&gt;, type &lt;chr&gt;,
+## #   type_sub_cat &lt;chr&gt;, type_text &lt;dbl&gt;, index_high_est &lt;dbl&gt;,
+## #   index_med_est &lt;dbl&gt;, index_low_est &lt;dbl&gt;, index_country_rank &lt;dbl&gt;,
+## #   correct_type &lt;chr&gt;, country &lt;chr&gt;, init_country_level &lt;chr&gt;,
+## #   province &lt;chr&gt;, city &lt;chr&gt;, source_corr_type &lt;lgl&gt;, target_country &lt;chr&gt;,
+## #   target_geog_level &lt;chr&gt;, target_region &lt;chr&gt;, target_province &lt;chr&gt;,
+## #   target_city &lt;chr&gt;, target_other &lt;lgl&gt;, target_who_what &lt;chr&gt;,
+## #   target_direction &lt;chr&gt;, travel_mechanism &lt;chr&gt;, compliance &lt;chr&gt;,
+## #   enforcer &lt;chr&gt;, link &lt;chr&gt;, ISO_A3 &lt;chr&gt;, ISO_A2 &lt;chr&gt;</code></pre>
+<pre class="r"><code># Class question: How could you use arrange() to sort all missing values to the date_end variable? (Hint: use is.na()).
+
+
+
+# the dplyr counterpart to the $ operator or the [,variableName] operator is &#39;select&#39;
+
+select(coronaNet, entry_type)</code></pre>
+<pre><code>## # A tibble: 2,249 x 1
+##    entry_type
+##    &lt;chr&gt;     
+##  1 update    
+##  2 update    
+##  3 new_entry 
+##  4 new_entry 
+##  5 update    
+##  6 new_entry 
+##  7 new_entry 
+##  8 new_entry 
+##  9 new_entry 
+## 10 new_entry 
+## # … with 2,239 more rows</code></pre>
+<pre class="r"><code>select(coronaNet, entry_type, country)</code></pre>
+<pre><code>## # A tibble: 2,249 x 2
+##    entry_type country    
+##    &lt;chr&gt;      &lt;chr&gt;      
+##  1 update     Chile      
+##  2 update     Chile      
+##  3 new_entry  Guatemala  
+##  4 new_entry  Turkey     
+##  5 update     Kenya      
+##  6 new_entry  Switzerland
+##  7 new_entry  Italy      
+##  8 new_entry  Vietnam    
+##  9 new_entry  Vietnam    
+## 10 new_entry  Vietnam    
+## # … with 2,239 more rows</code></pre>
+<pre class="r"><code>select(coronaNet, entry_type:country)</code></pre>
+<pre><code>## # A tibble: 2,249 x 13
+##    entry_type update_type event_descripti… domestic_policy type  type_sub_cat
+##    &lt;chr&gt;      &lt;chr&gt;       &lt;chr&gt;                      &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;       
+##  1 update     &lt;NA&gt;        &quot;Chile extends …               0 Quar… Self-Quaran…
+##  2 update     &lt;NA&gt;        &quot;Chile extends …               0 Quar… Quarantine …
+##  3 new_entry  &lt;NA&gt;        &quot;On April 7th, …               1 Othe… &lt;NA&gt;        
+##  4 new_entry  &lt;NA&gt;        &quot;The total numb…               1 Othe… &lt;NA&gt;        
+##  5 update     &lt;NA&gt;        &quot;On 22nd March,…               0 Exte… &lt;NA&gt;        
+##  6 new_entry  &lt;NA&gt;        &quot;On April 2nd, …               1 Heal… &lt;NA&gt;        
+##  7 new_entry  &lt;NA&gt;        &quot;Italy is enfor…               1 Soci… &lt;NA&gt;        
+##  8 new_entry  &lt;NA&gt;        &quot;Schools have r…               1 Clos… Preschool o…
+##  9 new_entry  &lt;NA&gt;        &quot;Schools have r…               1 Clos… Primary Sch…
+## 10 new_entry  &lt;NA&gt;        &quot;Schools have r…               1 Clos… Secondary S…
+## # … with 2,239 more rows, and 7 more variables: type_text &lt;dbl&gt;,
+## #   index_high_est &lt;dbl&gt;, index_med_est &lt;dbl&gt;, index_low_est &lt;dbl&gt;,
+## #   index_country_rank &lt;dbl&gt;, correct_type &lt;chr&gt;, country &lt;chr&gt;</code></pre>
+<pre class="r"><code>select(coronaNet, -c(entry_type:country))</code></pre>
+<pre><code>## # A tibble: 2,249 x 25
+##    record_id policy_id recorded_date       date_updated date_announced
+##    &lt;chr&gt;         &lt;dbl&gt; &lt;dttm&gt;              &lt;date&gt;       &lt;date&gt;        
+##  1 1000775Ds   1342691 2020-04-04 15:43:15 2020-04-04   2020-03-14    
+##  2 1000775Dm   1342691 2020-04-04 15:43:15 2020-04-04   2020-03-14    
+##  3 1003875NA   1003875 2020-04-15 11:04:50 2020-04-15   2020-04-07    
+##  4 1004103NA   1004103 2020-05-15 11:04:46 2020-05-15   2020-05-15    
+##  5 1004681NA   2575122 2020-04-03 08:33:25 2020-04-03   2020-03-22    
+##  6 100526NA     100526 2020-04-11 03:45:41 2020-04-11   2020-04-02    
+##  7 4866080NA   1005278 2020-03-30 05:21:44 2020-03-30   2020-03-20    
+##  8 1005610Dc   1005610 2020-05-29 07:51:28 2020-05-29   2020-05-07    
+##  9 1005610Dd   1005610 2020-05-29 07:51:28 2020-05-29   2020-05-07    
+## 10 1005610Dr   1005610 2020-05-29 07:51:28 2020-05-29   2020-05-07    
+## # … with 2,239 more rows, and 20 more variables: date_start &lt;date&gt;,
+## #   date_end &lt;date&gt;, init_country_level &lt;chr&gt;, province &lt;chr&gt;, city &lt;chr&gt;,
+## #   source_corr_type &lt;lgl&gt;, target_country &lt;chr&gt;, target_geog_level &lt;chr&gt;,
+## #   target_region &lt;chr&gt;, target_province &lt;chr&gt;, target_city &lt;chr&gt;,
+## #   target_other &lt;lgl&gt;, target_who_what &lt;chr&gt;, target_direction &lt;chr&gt;,
+## #   travel_mechanism &lt;chr&gt;, compliance &lt;chr&gt;, enforcer &lt;chr&gt;, link &lt;chr&gt;,
+## #   ISO_A3 &lt;chr&gt;, ISO_A2 &lt;chr&gt;</code></pre>
+<pre class="r"><code>select(coronaNet, contains(&#39;type&#39;))</code></pre>
+<pre><code>## # A tibble: 2,249 x 7
+##    entry_type update_type type  type_sub_cat type_text correct_type
+##    &lt;chr&gt;      &lt;chr&gt;       &lt;chr&gt; &lt;chr&gt;            &lt;dbl&gt; &lt;chr&gt;       
+##  1 update     &lt;NA&gt;        Quar… Self-Quaran…        NA original    
+##  2 update     &lt;NA&gt;        Quar… Quarantine …        NA original    
+##  3 new_entry  &lt;NA&gt;        Othe… &lt;NA&gt;                NA original    
+##  4 new_entry  &lt;NA&gt;        Othe… &lt;NA&gt;                NA original    
+##  5 update     &lt;NA&gt;        Exte… &lt;NA&gt;                NA original    
+##  6 new_entry  &lt;NA&gt;        Heal… &lt;NA&gt;                NA original    
+##  7 new_entry  &lt;NA&gt;        Soci… &lt;NA&gt;                NA correction  
+##  8 new_entry  &lt;NA&gt;        Clos… Preschool o…        NA original    
+##  9 new_entry  &lt;NA&gt;        Clos… Primary Sch…        NA original    
+## 10 new_entry  &lt;NA&gt;        Clos… Secondary S…        NA original    
+## # … with 2,239 more rows, and 1 more variable: source_corr_type &lt;lgl&gt;</code></pre>
+<pre class="r"><code># Class question: what are some ways you can select record_id, policy_id, target_direction, ISO_A3, and ISO_A2?
+
+
+# the dplyr counterpart to making a new variable is the &#39;mutate&#39; function
+
+mutate(coronaNet, newVar1 = 1, 
+       newVar2 = ifelse(entry_type == &#39;new_entry&#39;, 1, 0)) %&gt;%
+  select(newVar1, newVar2)</code></pre>
+<pre><code>## # A tibble: 2,249 x 2
+##    newVar1 newVar2
+##      &lt;dbl&gt;   &lt;dbl&gt;
+##  1       1       0
+##  2       1       0
+##  3       1       1
+##  4       1       1
+##  5       1       0
+##  6       1       1
+##  7       1       1
+##  8       1       1
+##  9       1       1
+## 10       1       1
+## # … with 2,239 more rows</code></pre>
+<pre class="r"><code># if you only want to keep the new variables, use transmute()
+transmute(coronaNet, newVar1 = 1, 
+          newVar2 = ifelse(entry_type == &#39;new_entry&#39;, 1, 0))  </code></pre>
+<pre><code>## # A tibble: 2,249 x 2
+##    newVar1 newVar2
+##      &lt;dbl&gt;   &lt;dbl&gt;
+##  1       1       0
+##  2       1       0
+##  3       1       1
+##  4       1       1
+##  5       1       0
+##  6       1       1
+##  7       1       1
+##  8       1       1
+##  9       1       1
+## 10       1       1
+## # … with 2,239 more rows</code></pre>
+<hr />
+</div>
+</div>
+<div id="summarizing-the-data" class="section level1" number="3">
+<h1 number="3"><span class="header-section-number">3</span> Summarizing the Data</h1>
+<pre class="r"><code>coronaNet %&gt;% group_by(country) %&gt;%
+  summarise(count = n(),
+            numberOfTypesOfPolicies = n_distinct(type),
+            mostActive = median(date_start))</code></pre>
+<pre><code>## # A tibble: 190 x 4
+##    country             count numberOfTypesOfPolicies mostActive
+##    &lt;chr&gt;               &lt;int&gt;                   &lt;int&gt; &lt;date&gt;    
+##  1 Afghanistan            10                       4 2020-03-28
+##  2 Albania                 1                       1 2020-03-14
+##  3 Algeria                 2                       1 2020-03-15
+##  4 Andorra                 4                       2 2020-03-16
+##  5 Angola                 19                       7 2020-04-02
+##  6 Antigua and Barbuda     6                       5 2020-03-28
+##  7 Argentina               9                       7 2020-03-25
+##  8 Armenia                14                       5 2020-04-08
+##  9 Australia              22                      11 2020-03-24
+## 10 Austria                15                       7 2020-03-19
+## # … with 180 more rows</code></pre>
+<pre class="r"><code>coronaNet %&gt;% group_by(country) %&gt;%
+  mutate(correct_type = ifelse(correct_type == &#39;original&#39;, 0, 1)) %&gt;% 
+  summarise(count = n(),
+            numberOfTypesOfPolicies = n_distinct(type),
+            mostActive = median(date_start),
+            percCorrected = mean(correct_type))</code></pre>
+<pre><code>## # A tibble: 190 x 5
+##    country             count numberOfTypesOfPolicies mostActive percCorrected
+##    &lt;chr&gt;               &lt;int&gt;                   &lt;int&gt; &lt;date&gt;             &lt;dbl&gt;
+##  1 Afghanistan            10                       4 2020-03-28             0
+##  2 Albania                 1                       1 2020-03-14             0
+##  3 Algeria                 2                       1 2020-03-15             0
+##  4 Andorra                 4                       2 2020-03-16             0
+##  5 Angola                 19                       7 2020-04-02             0
+##  6 Antigua and Barbuda     6                       5 2020-03-28             0
+##  7 Argentina               9                       7 2020-03-25             0
+##  8 Armenia                14                       5 2020-04-08             0
+##  9 Australia              22                      11 2020-03-24             0
+## 10 Austria                15                       7 2020-03-19             0
+## # … with 180 more rows</code></pre>
+<pre class="r"><code>coronaNet %&gt;% group_by(country, date_start) %&gt;%
+  summarise(count = n(),
+            numberOfTypesOfPolicies = n_distinct(type))</code></pre>
+<pre><code>## # A tibble: 1,281 x 4
+## # Groups:   country [190]
+##    country     date_start count numberOfTypesOfPolicies
+##    &lt;chr&gt;       &lt;date&gt;     &lt;int&gt;                   &lt;int&gt;
+##  1 Afghanistan 2020-02-12     1                       1
+##  2 Afghanistan 2020-02-27     1                       1
+##  3 Afghanistan 2020-03-22     2                       2
+##  4 Afghanistan 2020-03-24     1                       1
+##  5 Afghanistan 2020-04-01     1                       1
+##  6 Afghanistan 2020-04-15     3                       1
+##  7 Afghanistan 2020-04-29     1                       1
+##  8 Albania     2020-03-14     1                       1
+##  9 Algeria     2020-03-13     1                       1
+## 10 Algeria     2020-03-18     1                       1
+## # … with 1,271 more rows</code></pre>
+<hr />
+</div>
+<div id="frequency-table" class="section level1" number="4">
+<h1 number="4"><span class="header-section-number">4</span> Frequency Table</h1>
+<pre class="r"><code>#install.packages(&quot;kableExtra&quot;)
+
+library(kableExtra)
+
+coronaNet %&gt;% 
+  filter(init_country_level == &quot;Yes, it is at the province/state level&quot;,
+         #entry_type==&quot;new_entry&quot;,
+         country==&quot;Germany&quot;) %&gt;%
+  group_by(type) %&gt;% 
+  summarize(`Total Number of Policies`=n(),
+            `Number of Countries`=length(unique(country)),
+            `Number of Targeted Countries`=length(unique(target_country)),
+            `% With Mandatory Enforcement`=round(mean(grepl(x=compliance,pattern=&quot;Mandatory&quot;)*100,na.rm=T),0)) %&gt;% 
+  dplyr::select(Type=&quot;type&quot;,everything()) %&gt;% 
+  filter(!is.na(Type)) %&gt;% 
+  arrange(desc(`Total Number of Policies`))  %&gt;% 
+  ungroup() %&gt;%
+  knitr::kable(&quot;html&quot;,booktabs=T,
+               caption=&quot;Policies by Germany on state level (Bundesländer)&quot;) </code></pre>
+<table>
+<caption>
+Policies by Germany on state level (Bundesländer)
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Type
+</th>
+<th style="text-align:right;">
+Total Number of Policies
+</th>
+<th style="text-align:right;">
+Number of Countries
+</th>
+<th style="text-align:right;">
+Number of Targeted Countries
+</th>
+<th style="text-align:right;">
+% With Mandatory Enforcement
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Restriction and Regulation of Businesses
+</td>
+<td style="text-align:right;">
+22
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+100
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Closure and Regulation of Schools
+</td>
+<td style="text-align:right;">
+19
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+100
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Health Resources
+</td>
+<td style="text-align:right;">
+14
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Restrictions of Mass Gatherings
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+100
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Social Distancing
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+100
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Health Testing
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+50
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+New Task Force, Bureau or Administrative Configuration
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+100
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Quarantine
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+100
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+External Border Restrictions
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+100
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Internal Border Restrictions
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+100
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Other Policy Not Listed Above
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Public Awareness Measures
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+100
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Restriction and Regulation of Government Services
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+100
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="density-plot-for-policies" class="section level1" number="5">
+<h1 number="5"><span class="header-section-number">5</span> Density Plot for Policies</h1>
+<p>In this case, we want to have the density plot for the frequencies of policies.</p>
+<pre class="r"><code>#install.packages(&quot;lubridate&quot;)
+
+library(lubridate)
+
+d&lt;- coronaNet%&gt;% 
+  filter(!is.na(type)) %&gt;% 
+  group_by(type,date_announced) %&gt;% 
+  summarize(Policies=length(unique(record_id))) %&gt;% 
+  arrange(type,date_announced) %&gt;% 
+  mutate(Policies=cumsum(Policies)) %&gt;% 
+  ungroup %&gt;% 
+  mutate( type=recode(type,
+      
+                    `External Border Restrictions`=&quot;External\nBorder\nRestrictions&quot;,
+                      `Restriction of Non-Essential Businesses`=&quot;Restriction of\nNon-Essential\nBusinesses&quot;,
+                      `Restrictions of Mass Gatherings`=&quot;Restrictions of\nMass Gatherings&quot;,
+                      `Restriction of Non-Essential Government Services`=&quot;Restriction of\nNon-Essential\nGovernment Services&quot;,
+                      `Internal Border Restrictions`=&quot;Internal\nBorder Restrictions&quot;,
+                      `External Border Restrictions`=&quot;External\nBorder Restrictions&quot;,
+                      `Public Awareness Campaigns`=&quot;Public\nAwareness Campaigns&quot;,
+                      `New Task Force or Bureau`=&quot;New Task Force&quot;)) %&gt;% 
+  ggplot(aes(y=Policies,x=date_announced)) +
+  geom_area() +
+  theme_minimal() +
+  theme(panel.grid = element_blank(),
+        strip.background = element_blank()) +
+  xlab(&quot;&quot;) +
+  facet_wrap(~type)
+
+d_all&lt;-d + scale_x_date(date_labels = &quot;%d/%m&quot;)
+d_all</code></pre>
+<p><img src="descriptives_corona_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+</div>
+<div id="t-test" class="section level1" number="6">
+<h1 number="6"><span class="header-section-number">6</span> T-Test</h1>
+<pre class="r"><code># https://www.dummies.com/education/science/biology/how-to-use-student-t-tests-to-compare-averages/
+
+# Doing a t-test in R
+# https://uc-r.github.io/t_test
+
+# Doing a t-test by hand
+# http://onlinestatbook.com/2/tests_of_means/difference_means.html
+# https://stattrek.com/hypothesis-test/difference-in-means.aspx
+
+# Interpreting p-values
+# https://blog.minitab.com/blog/adventures-in-statistics-2/how-to-correctly-interpret-p-values
+
+
+# class question: what is the average gdpPPP
+
+
+# lets see if there is a statistical difference in the number of business restrictions for countries over the average GDP PPP level 
+# compared to countries under the average GDP PPP level
+t.test(dataAgg %&gt;% filter(gdpPPP &gt; mean(dataAgg$gdpPPP, na.rm = TRUE)) %&gt;% select(numBusinessRestrictions),
+       dataAgg %&gt;% filter(gdpPPP &lt;= mean(dataAgg$gdpPPP, na.rm = TRUE))%&gt;% select(numBusinessRestrictions))</code></pre>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  dataAgg %&gt;% filter(gdpPPP &gt; mean(dataAgg$gdpPPP, na.rm = TRUE)) %&gt;%  and dataAgg %&gt;% filter(gdpPPP &lt;= mean(dataAgg$gdpPPP, na.rm = TRUE)) %&gt;%     select(numBusinessRestrictions) and     select(numBusinessRestrictions)
+## t = 1.5584, df = 18.136, p-value = 0.1364
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -2.54962 17.22874
+## sample estimates:
+## mean of x mean of y 
+## 10.210526  2.870968</code></pre>
+<pre class="r"><code>dataAgg %&gt;% filter(gdpPPP &gt; mean(dataAgg$gdpPPP, na.rm = TRUE)) %&gt;% summarise(avgNumBusinessRestrictions = mean(numBusinessRestrictions, na.rm = TRUE))  </code></pre>
+<pre><code>## # A tibble: 1 x 1
+##   avgNumBusinessRestrictions
+##                        &lt;dbl&gt;
+## 1                       10.2</code></pre>
+<pre class="r"><code>dataAgg %&gt;% filter(gdpPPP &lt;= mean(dataAgg$gdpPPP, na.rm = TRUE)) %&gt;% summarise(avgNumBusinessRestrictions = mean(numBusinessRestrictions, na.rm = TRUE))  </code></pre>
+<pre><code>## # A tibble: 1 x 1
+##   avgNumBusinessRestrictions
+##                        &lt;dbl&gt;
+## 1                       2.87</code></pre>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

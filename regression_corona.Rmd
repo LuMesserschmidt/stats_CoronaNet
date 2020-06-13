@@ -1,0 +1,86 @@
+---
+title: "CoronaNet Example"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,warning = FALSE)
+```
+
+Download the script [here](https://raw.githubusercontent.com/LuMesserschmidt/stats_TUM/master/Files/Course%20Scripts/R_code_CoronaNet_2.R)
+
+
+***
+
+# Set up
+
+```{r, message=FALSE}
+rm(list=ls())
+
+library(readr)
+library(tidyverse)
+
+```
+
+***
+
+# Loading the dataset
+
+
+```{r, eval=T, message=F}
+coronaNet <- read_csv("data/coronanet_release.csv")
+wb <- read_csv("data/API_NY.GDP.PCAP.PP.CD_DS2_en_csv_v2_988619.csv", skip = 4)
+
+businessRestrict = coronaNet %>% filter(type %in% c("Restriction and Regulation of Businesses" ,"Restriction of Non-Essential Businesses"))
+
+wb = wb %>% gather("year", "gdpPPP", -`Country Name`, -`Country Code`, -`Indicator Name`, -`Indicator Code`, -X65)
+
+wb = wb %>% select( -`Indicator Name`, -`Indicator Code`, -X65)
+wb$year = as.numeric(wb$year)
+wb$lgdpPPP= log(wb$gdpPPP)
+
+
+data = merge(businessRestrict, wb %>% filter(year == 2018), by.x = 'ISO_A3', by.y = "Country Code", all.x = TRUE)
+
+dataAgg = data %>% 
+  group_by(country) %>% 
+  summarise(numBusinessRestrictions = n(),
+            gdpPPP = mean(gdpPPP))
+
+dataAgg$gdpDum = ifelse(dataAgg$gdpPPP > mean(dataAgg$gdpPPP, na.rm = TRUE), "Above Average GDP", "Below Average GDP")
+dataAgg = dataAgg %>% filter(!is.na(gdpDum))
+
+```
+
+# Run Regression
+
+
+```{r, eval=T}
+# Here are some resources for learning more about OLS:
+# http://setosa.io/ev/ordinary-least-squares-regression/
+# http://r-statistics.co/Linear-Regression.html
+# https://www.datacamp.com/community/tutorials/linear-regression-R
+# https://www.albert.io/blog/key-assumptions-of-ols-econometrics-review/
+
+
+# Simple Bivariate Model
+model1 = lm(numBusinessRestrictions ~ gdpPPP  , data = dataAgg) 
+summary(model1)
+
+model2 = lm(numBusinessRestrictions ~ gdpPPP +gdpDum , data = dataAgg) 
+summary(model2)
+
+
+```
+
+***
+# Making pretty tables with Stargazer
+
+```{r, eval=T}
+
+stargazer::stargazer(model1,model2, type = "text")
+
+
+```
+
+
+

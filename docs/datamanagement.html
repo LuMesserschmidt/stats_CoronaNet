@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Datamanagement</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">R Course PhD</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Introduction</a>
+</li>
+<li>
+  <a href="objectsndata.html">Objects and Data</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Data Management
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="datamanagement.html">Data Management Introduction</a>
+    </li>
+    <li>
+      <a href="datamanagement_eurostat.html">Eurostat Example</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Descriptives and Bivariate
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="descriptives.html">Descriptive Stats</a>
+    </li>
+    <li>
+      <a href="bivariate.html">Bivariate Stats</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Regression
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="other_regressions.html">Regression</a>
+    </li>
+    <li>
+      <a href="other_outlier.html">Outlier Analysis</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Data Viz
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="dataviz.html">Data Viz Introduction</a>
+    </li>
+    <li>
+      <a href="dataviz_eurostat.html">Eurostat Example</a>
+    </li>
+    <li>
+      <a href="dataviz_map.html">Map Example</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Datamanagement</h1>
+
+</div>
+
+
+<p>Download the script <a href="https://raw.githubusercontent.com/LuMesserschmidt/stats_TUM/master/Files/Course%20Scripts/datamanagement_clean.R">here</a></p>
+<p>Solutions can be downloaded <a href="https://raw.githubusercontent.com/LuMesserschmidt/stats_TUM/master/Files/Course%20Scripts/datamanagement_solutions.R">here</a> - but try to solve everything without the solutions first!</p>
+<hr />
+<div id="preliminary" class="section level1">
+<h1><span class="header-section-number">1</span> Preliminary</h1>
+<ul>
+<li><p>We use an old (2003) randomly changed and subsetted SOEP dataset with ~4.600 observations.</p></li>
+<li><p>Please, <strong>download</strong> the two csv files (<a href="https://raw.githubusercontent.com/LuMesserschmidt/stats_TUM/master/data/soep_europ.csv">.soep_europ.csv</a> and <a href="https://raw.githubusercontent.com/LuMesserschmidt/stats_TUM/master/data/soep_us.csv">soep_us.csv</a>) and the <a href="https://github.com/LuMesserschmidt/stats_TUM/raw/master/data/soep.dta">soep.dta</a> file and save them locally within your R project directory.</p></li>
+</ul>
+<hr />
+</div>
+<div id="tidyverse-and-script-set-up" class="section level1">
+<h1><span class="header-section-number">2</span> Tidyverse and script set-up</h1>
+<ul>
+<li>To make sure that your R environment is clear, remember to use <code>rm(list=ls())</code> in the beginning.</li>
+<li>As explained before, R itself can operate only very basic tasks and needs packages to run more powerful functions.
+<ul>
+<li>Therefore, you should always load the packages you need in the beginning, too.</li>
+<li>When you are writing a script and discover that you need a new package, make sure to scroll back to the beginning and (install and) open the package there.</li>
+</ul></li>
+<li>Throughout this page, we’ll introduce the powerful <a href="https://www.tidyverse.org/">tidyverse</a>) - a collection of very useful packages:
+<ul>
+<li>“The tidyverse is an opinionated collection of R packages designed for data science. All packages share an underlying design philosophy, grammar, and data structures.”</li>
+<li>Almost all of the data tasks (from data management to data vizualisation) we’ll learn about in this tutorial are covered by packages from the tidyverse.</li>
+<li>In particular, for data management, we introduce the <code>dplyr</code> package and its functions (or verbs as they are often called in dplyr terminology).</li>
+</ul></li>
+</ul>
+<p>This is how the beginning of every of your scripts should look like: 1. Clean environment and 2. load packages</p>
+<pre class="r"><code>rm(list = ls())
+# install.packages(&quot;tidyverse&quot;)
+library(tidyverse)</code></pre>
+<hr />
+</div>
+<div id="loading-the-dataset" class="section level1">
+<h1><span class="header-section-number">3</span> Loading the dataset</h1>
+<p>Step 1 of Data Management is about “reading” the data into the R environment. There are many different file types and with R you can open all of them.</p>
+<p>Here, we’ll focus on two file types (csv and dta). Different data files require different approaches but - <strong>as always</strong> - information can be easily accessed in the CRAN documentation/stackoverflow.</p>
+<p>Let’s first open the csv file “soep_europ.csv”.</p>
+<p><strong>Remember</strong>:</p>
+<ul>
+<li><p>You have to write down the path where the file is saved relative to the root.directory of your RProject.</p></li>
+<li><p>A good rule of thumb is to save all your data in a separate “data” folder within your R environment: E.g. “data<strong>/</strong>soep_europ.csv”</p></li>
+<li><p>Don’t use the backslash but always the forward slash(/).</p></li>
+<li><p>In the follwing, we will read and save the practice data as <code>data</code>. Don’t forget - everything in R is an object. Therefore, we could have used every name for the data frame we want. Instead of <code>data</code>, we could have also called it <code>isg</code>, <code>RisGreat</code>, or <code>blaBlablaBla345</code>. The names don’t matter!</p></li>
+</ul>
+<div id="csv" class="section level2">
+<h2><span class="header-section-number">3.1</span> .csv</h2>
+<p><span style="color:red">Task</span> <u><strong>Complete the empty spaces!</strong></u></p>
+<pre class="r"><code>data &lt;- read.csv(&quot;_______&quot;) # Looks weird....</code></pre>
+<p>What happened: In (most) European countries the standard way to save csv/excel files is to separate values by “;” and the decimals by “,”.</p>
+<p>In the US and many other countries separation is done by “,” and the decimals are marked by “.”. This is the default for read.csv.</p>
+<p>To read the data correctly, we have to add the argument “sep” to the function.</p>
+<p><span style="color:red">Task</span> <u><strong>Complete the empty spaces!</strong></u></p>
+<pre class="r"><code>data &lt;- _____(&quot;data/soep_europ.csv&quot;, sep=&quot;_____&quot;) # </code></pre>
+<p>2 Addenda:</p>
+<p><span style="color:red">Task</span> <u><strong>1. Try out to to read a US style csv with soep_us.csv</strong></u></p>
+<pre class="r"><code>data &lt;- </code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>An easier way to read European style csv files is to use <code>read_csv2()</code> from the tidyverse. (Accordingly, <code>read_csv()</code> is for US style csv files)</li>
+</ol>
+<p><span style="color:red">Task</span> <u><strong>Use read_csv2() to read soep_europ.csv</strong></u></p>
+<pre class="r"><code>data &lt;- </code></pre>
+</div>
+<div id="dta-.sav-excel" class="section level2">
+<h2><span class="header-section-number">3.2</span> .dta / .sav / excel</h2>
+<ul>
+<li>.csv (together with .txt) is definetely the cleanest file format to read (and therefore also to save) data because it is improved for machine readability.</li>
+</ul>
+<p>However, R being R, you can also read many other file formats. Let’s try out some of them. As a second data file type, we try to read .dta (Stata’s proprietary file format)</p>
+<p>For Stata’s .dta file, we can use the haven package (part of the tidyverse but not loaded through <code>library(tidyverse)</code>).</p>
+<ul>
+<li>Btw., if you only intend to use a package once, you can simply call the package with <code>packagename::function</code>.</li>
+</ul>
+<pre class="r"><code>data &lt;- haven::read_dta(&quot;data/soep.dta&quot;)</code></pre>
+<p>Same for SPSS files:</p>
+<pre class="r"><code>data &lt;- haven::read_sav(&quot;data/soep.sav&quot;)</code></pre>
+<p>We can also read excel (e.g. .xls and xlsx) files. These functions are part of a different package from the tidyverse.</p>
+<pre class="r"><code>data &lt;- readxl::read_xlsx(&quot;data/soep.xlsx&quot;)</code></pre>
+<p>Enough on reading data for now, let’s use the European csv for now.</p>
+<pre class="r"><code>data &lt;- read_csv2(&quot;data/soep_europ.csv&quot;)</code></pre>
+<hr />
+</div>
+</div>
+<div id="basic-data-management" class="section level1">
+<h1><span class="header-section-number">4</span> Basic Data Management</h1>
+<div id="the-pipe" class="section level2">
+<h2><span class="header-section-number">4.1</span> The Pipe %&gt;%</h2>
+<p>Before getting into the woods of data management, let’s understand the pipe first. The Pipe <code>%&gt;%</code> operator stems from the magrittr package (which in turn is part of the tidyverse - therefore it is already loaded.</p>
+<p>The Pipe operator pipes the last element of something into the first one of the next: <code>f(x)</code> becomes <code>x %&gt;% f()</code>.</p>
+<p>To give an example:</p>
+<pre class="r"><code>mean(c(1:5))
+# can be expressed with the pipe as
+c(1:5) %&gt;%
+  mean()</code></pre>
+<p>We will always use the pipe in the following subsections.</p>
+</div>
+<div id="select-the-relevant-variables" class="section level2">
+<h2><span class="header-section-number">4.2</span> Select the relevant variables</h2>
+<p>Our data has 902 variables. Obviously, we do not need that many.</p>
+<p>Accordingly, we <code>select</code> the relevant ones:</p>
+<ul>
+<li><em>hhnr</em>, <em>persnr</em>, <em>gebjahr</em>, <em>sex</em>, <em>tp72</em> (Work Overtime), <em>tp7001</em> (Contracted Working Hours), <em>tp7003</em> (Hours Per Week Actual), <em>tp7602</em> (Net Income Last Month)</li>
+</ul>
+<p><span style="color:red">Task</span> <u><strong>Complete the empty spaces!</strong></u> Notice that after typing the first two or three characters of each variable, RStudio gives you a drop down menu.</p>
+<pre class="r"><code>data &lt;- data %&gt;% # remember the pipe?
+  select(______) # fill in the missing names</code></pre>
+<p><code>select()</code> is from the tidyverse, namely the package <code>dplyr</code>. “dplyr is a grammar of data manipulation, providing a consistent set of verbs that help you solve the most common data manipulation challenges.” For more information about dplyr, <a href="https://dplyr.tidyverse.org/">check this out</a>.</p>
+<hr />
+</div>
+<div id="explore-the-data-structure" class="section level2">
+<h2><span class="header-section-number">4.3</span> Explore the data structure</h2>
+<p>For a first overview over our data, we can use the base functions (e.g. those which are without any package installations part of R) <code>str()</code>, <code>head()</code>, <code>summary()</code>, <code>table()</code>, <code>quantile()</code>, and <code>View()</code>.</p>
+<p><span style="color:red">Task</span> <u><strong>Go through every function’s output and try to understand what it means!</strong></u></p>
+<pre class="r"><code>str(data)
+head(data)
+summary(data)
+table(data$tp72) # you could use any other variable here. 
+quantile(data$tp72, na.rm = TRUE)
+View(data)</code></pre>
+<hr />
+</div>
+<div id="basic-recoding-and-mutate" class="section level2">
+<h2><span class="header-section-number">4.4</span> Basic recoding and mutate()</h2>
+<p>The dataset is from 2003. Compute the age accordingly by creating the new variable age</p>
+<p><span style="color:red">Task</span> <u><strong>Complete the empty spaces!</strong></u></p>
+<pre class="r"><code>data$age &lt;- 2003 - _____</code></pre>
+<p>There is also a dplyr way to do this: <code>mutate()</code>.</p>
+<p><span style="color:red">Task</span> <u><strong>Complete the empty spaces!</strong></u></p>
+<pre class="r"><code>data &lt;- ______ %&gt;%
+  mutate(age = ______)</code></pre>
+<hr />
+</div>
+<div id="filtering" class="section level2">
+<h2><span class="header-section-number">4.5</span> Filtering</h2>
+<p>If you only want to keep certain rows (observations) in which values of a variable match a certain criterion, you can <code>filter()</code>.</p>
+<p>Let’s say, we only want to keep those observations which are at least 18.</p>
+<p><span style="color:red">Task</span> <u><strong>Complete the empty spaces!</strong></u></p>
+<pre class="r"><code>data &lt;- data %&gt;%
+  filter(____ &gt;= _____)</code></pre>
+<p>Note for later (see Filtering II): When we filter for exactly one condition, we use <code>==</code> (or operators like <code>&gt;=</code>). When we filter for a string, we use <code>%in%</code>.</p>
+<hr />
+</div>
+<div id="arrange" class="section level2">
+<h2><span class="header-section-number">4.6</span> Arrange</h2>
+<p>Sometimes, we want to order data. We do so with <code>arrange()</code>. <code>desc(x)</code> sorts x in descending order.</p>
+<p><span style="color:red">Task</span> <u><strong>Sort the data frame by age!</strong></u></p>
+<pre class="r"><code># Example 1
+data &lt;- _____ %&gt;%
+  _____(desc(___)) </code></pre>
+<hr />
+</div>
+<div id="all-in-one" class="section level2">
+<h2><span class="header-section-number">4.7</span> All in one</h2>
+<p>By the way, we could have done all of this in one batch:</p>
+<p><span style="color:red">Task</span> <u><strong>Complete the empty spaces!</strong></u></p>
+<pre class="r"><code>data &lt;- read_csv2(&quot;data/soep_europ.csv&quot;) # read data again.
+
+data &lt;- data %&gt;%
+  select(hhnr, persnr, gebjahr, sex, tp72, tp7001, tp7003 , tp0301, tp0302, tp7602) %&gt;%
+  mutate(age = 2003-_____) %&gt;% 
+  filter(______) %&gt;% # only those who are at least 18
+  _____(____(____)) # Arrange the dataframe so that age is displayed in descending order</code></pre>
+<p>Great, by now you basically have the main logic of dplyr at hand. In the sections below, we simply introduce some more dplyr functions and expand the functionality a bit.</p>
+<hr />
+</div>
+</div>
+<div id="advanced-stuff" class="section level1">
+<h1><span class="header-section-number">5</span> Advanced stuff</h1>
+<div id="recode-and-mutltiple-operations" class="section level2">
+<h2><span class="header-section-number">5.1</span> Recode and mutltiple operations</h2>
+<p>Often, we will want to recode single observations within a variable. <code>recode()</code> is the dplyr verb for this operation (see below).</p>
+<p>Furthermore,note that within <code>mutate()</code> (and any other dplyr verb) you can easily apply more than one operation (on the same variable) at once in a tidy way. For example, let’s say we</p>
+<ul>
+<li>want to <code>recode</code> the binary variable tp72 (Work Overtime) into three levels:
+<ul>
+<li>10 Yes</li>
+<li>20 No</li>
+<li>0 Everything else</li>
+</ul></li>
+<li>Apply those changes to tp72 by creating the new variable over</li>
+<li>Do something similar with tp7602 (recreate as netinc, change specific values to NA)</li>
+</ul>
+<p><span style="color:red">Task</span> <u><strong>Complete the empty spaces!</strong></u></p>
+<pre class="r"><code>data &lt;- data %&gt;%
+  mutate(
+    over = recode(
+      tp72,
+      &quot;3&quot; = 0, #actually means Does not apply: Self-Employment
+      &quot;-2&quot; = 0, # actually means does not apply
+      &quot;-1&quot; = 0, # actually means no answer
+      .default = tp72
+    ),
+    over = over * 10,
+    netinc = ____(
+      _____,
+      &quot;-3&quot; = NA_real_, # remember the difference between integer and double? 
+      &quot;-2&quot; = NA_real_,
+      &quot;-1&quot; = NA_real_,
+      .default = _____
+    )
+  )</code></pre>
+<p>Several things to note here:</p>
+<ul>
+<li>Within the same function (mutate) using the same variable (over), we have applied to different functions (recode and multiplying the values by 10).<br />
+</li>
+<li>Within <code>mutate()</code> we can - in a tidy way - work on multiple variables (e.g. over and netinc)</li>
+<li>Why do we write an NA_real? Because R has to be explicitly told that the NA it should use as a replacement should be an of type double (see last page on the difference between double and integer).
+<ul>
+<li>Check this <a href="https://stackoverflow.com/questions/46827631/are-there-different-types-of-nas">stackoverflow</a> answer for an overview over the different NAs.</li>
+</ul></li>
+</ul>
+<p>Let’s check whether the data manipulation worked:</p>
+<pre class="r"><code>table(data$over)
+
+table(data$over, 
+      useNA = &quot;always&quot;) # we add the argument useNA in order to also get the number of NA values. </code></pre>
+<hr />
+</div>
+<div id="factorize" class="section level2">
+<h2><span class="header-section-number">5.2</span> Factorize</h2>
+<p>As we have practiced before, we can factorize variables. This is also possible within the dplyr world (<code>mutate()</code> again). Let’s do that for sex.</p>
+<p><span style="color:red">Task</span> <u><strong>Complete the empty spaces!</strong></u></p>
+<pre class="r"><code>_____ &lt;- _____ _____
+  ____(sex = factor(
+    sex ,
+    levels = c(1, 2),
+    labels = c(&quot;male&quot;, &quot;female&quot;)
+  ))</code></pre>
+<hr />
+</div>
+<div id="recode-ii-if_else" class="section level2">
+<h2><span class="header-section-number">5.3</span> Recode II: if_else</h2>
+<p>We can also recode values below a certain threshold at once (if it is numeric (either double or integer)):</p>
+<p><code>if_else(condition, true, false)</code></p>
+<ul>
+<li>tp7001(Contracted Working Hours): mutate to column “contract”, change all values below 0 (errors) to NA, and divide the variable by 10</li>
+<li>Do the same for tp7003: Actual working hours</li>
+</ul>
+<pre class="r"><code>data &lt;- data %&gt;%
+  mutate(
+    contract =
+      if_else(condition = tp7001 &lt; 0, 
+              true = NA_real_, 
+              false = tp7001),
+    actual =
+      ____(__________________________________),
+    contract = contract / 10,
+    actual = _______________
+  )</code></pre>
+<hr />
+</div>
+<div id="multiple-if_else-case_when" class="section level2">
+<h2><span class="header-section-number">5.4</span> Multiple if_else: case_when</h2>
+<p><code>cases_when()</code> allows us to apply multiple <code>if_else()</code> statements.</p>
+<p>Let’s say, we want to build a character variable inc.quant which indicates the <code>quantile()</code> (see above) of netinc.</p>
+<p><span style="color:red">Task</span> <u><strong>Complete the empty spaces!</strong></u></p>
+<pre class="r"><code>data &lt;- data %&gt;%
+  mutate(
+    inc.quant = case_when(
+      netinc &lt; quantile(netinc, na.rm = TRUE)[2] ~ &quot;Q1&quot;,
+      
+      netinc &gt;= quantile(netinc, na.rm = TRUE)[2] &amp;
+        netinc &lt; quantile(netinc, na.rm = TRUE)[3] ~ &quot;Q2&quot;,
+      
+      netinc &gt;= quantile(netinc, na.rm = TRUE)[__] &amp;
+        netinc &lt; _______(netinc, na.rm = TRUE)[__] ~ &quot;Q3&quot;,
+      
+      netinc ______________________________________
+    )
+  )</code></pre>
+<hr />
+</div>
+<div id="check-data.frame-again" class="section level2">
+<h2><span class="header-section-number">5.5</span> Check data.frame again</h2>
+<pre class="r"><code>head(data)
+summary(data)</code></pre>
+<hr />
+</div>
+<div id="all-in-one-ii" class="section level2">
+<h2><span class="header-section-number">5.6</span> All in one II</h2>
+<p>Again, we could have done all of this in one batch - but it would have been untidy…</p>
+<pre class="r"><code>data &lt;- read_csv2(&quot;data/soep_europ.csv&quot;)
+
+data &lt;- data %&gt;% # remember the pipe?
+  
+  select(hhnr, persnr, gebjahr, sex, tp72, tp7001, tp7003 , tp0301, tp0302, tp7602)%&gt;%
+  
+  mutate(age = 2003-gebjahr) %&gt;%
+  
+  filter(age&gt;=18) %&gt;%
+  
+  arrange(desc(age))%&gt;%
+  mutate(
+         over = recode(
+           tp72,
+           &quot;3&quot; = 0, #actually means Does not apply: Self-Employment
+           &quot;-2&quot; = 0, # actually means does not apply
+           &quot;-1&quot; = 0, # actually means no answer
+           .default = tp72
+          ),
+         over = over * 10,
+         netinc = recode(tp7602,
+                         &quot;-3&quot; = NA_real_,
+                         &quot;-2&quot; = NA_real_,
+                         &quot;-1&quot; = NA_real_
+          ),
+         
+         sex = factor(
+           sex ,
+           levels = c(1, 2),
+           labels = c(&quot;male&quot;, &quot;female&quot;)
+         ),    
+         
+         contract =
+           if_else(condition = tp7001 &lt; 0,
+                   true = NA_real_,
+                   false = tp7001),
+         actual =
+           if_else(condition = tp7003 &lt; 0,
+                   true = NA_real_, 
+                   false = tp7003),
+         contract = contract / 10,
+         actual = actual / 10,
+
+         inc.quant = case_when(
+           netinc &lt; quantile(netinc, na.rm = TRUE)[2] ~ &quot;Q1&quot;,
+           netinc &gt;= quantile(netinc, na.rm = TRUE)[2] &amp;
+             netinc &lt; quantile(netinc, na.rm = TRUE)[3] ~ &quot;Q2&quot;,
+           netinc &gt;= quantile(netinc, na.rm = TRUE)[3] &amp;
+             netinc &lt; quantile(netinc, na.rm = TRUE)[4] ~ &quot;Q3&quot;,
+           netinc &gt;= quantile(netinc, na.rm = TRUE)[4] ~ &quot;Q4&quot;
+         )
+  )</code></pre>
+<hr />
+</div>
+</div>
+<div id="easy-additional-stuff" class="section level1">
+<h1><span class="header-section-number">6</span> (Easy) additional stuff</h1>
+<p>Great job! We are almost done.</p>
+<p>Below we’ll QUICKLY introduce a few more functions.</p>
+<div id="summarize" class="section level2">
+<h2><span class="header-section-number">6.1</span> Summarize</h2>
+<p>Summarize allows us to summarise certain variables, such as certain features of age</p>
+<pre class="r"><code>data %&gt;%
+  summarize(mean = mean(age, na.rm = TRUE),
+            sd = sd(age, na.rm = TRUE))</code></pre>
+<hr />
+</div>
+<div id="grouping" class="section level2">
+<h2><span class="header-section-number">6.2</span> Grouping</h2>
+<p>The same is also possible for grouped structures. Say, for example, you would want to calculate separate values for different genders:</p>
+<pre class="r"><code>data %&gt;%
+  group_by(sex) %&gt;%
+  summarise(mean = mean(age, na.rm = TRUE),
+            sd = sd(age, na.rm = TRUE)) </code></pre>
+<p>A bit more nuanced: Let’s say you want to create a variable cohort.deviance which gives you the deviation in netinc from the mean of all people of the same age. To do this, you first have to group by age (remember the dplyr verb?) and then subtract the mean of netinc from every single netinc value.</p>
+<p><span style="color:red">Task</span> <u><strong>Complete the empty spaces!</strong></u></p>
+<pre class="r"><code>data &lt;- data %&gt;%
+  _________ %&gt;%
+  mutate(cohort.deviance = netinc - ______(_______, na.rm = TRUE)) </code></pre>
+<hr />
+</div>
+<div id="filtering-ii" class="section level2">
+<h2><span class="header-section-number">6.3</span> Filtering II</h2>
+<p>As explained above, there are different types of filtering operations.</p>
+<p>Let’s say, you only want to keep those observations which are older than 18 and who are in the top three income quintiles. We store this in data2</p>
+<p><span style="color:red">Task</span> <u><strong>Note the difference between the lines of inc.quant and sex!</strong></u></p>
+<pre class="r"><code>data2 &lt;- data %&gt;%
+  filter(age &gt; 18,
+         inc.quant %in% c(&quot;Q2&quot;, &quot;Q3&quot;, &quot;Q4&quot;),
+         sex == &quot;male&quot;)</code></pre>
+<p>When we filter for exactly one condition, we use <code>==</code> (or <code>&gt;</code>, <code>&lt;</code>, <code>&gt;=</code>, <code>&lt;=</code>). When we filter for a string, we use <code>%in%</code>.</p>
+<hr />
+</div>
+<div id="merge" class="section level2">
+<h2><span class="header-section-number">6.4</span> Merge</h2>
+<p>Assuming, we forgot to include the variable “tp0101” (Satisfaction With Health) in our dataset when we selected all the variables we want to work with above. Of course, the normal/efficient way would be to go back the select() operation above, include persnnr and rerun the whole code. For the sake of learning let’s ignore this possibility. Instead, we reread the SOEP data under a different name, merge the relevant variables from this data.frame with the one we have been working with all the time and create a new data.frame (data2).</p>
+<pre class="r"><code>data.origin &lt;- read_csv2(&quot;data/soep_europ.csv&quot;)
+
+data2 &lt;- data %&gt;%
+  left_join(data.origin[,c(&quot;hhnr&quot;, &quot;tp0101&quot;)], by=c(&quot;hhnr&quot;))</code></pre>
+<p>Dplyr offers four different ways to joining two data sets - see screenshot from the dplyr cheat sheet (again, cheat sheets are amazing) below:</p>
+<p><img src="Files/dplyr_joins.PNG" /></p>
+<p>Second, you might have noticed when looking at the environment that data2 has ~900k rows. Obviously, something didn’t work. The culprit lies with the variable to join both data.frames: hhnr. hhnr contains many duplicates because often more than one member (persnr) from one household participated in the survey. We can check this with <code>any(duplicated(data$hhnr))</code>.</p>
+<p>We therefore need a second variable to join them by. In our case, this second variable is persnr.</p>
+<p><span style="color:red">Task</span> <u><strong>Complete the empty spaces!</strong></u></p>
+<pre class="r"><code>data &lt;- data %&gt;%
+  left_join(data.origin[,c(&quot;hhnr&quot;, &quot;tp0101&quot;, ____)], by=c(&quot;hhnr&quot;, ______))</code></pre>
+<hr />
+</div>
+<div id="spread-and-gather" class="section level2">
+<h2><span class="header-section-number">6.5</span> Spread and Gather</h2>
+<p>The last section for now!</p>
+<p>A reminder of the difference between long and wide data:</p>
+<ul>
+<li>Wide data has each different variable in a separate column.</li>
+<li>Long data has in one column all the variable names and in another column the respective values.</li>
+</ul>
+<p>Often, we want to be able to switch between long and wide data. Dplyr has two easy functions: <code>spread()</code> and <code>gather()</code></p>
+<p><img src="Files/dplyr_reshape.PNG" /></p>
+<p>At the moment, our data is in wide format (e.g. all the variables are in separate columns). Suppose, we would want to make the data long:</p>
+<pre class="r"><code>data.long &lt;- data %&gt;%
+  gather(key=key, value = value, -c(hhnr, persnr))</code></pre>
+<p><span style="color:red">Task</span> <u><strong>Can you make data.long wide again?</strong></u></p>
+<pre class="r"><code>data.wide &lt;- data.long %&gt;%
+  spread(key=____, value=______)</code></pre>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

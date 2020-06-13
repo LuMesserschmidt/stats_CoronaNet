@@ -1,0 +1,265 @@
+---
+title: "Datamanagement: Eurostat Example"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,warning = FALSE)
+```
+
+Download the script [here](https://raw.githubusercontent.com/LuMesserschmidt/stats_TUM/master/Files/Course%20Scripts/datamanagement_eurostat_clean.R)
+
+Solutions can be downloaded [here](https://raw.githubusercontent.com/LuMesserschmidt/stats_TUM/master/Files/Course%20Scripts/datamanagement_eurostat_solutions.R) - but try to solve everything without the solutions first! You will feel far more at ease with the basics of data manipulation if you write your own code. 
+
+***
+
+# General
+
+* This page is for you to practice the data management techniques you learned on the last [page](https://beselufri.github.io/RforISG/datamanagement.html). You have to collect, manipulate and merge multiple several variables (from different data sets) by your own. Code wise, there is nothing new. All the operations can be solved with the tidyverse/dplyr grammar from before.
+   + To be fair, there are three new functions (all from the tidyverse or base R): `bind_rows()`, `str_replace()`, and `paste()`. We will explain the orally in the example below. If in doubt, try `?function.name` or google ;)
+  
+* Your task is to gather several variables from Eurostat. To make matters a bit more difficult, you have to colelct the data twice: Once on the country level and once on the region (NUTS2) level. 
+
+* The only new thing is that we now use an API to download the data (see next section).
+
+***
+
+# About API
+APIs (=Application Programming Interface) in our R context can be thought of as a function to directly retrieve data from online data bases in a clearly defined way. The data base provider builds an interface which enables machines to download the data.
+
+This makes life easier for everybody coding with data as the data can be readily downloaded into the (R-) environment and has not to be downloaded in a (foreign) format manually. Downloading data by code also increases reproducibility and transparency.  
+
+***
+
+# Info about the Eurostat API and the general approach. 
+   
+## General Coding Information
+* Retrieve and manage data for the PES project directly via the Eurostat API and the related eurostat R package 
+* Links: [eurostat Cheat Sheet](https://github.com/rstudio/cheatsheets/raw/master/eurostat.pdf) and  [eurostat Documentation](https://cran.r-project.org/web/packages/eurostat/eurostat.pdf)
+
+***
+
+## Important Data Management Decisions
+* For Belgium regions the following geo identifiers have been used
+    + **BE1** Région de Bruxelles-Capitale / Brussels Hoofdstedelijk Gewest --> ATTENTION BE10 seems to be identical
+    + **BE2** Vlaams Gewest
+  + **BE3** Région wallonne
+* Youth and working age population
+    + Youth defined as "From 15 to 24 years"
+    + Working age populations as "From 15 to 64 years",
+  
+***
+  
+## The data management structure
+* Each variable/group of related variables has its own header and is downloaded and manipulated in the same fashion:
+    + There are three code chunks: one for a) all countries, b) Belgian regions and c) merging a and b
+* .a) and b) themselves have the same order:
+    + Download data via API with get_eurostat
+    + Label all codes (for easier readability) with label_eurostat
+    + Filter, select and spread the data
+* The first variable (Employment) has extensive comments to ease the understanding of the code
+* To retrieve the eurostat codes for datasets check the subchapter "Search for Eurostat codes"
+  
+***
+
+## Search for Eurostat codes
+* Eurostat codes for data tables can be retrieved via search_eurostat
+* An example (looking for all data containing the name employment in the title):
+    + `query <- search_eurostat("Employment", type = "all")`
+    + You can then inspect the query via `View(query)`
+
+# Setup the script
+* Remember: You should clean the environment and load the necessary packages. 
+    + If packages aren't installed yet, do so. 
+    + We need the tidyverse and the eurostat package.
+
+<span style="color:red">Task</span> <u>**Clean the environment and load the packages**</u>
+```{r, eval=FALSE}
+
+
+```
+
+```{r, echo=FALSE, message=FALSE}
+library(tidyverse)
+library(eurostat)
+
+```
+
+
+# Employment rate by educational attainment levels
+## Countries: **lfsa_ergaed** Employment rates by sex, age and educational attainment level 
+```{r, eval=FALSE}
+data_a <-
+  get_eurostat(id = "lfsa_ergaed", # the relevant id to be downloaded
+               time_format = "num") # retrieve time column as.numeric right away (bc we only have yearly data)
+               
+data_a <- label_eurostat(data_a,
+                           code = c("geo",
+                                    "isced11",
+                                    "sex"), # we want to keep the "geo" plus relevant identifier items to be able to merge data easily
+                           lang = "en") # English is the default, line included for transparency
+
+data_a <- data_a %>%
+  filter(age == "From 15 to 64 years",
+         # filter for appropriate values --> if more variables (for example sex or age) are needed, make changes here!
+         isced11_code %in% c("ED0-2", "ED3_4", "ED5-8")) %>%
+  mutate(
+    variab = "emp", # Add variable identifier
+    isced11_code = str_replace(isced11_code, "-", "_"),
+    # R doesn't like '-'(minus) in column names, change that to '_'
+    key = paste(variab, isced11_code, sex_code, sep = "_")
+  ) %>% # Merge sex and isced to get different data vars
+  select(-c(unit, sex, isced11, sex_code, isced11_code, age, geo)) %>% # remove unnecessary rows (which would be in the way of spread)
+  spread(key = key, value = values) %>% # spread out the column whose individual levels are needed as columns
+  rename_all(tolower) # all column names in lowercase
+  
+
+```
+
+## Belgium: **lfst_r_lfe2emprtn** Employment rates by sex, age, educational attainment level, citizenship and NUTS 2 regions
+```{r, eval=FALSE}
+data_b <-
+  get_eurostat(id = "lfst_r_lfe2emprtn", # the relevant id to be downloaded
+               time_format = "num") # retrieve time column as.numeric right away (bc we only have yearly data)
+
+
+data_b <- label_eurostat(
+  data_b,
+  code = c("geo",
+           "isced11",
+           "sex"),
+  # we want to keep the "geo" and "na_item" column to be able to merge data easily
+  lang = "en",
+  # English is the default, line included for transparency
+  fix_duplicated = TRUE
+)
+
+data_b <- data_b %>%
+  filter(
+    geo_code %in% c("BE1", "BE2", "BE3"),
+    citizen == "Total", # geo_code and citizen are the only two differences in Belgium compared to Country level for the filter
+    age == "From 15 to 64 years",
+    # filter for appropriate values --> if more variables (for example sex or age) are needed, make changes here!
+    isced11_code %in% c("ED0-2", "ED3_4", "ED5-8")
+  ) %>%
+  mutate(
+    variab = "emp", # Add variable identifier
+    isced11_code = str_replace(isced11_code, "-", "_"),
+    # R doesn't like '-'(minus) in column names, change that to '_'
+    key = paste(variab, isced11_code, sex_code, sep = "_")
+  ) %>% # Merge sex and isced to get different data vars
+  select(-c(unit, sex, isced11, sex_code, isced11_code, age, geo, citizen)) %>% # remove unnecessary rows (which would be in the way of spread) + Do not forget also to unfilter citizen (extra variable in the Belgium data)
+  spread(key = key, value = values) %>% # spread out the column whose individual levels are needed as columns
+  rename_all(tolower) # all column names in lowercase
+
+
+```
+
+## Rbind a and b
+This is the only new thing. `bind_rows()` appends rows from different data frames if the column names and types are identical. 
+
+```{r, eval=FALSE}
+empl_educ <- bind_rows(data_a, data_b)
+```
+
+
+# Time to practice!
+ 
+* You can now work on your own. 
+* I would highly recommend you to follow the structure of
+    + a) get and manipulate data for all countries, b) get and manipulate data for Belgian regions and c) merge a and b
+* Below you get all the eurostat codes you need as well as the name you should give each respective variable.
+* Once you have all variables, we want to merge them by their geo_code and time identification. 
+* Don't forget to recode values if they are supposed to become a variable
+    + E.g. if in the column size_emp one value is called "From 0 to 9 persons employed" and this value should become a column name, you should recode the value (while it is possible to have column names with spaces this is not very tidy): `.... %>% mutate (size_emp = recode(size_emp, "From 0 to 9 persons employed" = "empsize_verysmall"))`
+
+
+```{r}
+# A. Employment rate by sex and age
+
+## Countries: **lfsa_ergaed** Employment rates by sex, age and educational attainment level 
+
+## Belgium: **lfst_r_lfe2emprtn** Employment rates by sex, age, educational attainment level, citizenship and NUTS 2 regions----
+
+## Rbind a and b: empl_educ
+
+
+# B. Unemployment rates
+
+## Unemployment rates by sex, age and citizenship (%) [lfsa_urgan]
+
+## Unemployment rates by sex, age, ((, country of birth)) and NUTS 2 regions (%) [lfst_r_lfu3rt AND lfst_r_lfur2gac]
+
+#' There is only one single data management task for you here: 
+#' * Somewhat randomly, Unemployment data for Youth and working age population exist but in different datasets:
+#'   + lfst_r_lfur2gac has 15-64
+#*   + lfst_r_lfu3rt has 15-24
+#' * Accordingly, we load and manipulate both data seperately and merge them
+
+
+## Rbind a and b: unempl
+
+
+
+
+
+# C. Nominal GDP per capita
+
+## Gross domestic product at market prices tec00001
+
+## Gross domestic product (GDP) at current market prices by NUTS 2 regions [nama_10r_2gdp]
+
+## Rbind a and b gdp.pc
+
+
+
+
+# D. Investment Rate
+
+## Annual enterprise statistics for special aggregates of activities (NACE Rev. 2) [sbs_na_sca_r2]
+#' * Only Data for country level
+#' * getting data for the variables:
+#'   + Investment rate (investment/value added at factors cost) - percentage
+#'   + Investment per person employed - milliers deuros
+
+## Only data for country level available
+
+## Rbind a and b: Just save data_a as inv 
+
+```
+
+
+# Difficult
+* For Employment Growth (growth in employment YoY) you have to create column with the lagged employment values (e.g. give in the same row the employment values from the present year in one column and in another column the employment from the year before). 
+
+* Lagging can be done with `lag()`. Don't forget to use `group_by` before!
+
+```{r}
+# Employment Growth 
+
+## Employment and activity by sex and age  - annual data  [lfsi_emp_a]
+
+## Employment by sex, age and NUTS 2 regions (1 000) [lfst_r_lfe2emp]
+
+## Rbind a and b:empl_growth
+
+```
+
+
+# Merge all df together and save as csv
+```{r, eval=FALSE}
+
+df_final <-
+  Reduce(
+    function(x, y)
+      full_join(x, y, by = c("geo_code", "time")),
+    list(empl_educ, unempl, empl_sex_age, transition, empl_growth, totemp, gdp_gr, gdp_pc, inv, min_wage, empsize, dropout,  
+         literacy, childcare, gr_productiv, popul, depratio, immigr, emmigr, tempemp, jobsrch, activtyrate, parttime, death)
+  )
+
+df_final <- df_final %>%
+  group_by(geo_code, time) %>%
+  rename_all(tolower)
+
+write_excel_csv2(df_final, "data_uptodate.csv")
+```
+

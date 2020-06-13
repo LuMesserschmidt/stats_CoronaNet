@@ -1,0 +1,295 @@
+---
+title: "Regression Analysis"
+---
+
+```{r echo = F}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Download the script [here](https://raw.githubusercontent.com/LuMesserschmidt/stats_TUM/master/Files/Course%20Scripts/other_regressions_clean.R). There are no exercises so this script contains all necessary code already.
+
+Download the data [here](https://raw.githubusercontent.com/LuMesserschmidt/stats_TUM/master/data/eurostat_data.csv) (same data as on the [DataViz Eurostat page](https://beselufri.github.io/RforISG/dataviz_eurostat.html))
+
+***
+
+# Tl;dr
+
+This is how standard OLS regressions are done:
+```{r, eval=FALSE}
+ols_object <- lm(regressand ~ regressor1 + regressor2 + regressor3,
+                 data = data.frame)
+```
+
+
+This is how a (two-ways FE) panel regression is done
+```{r, eval=FALSE}
+library(plm)
+panel_object <-
+   plm(
+      regressand ~ regressor1 + regressor2 + regressor3,
+      index = c("unit", "time"),
+      model = "within",
+      effect = "twoways",
+      # for two-ways fixed effect regressions
+      data = data.frame
+   )
+```
+
+This is how you can get a summary of your regression:
+```{r, eval=FALSE}
+summary(ols_object, panel_object)
+```
+
+This is a nicer way for getting a summary and exporting (journal style)
+
+```{r, eval=FALSE}
+library(stargazer)
+stargazer(ols_object, panel_object,
+          type = "html", # either html, latex, or text
+          out = "output.html") # if a file should be produced
+```
+
+
+
+# Introduction
+
+## Workflow
+
+```{r echo=FALSE}
+DiagrammeR::grViz("Files/lm-modelling.gv", width = 800, height = 400)
+```
+
+***
+
+## The `lm` Function
+
+```{r eval=FALSE, echo=TRUE, message=FALSE, warning=FALSE}
+lm(formula,
+   data,
+   subset,
+   na.action)
+```
+
+`formula` - Specification of our regression model
+
+`data` - The dataset containing the variables of the regression
+
+`subset` - An option to subset the data 
+
+`na.action` - Option that specifies how to deal with missing values
+
+***
+
+## The `formula` Argument
+We can write our models using the following syntax:
+
+```{r echo=TRUE, eval=FALSE}
+model <- formula(regressand ~ regressors)
+```
+
+Where `regressand` is just our dependent variable / response  usually denoted by $y$ and `model` is our formula of independent variables / regressors, e.g.:
+
+```{r echo=TRUE, eval=FALSE}
+kicker_success_formula <- formula(kicker_success ~ experience + training + luck)
+```
+
+***
+
+We can construct formulas with the following syntax:
+
+- Adding variables with `+`
+```{r eval=FALSE, echo = TRUE}
+formula(y ~ a + b)
+```
+
+- Interactions with `:`
+```{r eval=FALSE, echo = TRUE}
+formula(y ~ a + b + a:b)
+```
+
+- Crossing: `a * b ` is equivalent to `a + b + a:b`
+```{r eval=FALSE, echo = TRUE}
+formula(y ~ a + b + a:b) # and
+formula(y ~ a * b) # are equivalent
+```
+
+
+- Transformations with `I()`
+```{r eval=FALSE, echo = TRUE}
+formula(y ~ a + I(a ^ 2)) # quadratic term must be in I() to evaluate correctly
+formula(y ~ log(a)) # log can stay by itself
+```
+    
+- Include all variables in your data with `.`
+```{r eval=FALSE, echo = TRUE}
+formula(y ~ .) # is equivalent to
+formula(y ~ a + b + ... + z) # for a dataset with variables from a to z
+```
+
+***
+
+## The `subset` Argument
+
+- Sometimes, we want to run our model on a subset of our data (without changing the data themselves)
+- We can specify subsets of certain variables as follows:
+
+```{r echo=TRUE, eval=FALSE}
+lm(formula,
+   data,
+   subset = age < 30)
+```
+
+- Connect multiple subset arguments with logical operators:
+
+```{r echo=TRUE, eval=FALSE}
+lm(formula,
+   data,
+   subset = age < 30 & height > 180)
+```
+
+Note that although this works, a best practice is to subset your data prior to the estimation. By keeping these steps distinct, your code will be much easier for someone else to understand.
+
+***
+
+## The `na.action` Argument
+
+
+If the data contains missing values, `lm` automatically deletes the whole observation.
+
+- Specify `na.action = na.fail` if you want an error when the data contains missing values
+
+Again, it is a best practice to look for missing values in your data prior to the estimation to keep your code transparent.
+
+- You can use the `missmap` function from the `Amelia` package to get a nice visualisation of missing values in your data
+
+***
+
+## Example Call of `lm` with Eurostat Data
+
+```{r echo=TRUE}
+eur_data <- read.csv2("data/eurostat_data.csv")
+
+m1 <-
+   formula(unemp_workagepop_t ~ gdp_gr + inv_per_empl + immigration_t,
+           subset = year == 2014)
+model <- lm(formula = m1,
+            data = eur_data)
+```
+
+***
+
+## Output of `lm`
+
+The `lm` function returns a list. Relevant components of this list are:
+
+- `call` - the function call that generated the output
+- `coefficients` the OLS coefficients
+- `residuals`
+- `fitted.values` The estimates for our dependent variable (unemployment)
+- `model` The model matrix used for estimation
+
+The full list of outputs can be looked up via
+
+- `?lm()` 
+- `str(model)` where model is our saved output from `lm`
+- the `$` operator and `tab`, e.g. `model$...`
+
+
+Lets look up our coefficients $\beta$, fitted values $\hat{y}$ and OLS residuals $\varepsilon$
+```{r echo=TRUE}
+model$coefficients
+```
+
+```{r echo=TRUE}
+model$fitted.values[1:7] # first 7 fitted values
+```
+
+```{r echo=TRUE}
+model$residuals[1:7] # first 7 residuals
+```
+
+
+
+We can visualise the results very simply with `hist` or `plot`:
+
+```{r echo=TRUE, fig.width=10}
+hist(model$residuals, breaks = 30)
+```
+
+
+```{r echo=TRUE, fig.width=10}
+hist(model$fitted.values, breaks = 30)
+```
+
+***
+
+## Output of `lm` with the `summary()` function
+
+```{r}
+summary(model)
+```
+
+***
+
+## Display and Export Tables with `stargazer()`
+
+```{r echo=TRUE, warning=FALSE}
+stargazer::stargazer(model, type = "text")
+```
+
+Jake Russ has the [ultimate overview](https://www.jakeruss.com/cheatsheets/stargazer/) over all `stargazer()` functions (there are many!!).
+
+*** 
+
+### Export Stargazer Output to File
+
+```{r, echo=TRUE, eval = FALSE}
+stargazer::stargazer(model,
+                     type = "html",
+                     out = "model.html")
+```
+
+***
+
+## Compare different Models
+
+```{r echo=TRUE}
+model2 <- lm(unemp_workagepop_t ~ gdp_gr,
+             data = eur_data)
+```
+
+
+```{r, results="asis"}
+stargazer::stargazer(model, model2,
+                     type = "html")
+```
+
+
+Specify the folder and file were your table should be saved as `"path/name.type"`
+
+1. Output as `.html` : Open the file in your web browser and copy it into Word
+2. Output as `.tex`  : Include in LaTeX
+
+***
+
+# Panel Regression
+
+Just a very quick glimpse into panel regressions with plm. 
+
+```{r}
+library(plm)
+panel_object <- plm(
+   unemp_workagepop_t ~ gdp_gr,
+   data = eur_data,
+   index = c("geo_code", "time"),
+   model = "within",
+   effect = "twoways"
+) # for two-ways fixed effect regressions
+```
+
+
+For further information on panel regressions, I recommend
+
+* the [slides](https://www.princeton.edu/~otorres/Panel101R.pdf) by Oscar Torres-Reyna
+* the [Chapter 13](http://www.urfie.net/read/mobile/index.html#p=208) from the Econometrics with R book
+

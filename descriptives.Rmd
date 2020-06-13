@@ -1,0 +1,104 @@
+---
+title: "Descriptive Statistics"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,warning = FALSE)
+```
+
+Download the script [here](https://raw.githubusercontent.com/LuMesserschmidt/stats_TUM/master/Files/Course%20Scripts/descriptives.R)
+
+
+***
+
+# Preliminary
+
+* We want to analyze our data. In the first place this means we are going to conduct descriptive analyses: How is the data structured, what do we know about the variables? 
+
+* To do so, we need to download the data, do we?
+
+***
+
+
+This is how the beginning of every of your scripts should look like: 1. Clean environment and 2. load packages  
+```{r, message=FALSE}
+rm(list = ls())
+# install.packages("tidyverse")
+library(tidyverse)
+```
+
+***
+
+# Loading the dataset
+
+To make life easier, we load a dataset that is already attached to R: the mtcar dataset.
+
+```{r, eval=FALSE}
+data<- mtcars
+```
+
+## Explore the data structure
+
+For a first overview over our data, we can use the base functions (e.g. those which are without any package installations part of R) `names()`,`str()`, `head()`, `summary()`, `table()`, `quantile()`, and `View()`.
+
+<span style="color:red">Task</span> <u>**Go through every function's output and try to understand what it means!**</u>
+```{r, eval=FALSE}
+names(data)
+str(data)
+head(data)
+summary(data)
+table(data$mpg) # you could use any other variable here.
+quantile(data$mpg, na.rm = TRUE)
+View(data)
+```
+
+***
+# Data Distribution
+In the beginning of each research project, we start with most important data indicators: We want to know the `mean()`, the `median()`, or about the `range()` of a variable. 
+
+```{r, eval=FALSE}
+mean(data$cyl, na.rm=T) 
+median(data$cyl, na.rm=T) 
+range(data$cyl, na.rm=T)
+```
+
+***
+# Frequency Table
+
+## One-dimensional
+
+Or we want to check about the frequency: We use the `table()` function.
+
+To give an example:
+
+```{r, eval=FALSE}
+table(data$cyl)
+```
+
+## n-dimensional table
+
+Sometimes, it is interesting whether there are differences among categories. For example, we want to know the two-diemsnional table for the number of gears and cylinders.
+
+```{r, eval=FALSE}
+table(data$cyl,data$gear)
+```
+
+# Histogram
+
+Moving away from relative or absolute probabilities, we can analyse the distribution. Histograms are most common for this:
+
+```{r, eval=FALSE}
+hist(data$gear, main = paste("Gear Histogram"),xlab="Cylinder in numbers", ylab="Frequence")
+```
+
+
+# Boxplot
+
+Yes, R is pretty straightforward. For example, we can easily calculate the boxplot for the variables of any data: 
+
+```{r, eval=FALSE}
+boxplot(data$mpg, na.rm=T,main=paste("Boxplot mpg"))
+```
+
+
+

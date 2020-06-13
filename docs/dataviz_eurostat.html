@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Data Viz: Eurostat Example</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="site_libs/htmlwidgets-1.5.1/htmlwidgets.js"></script>
+<script src="site_libs/plotly-binding-4.9.0/plotly.js"></script>
+<script src="site_libs/typedarray-0.1/typedarray.min.js"></script>
+<link href="site_libs/crosstalk-1.0.0/css/crosstalk.css" rel="stylesheet" />
+<script src="site_libs/crosstalk-1.0.0/js/crosstalk.min.js"></script>
+<link href="site_libs/plotly-htmlwidgets-css-1.46.1/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="site_libs/plotly-main-1.46.1/plotly-latest.min.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">R Course PhD</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Introduction</a>
+</li>
+<li>
+  <a href="objectsndata.html">Objects and Data</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Data Management
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="datamanagement.html">Data Management Introduction</a>
+    </li>
+    <li>
+      <a href="datamanagement_eurostat.html">Eurostat Example</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Descriptives and Bivariate
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="descriptives.html">Descriptive Stats</a>
+    </li>
+    <li>
+      <a href="bivariate.html">Bivariate Stats</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Regression
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="other_regressions.html">Regression</a>
+    </li>
+    <li>
+      <a href="other_outlier.html">Outlier Analysis</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Data Viz
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="dataviz.html">Data Viz Introduction</a>
+    </li>
+    <li>
+      <a href="dataviz_eurostat.html">Eurostat Example</a>
+    </li>
+    <li>
+      <a href="dataviz_map.html">Map Example</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Data Viz: Eurostat Example</h1>
+
+</div>
+
+
+<p>Download the script <a href="https://raw.githubusercontent.com/LuMesserschmidt/stats_TUM/master/Files/Course%20Scripts/dataviz_eurostat_clean.R">here</a></p>
+<p>Download the data <a href="https://raw.githubusercontent.com/LuMesserschmidt/stats_TUM/master/data/eurostat_data.csv">here</a></p>
+<p>Solutions can be downloaded <a href="https://raw.githubusercontent.com/LuMesserschmidt/stats_TUM/master/Files/Course%20Scripts/dataviz_eurostat_solutions.R">here</a> - but try to solve everything without the solutions first!</p>
+<hr />
+<div id="info" class="section level1">
+<h1><span class="header-section-number">1</span> Info</h1>
+<p>We practice with the Eurostat data again. However, to spare us the time of datamanagement, now we already have a prepared dataset at hand.</p>
+<hr />
+</div>
+<div id="setup" class="section level1">
+<h1><span class="header-section-number">2</span> Setup</h1>
+<p>What do we always do first? (We only need the tidyverse)</p>
+<hr />
+</div>
+<div id="read-and-explore-the-data" class="section level1">
+<h1><span class="header-section-number">3</span> Read and explore the data</h1>
+<p>Read the data ( <a href="https://raw.githubusercontent.com/LuMesserschmidt/stats_TUM/master/data/eurostat_data.csv">eurostat_data.csv</a>) and store them as <code>eurost</code>.</p>
+<p>There is only one single data management task for you here: For now, we only want to use the year (denoted by the variable <em>time</em> in the dataset) 2014. Please, <u>filter accordingly</u>.</p>
+<pre class="r"><code>eurost &lt;- 
+  
+# filter for the time==2014 </code></pre>
+<p>You might want to explore the data first. Remember, you can use some of those <code>str()</code>, <code>head()</code>, <code>summary()</code>, <code>table()</code>, <code>quantile()</code>, and <code>View()</code>.</p>
+<hr />
+</div>
+<div id="reproduce-plots" class="section level1">
+<h1><span class="header-section-number">4</span> Reproduce Plots</h1>
+<p>Reproduce these three plots. Below the graphs you can find some information.</p>
+<div id="geom_point" class="section level2">
+<h2><span class="header-section-number">4.1</span> geom_point</h2>
+<p><img src="dataviz_eurostat_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<ul>
+<li>x = unemp_youth_t</li>
+<li>y = gdp_gr</li>
+<li>color = emigration_t / immigration_t</li>
+<li>size = inv_per_empl</li>
+<li>Use <code>theme_classic()</code></li>
+<li>You might realize that the label symbols of size are a bit weird as soon as you add the regression line. This is because the function to create the regression line interacts with the size argument within the <code>ggplot()</code> function. Therefore, as soon as you add the regression function, <u>move the size argument to <code>geom_point</code></u>. But don’t forget that the size argument has to be put within <code>aes()</code>!
+<ul>
+<li>Here is an important learning: <strong>aes() can be passed to either ggplot() or to a specific layer (e.g. geom_)</strong>. Aesthetics specified to ggplot() are used as defaults for every layer, while aes() passed to a specific layer a used as default for that layer only.</li>
+</ul></li>
+</ul>
+<hr />
+</div>
+<div id="geom_col" class="section level2">
+<h2><span class="header-section-number">4.2</span> geom_col</h2>
+<p><img src="dataviz_eurostat_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<ul>
+<li>use theme_economist()</li>
+<li>x = geo_code</li>
+<li>y = unemp_youth_t</li>
+<li>fill = unemp_youth_t</li>
+<li>Play a bit with the width of the bars.</li>
+<li>Crucially, we add points which relate to unemp_workagepop_t. You need to write a new aes() in the point function and assign the color “red”. Outside of the aes() argument, adjust the size of the points to 3.</li>
+<li>Rename the axes accordingly. Note that although the y axis is actually just related to youth unemployment, we simply rename it as Unemployment because the total unemployment (e.g. the points) are within the same scale.</li>
+<li>Furthermore, add this line <code>+ scale_color_manual(values = c(&quot;red&quot;), labels = c(&quot; &quot;))</code>. Do you understand what it does?</li>
+</ul>
+<hr />
+</div>
+<div id="geom_hist" class="section level2">
+<h2><span class="header-section-number">4.3</span> geom_hist</h2>
+<p>Here, we first do some some data management. We reload the data (but save them as <em>eurost2</em>), filter for some countries and the time period 1990-2015. Furthermore, we create two new columns which copy the values of (youth) unemployment ONLY in the year of 2015.</p>
+<pre class="r"><code>eurost2 &lt;- read_csv2(&quot;data/eurostat_data.csv&quot;) %&gt;%
+  filter(geo_code %in% c(&quot;DE&quot;, &quot;IT&quot;, &quot;EL&quot;, &quot;ES&quot;, &quot;UK&quot;),
+         time &gt;= 1990,
+         time &lt;= 2015) %&gt;%
+  mutate(
+    unemp_tod = if_else(time == 2015, unemp_workagepop_t, NA_real_),
+    unemp_youth_tod = if_else(time == 2015, unemp_youth_t, NA_real_)
+  )</code></pre>
+<p>We use this data for the plot</p>
+<p><img src="dataviz_eurostat_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<ul>
+<li>As aesthetic in the principle <code>ggplot()</code> function, just use x = geo_code</li>
+<li>What we are doing then is using two seperate <code>geom_violin</code> and two seperate <code>geom_point</code> functions
+<ul>
+<li>Both violin functions use the argument <code>alpha = 0.5</code> to increase the transparency of the violin plots</li>
+<li>One violin function has<code>y=unemp_youth_t</code> and the other<code>y = unemp_workagepop_t</code>. Use the appropriate colors</li>
+<li>One point function has <code>y = unemp_tod</code> and the other <code>y = unemp_youth_tod</code>. Use <code>color = &quot;black&quot;, size = 3</code> outside of the aesthetic.</li>
+</ul></li>
+<li>Use <code>theme_minimal()</code></li>
+<li>Add this line: <code>scale_fill_manual(values = c(&quot;red&quot;, &quot;blue&quot;), labels = c(&quot;Total Unemployment&quot;, &quot;Youth Unemployment&quot;))</code></li>
+</ul>
+<hr />
+</div>
+</div>
+<div id="new-stuff" class="section level1">
+<h1><span class="header-section-number">5</span> New Stuff</h1>
+<p>In this section, we cover some new functions within ggplot2. However, as the ggplot logic is so straight forward, try to learn these new techniques yourself (nevertheless, there are some hints).</p>
+<p>Learning how to find out about stuff in R by yourself is one of the key techniques for smooth coding.</p>
+<p>If you have any questions, one of the following might help:</p>
+<ul>
+<li><code>?functionname</code> (and press enter) to retrieve the official documentation</li>
+<li>google (make sure to type r somewhere into your query; stackoverflow results are preferable)</li>
+<li>Ask us ;)</li>
+</ul>
+<p>All the exercises will use the first plot. To make our lives easier, we safe this plot as main_plot</p>
+<pre class="r"><code>main_plot &lt;- ggplot(
+  data = eurost,
+  mapping = aes(
+    x = unemp_youth_t,
+    y = gdp_gr,
+    color = emigration_t / immigration_t
+  )
+) +
+  geom_point(aes(size = inv_per_empl)) +
+  labs(
+    x = &quot;Share of Unemployed Youth (15-24) in Pct.&quot;,
+    y = &quot;Real GDP growth rate (YOY)&quot;,
+    title = &quot;GDP growth and youth unemployment in 2014&quot;,
+    subtitle = &quot;Correlation between lower growth rate and higher youth unemployment&quot;,
+    caption = &quot;Source: Eurostat&quot;,
+    size = &quot;Investment p. person\n employed (in Mill. €)&quot;,
+    color = &quot;Ratio of Emigration \n to Immigration&quot;
+  ) +
+  geom_smooth(method = &quot;lm&quot;, se = FALSE, color = &quot;black&quot;) +
+  theme_classic()</code></pre>
+<pre class="r"><code>main_plot</code></pre>
+<p><img src="dataviz_eurostat_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<hr />
+<div id="adjusting-colors" class="section level2">
+<h2><span class="header-section-number">5.1</span> Adjusting colors</h2>
+<p>First of all, the colors of this main_plot are not so nice.</p>
+<p>There are hundreds of ways to change the colors of all the components of a ggplot. You might want to check out his <a href="https://www.datanovia.com/en/blog/ggplot-colors-best-tricks-you-will-love/">page</a> for more information.</p>
+<p>Try to replicate this plot: <img src="dataviz_eurostat_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<ul>
+<li>Remember, we just saved the first plot as main_plot. So you do not need to rewrite everything from this plot but only ….</li>
+<li>In this case, use the function <code>scale_color_gradient2()</code> to get the colors.
+<ul>
+<li>Use <code>?scale_color_gradient2()</code> to understand the arguments you need to use to replicate the plot</li>
+</ul></li>
+</ul>
+<hr />
+</div>
+<div id="adding-labels-to-points" class="section level2">
+<h2><span class="header-section-number">5.2</span> Adding labels to points</h2>
+<p>We want to have labels with the country codes next to our points. ggplot has a proprietary function for this, but a cleaner and more efficient function comes from the ggrepel package (e.g. install ggrepel).</p>
+<p><img src="dataviz_eurostat_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<ul>
+<li><p>Again, use main_plot as the base</p></li>
+<li><p>The function from ggrepel we want to use is <code>geom_text_repel</code>. Use geo_code as the label within the <code>aes()</code> argument of <code>geom_text_repel</code>.</p></li>
+</ul>
+<hr />
+</div>
+<div id="facets-and-more" class="section level2">
+<h2><span class="header-section-number">5.3</span> Facets and more</h2>
+<p>You can add a facets (e.g. the same plotting relationship in many windows representing different variables such as different years) with the function <code>+facet_wrap(~FACETS_VARIABLE_NAME)</code>. Make facets using our main graph, using location as a facets variable.</p>
+<p><img src="dataviz_eurostat_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<ul>
+<li>Use location as the facet variable.</li>
+</ul>
+<hr />
+</div>
+</div>
+<div id="interactive-graph" class="section level1">
+<h1><span class="header-section-number">6</span> Interactive Graph</h1>
+<p>With the plotly package, we can actually build interactive graphs.</p>
+<p>The easiest way is to simply use the <code>ggplotly()</code> function and parse a ggplot object to the <code>p</code> argument:</p>
+<pre class="r"><code># Download the plotly package:
+
+library(plotly)
+
+ggplotly(p = main_plot)</code></pre>
+<div id="htmlwidget-7a7bc20a0f767253c61f" style="width:672px;height:480px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-7a7bc20a0f767253c61f">{"x":{"data":[{"x":[10.3,23.2,23.8,8.6,36,15.9,7.7,12.6,52.4,53.2,20.5,24.2,45.5,20.4,23.4,9.8,42.7,19.3,22.6,19.6,11.7,12.7,7.9,23.9,34.8,24,22.9,20.2,29.7,17],"y":[0.7,1.3,1.8,2.4,-1.3,2.7,2.2,1.6,0.7,1.4,-0.6,1,-0.1,4.2,8.8,2.1,0.1,3.5,4.3,1.9,8.7,1.4,2,3.3,0.9,3.4,2.6,3,2.8,2.9],"text":["inv_per_empl: 11.2<br />unemp_youth_t: 10.3<br />gdp_gr:  0.7<br />emigration_t/immigration_t: 0.4600901","inv_per_empl: 21.3<br />unemp_youth_t: 23.2<br />gdp_gr:  1.3<br />emigration_t/immigration_t: 0.7678998","inv_per_empl:  4.1<br />unemp_youth_t: 23.8<br />gdp_gr:  1.8<br />emigration_t/immigration_t: 1.0793537","inv_per_empl: 15.3<br />unemp_youth_t:  8.6<br />gdp_gr:  2.4<br />emigration_t/immigration_t: 0.7109136","inv_per_empl:  3.3<br />unemp_youth_t: 36.0<br />gdp_gr: -1.3<br />emigration_t/immigration_t: 2.6094225","inv_per_empl:  5.4<br />unemp_youth_t: 15.9<br />gdp_gr:  2.7<br />emigration_t/immigration_t: 0.9522026","inv_per_empl:  7.2<br />unemp_youth_t:  7.7<br />gdp_gr:  2.2<br />emigration_t/immigration_t: 0.3663957","inv_per_empl: 13.4<br />unemp_youth_t: 12.6<br />gdp_gr:  1.6<br />emigration_t/immigration_t: 0.6496169","inv_per_empl:  3.3<br />unemp_youth_t: 52.4<br />gdp_gr:  0.7<br />emigration_t/immigration_t: 1.8098385","inv_per_empl:  5.4<br />unemp_youth_t: 53.2<br />gdp_gr:  1.4<br />emigration_t/immigration_t: 1.3109339","inv_per_empl:  9.6<br />unemp_youth_t: 20.5<br />gdp_gr: -0.6<br />emigration_t/immigration_t: 0.4915098","inv_per_empl: 11.2<br />unemp_youth_t: 24.2<br />gdp_gr:  1.0<br />emigration_t/immigration_t: 0.9051657","inv_per_empl:  4.0<br />unemp_youth_t: 45.5<br />gdp_gr: -0.1<br />emigration_t/immigration_t: 1.9607069","inv_per_empl:  5.6<br />unemp_youth_t: 20.4<br />gdp_gr:  4.2<br />emigration_t/immigration_t: 0.7734010","inv_per_empl: 48.3<br />unemp_youth_t: 23.4<br />gdp_gr:  8.8<br />emigration_t/immigration_t: 0.9671922","inv_per_empl:   NA<br />unemp_youth_t:  9.8<br />gdp_gr:  2.1<br />emigration_t/immigration_t: 0.7548435","inv_per_empl:  5.8<br />unemp_youth_t: 42.7<br />gdp_gr:  0.1<br />emigration_t/immigration_t: 0.4910403","inv_per_empl:  4.4<br />unemp_youth_t: 19.3<br />gdp_gr:  3.5<br />emigration_t/immigration_t: 1.5074092","inv_per_empl: 14.2<br />unemp_youth_t: 22.6<br />gdp_gr:  4.3<br />emigration_t/immigration_t: 0.5052391","inv_per_empl:  4.7<br />unemp_youth_t: 19.6<br />gdp_gr:  1.9<br />emigration_t/immigration_t: 1.8347323","inv_per_empl:  4.7<br />unemp_youth_t: 11.7<br />gdp_gr:  8.7<br />emigration_t/immigration_t: 0.3533970","inv_per_empl:  8.7<br />unemp_youth_t: 12.7<br />gdp_gr:  1.4<br />emigration_t/immigration_t: 0.7768901","inv_per_empl: 28.0<br />unemp_youth_t:  7.9<br />gdp_gr:  2.0<br />emigration_t/immigration_t: 0.4380671","inv_per_empl:  5.1<br />unemp_youth_t: 23.9<br />gdp_gr:  3.3<br />emigration_t/immigration_t: 1.2070588","inv_per_empl:  4.8<br />unemp_youth_t: 34.8<br />gdp_gr:  0.9<br />emigration_t/immigration_t: 2.5400697","inv_per_empl:  6.1<br />unemp_youth_t: 24.0<br />gdp_gr:  3.4<br />emigration_t/immigration_t: 1.2707833","inv_per_empl: 13.9<br />unemp_youth_t: 22.9<br />gdp_gr:  2.6<br />emigration_t/immigration_t: 0.4035490","inv_per_empl:  6.2<br />unemp_youth_t: 20.2<br />gdp_gr:  3.0<br />emigration_t/immigration_t: 1.0353893","inv_per_empl:  6.9<br />unemp_youth_t: 29.7<br />gdp_gr:  2.8<br />emigration_t/immigration_t: 0.6802315","inv_per_empl: 10.8<br />unemp_youth_t: 17.0<br />gdp_gr:  2.9<br />emigration_t/immigration_t: 0.5048901"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":["rgba(22,49,74,1)","rgba(30,65,97,1)","rgba(39,83,120,1)","rgba(29,62,93,1)","rgba(86,177,247,1)","rgba(35,75,111,1)","rgba(19,44,68,1)","rgba(27,59,88,1)","rgba(61,126,179,1)","rgba(46,96,138,1)","rgba(23,50,77,1)","rgba(34,73,107,1)","rgba(65,135,191,1)","rgba(30,65,97,1)","rgba(36,76,112,1)","rgba(30,64,96,1)","rgba(23,50,77,1)","rgba(52,108,154,1)","rgba(23,51,78,1)","rgba(61,128,181,1)","rgba(19,43,67,1)","rgba(30,66,97,1)","rgba(21,47,73,1)","rgba(43,90,130,1)","rgba(84,172,241,1)","rgba(45,94,135,1)","rgba(20,46,71,1)","rgba(38,80,117,1)","rgba(28,60,90,1)","rgba(23,51,78,1)"],"opacity":1,"size":[11.6975150173081,15.7314431250458,6.2992125984252,13.5382257542234,3.77952755905512,7.86188390450889,9.34284149060022,12.732390805387,3.77952755905512,7.86188390450889,10.8503761639823,11.6975150173081,6.13647709403083,8.05186140669308,22.6771653543307,null,8.23374350353731,6.7341201636683,13.0802035025092,7.11275755724673,7.11275755724673,10.3258613199454,17.7802272572554,7.55905511811024,7.22974839373333,8.49342662900654,12.9513195455503,8.57686494857569,9.12458669243375,11.4944558827817],"symbol":"circle","line":{"width":1.88976377952756,"color":["rgba(22,49,74,1)","rgba(30,65,97,1)","rgba(39,83,120,1)","rgba(29,62,93,1)","rgba(86,177,247,1)","rgba(35,75,111,1)","rgba(19,44,68,1)","rgba(27,59,88,1)","rgba(61,126,179,1)","rgba(46,96,138,1)","rgba(23,50,77,1)","rgba(34,73,107,1)","rgba(65,135,191,1)","rgba(30,65,97,1)","rgba(36,76,112,1)","rgba(30,64,96,1)","rgba(23,50,77,1)","rgba(52,108,154,1)","rgba(23,51,78,1)","rgba(61,128,181,1)","rgba(19,43,67,1)","rgba(30,66,97,1)","rgba(21,47,73,1)","rgba(43,90,130,1)","rgba(84,172,241,1)","rgba(45,94,135,1)","rgba(20,46,71,1)","rgba(38,80,117,1)","rgba(28,60,90,1)","rgba(23,51,78,1)"]}},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[7.7,8.27594936708861,8.85189873417722,9.42784810126582,10.0037974683544,10.579746835443,11.1556962025316,11.7316455696203,12.3075949367089,12.8835443037975,13.4594936708861,14.0354430379747,14.6113924050633,15.1873417721519,15.7632911392405,16.3392405063291,16.9151898734177,17.4911392405063,18.0670886075949,18.6430379746835,19.2189873417722,19.7949367088608,20.3708860759494,20.946835443038,21.5227848101266,22.0987341772152,22.6746835443038,23.2506329113924,23.826582278481,24.4025316455696,24.9784810126582,25.5544303797468,26.1303797468354,26.706329113924,27.2822784810127,27.8582278481013,28.4341772151899,29.0101265822785,29.5860759493671,30.1620253164557,30.7379746835443,31.3139240506329,31.8898734177215,32.4658227848101,33.0417721518987,33.6177215189873,34.1936708860759,34.7696202531646,35.3455696202532,35.9215189873418,36.4974683544304,37.073417721519,37.6493670886076,38.2253164556962,38.8012658227848,39.3772151898734,39.953164556962,40.5291139240506,41.1050632911392,41.6810126582278,42.2569620253165,42.8329113924051,43.4088607594937,43.9848101265823,44.5607594936709,45.1367088607595,45.7126582278481,46.2886075949367,46.8645569620253,47.4405063291139,48.0164556962025,48.5924050632911,49.1683544303798,49.7443037974684,50.320253164557,50.8962025316456,51.4721518987342,52.0481012658228,52.6240506329114,53.2],"y":[3.24421641182425,3.21003497082193,3.1758535298196,3.14167208881727,3.10749064781494,3.07330920681262,3.03912776581029,3.00494632480796,2.97076488380563,2.9365834428033,2.90240200180098,2.86822056079865,2.83403911979632,2.79985767879399,2.76567623779166,2.73149479678934,2.69731335578701,2.66313191478468,2.62895047378235,2.59476903278002,2.5605875917777,2.52640615077537,2.49222470977304,2.45804326877071,2.42386182776839,2.38968038676606,2.35549894576373,2.3213175047614,2.28713606375907,2.25295462275675,2.21877318175442,2.18459174075209,2.15041029974976,2.11622885874743,2.08204741774511,2.04786597674278,2.01368453574045,1.97950309473812,1.94532165373579,1.91114021273347,1.87695877173114,1.84277733072881,1.80859588972648,1.77441444872416,1.74023300772183,1.7060515667195,1.67187012571717,1.63768868471484,1.60350724371252,1.56932580271019,1.53514436170786,1.50096292070553,1.4667814797032,1.43260003870088,1.39841859769855,1.36423715669622,1.33005571569389,1.29587427469156,1.26169283368924,1.22751139268691,1.19332995168458,1.15914851068225,1.12496706967993,1.0907856286776,1.05660418767527,1.02242274667294,0.988241305670613,0.954059864668286,0.919878423665958,0.88569698266363,0.851515541661302,0.817334100658974,0.783152659656646,0.748971218654318,0.71478977765199,0.680608336649662,0.646426895647334,0.612245454645006,0.578064013642679,0.543882572640351],"text":["unemp_youth_t:  7.700000<br />gdp_gr: 3.2442164<br />emigration_t/immigration_t: black","unemp_youth_t:  8.275949<br />gdp_gr: 3.2100350<br />emigration_t/immigration_t: black","unemp_youth_t:  8.851899<br />gdp_gr: 3.1758535<br />emigration_t/immigration_t: black","unemp_youth_t:  9.427848<br />gdp_gr: 3.1416721<br />emigration_t/immigration_t: black","unemp_youth_t: 10.003797<br />gdp_gr: 3.1074906<br />emigration_t/immigration_t: black","unemp_youth_t: 10.579747<br />gdp_gr: 3.0733092<br />emigration_t/immigration_t: black","unemp_youth_t: 11.155696<br />gdp_gr: 3.0391278<br />emigration_t/immigration_t: black","unemp_youth_t: 11.731646<br />gdp_gr: 3.0049463<br />emigration_t/immigration_t: black","unemp_youth_t: 12.307595<br />gdp_gr: 2.9707649<br />emigration_t/immigration_t: black","unemp_youth_t: 12.883544<br />gdp_gr: 2.9365834<br />emigration_t/immigration_t: black","unemp_youth_t: 13.459494<br />gdp_gr: 2.9024020<br />emigration_t/immigration_t: black","unemp_youth_t: 14.035443<br />gdp_gr: 2.8682206<br />emigration_t/immigration_t: black","unemp_youth_t: 14.611392<br />gdp_gr: 2.8340391<br />emigration_t/immigration_t: black","unemp_youth_t: 15.187342<br />gdp_gr: 2.7998577<br />emigration_t/immigration_t: black","unemp_youth_t: 15.763291<br />gdp_gr: 2.7656762<br />emigration_t/immigration_t: black","unemp_youth_t: 16.339241<br />gdp_gr: 2.7314948<br />emigration_t/immigration_t: black","unemp_youth_t: 16.915190<br />gdp_gr: 2.6973134<br />emigration_t/immigration_t: black","unemp_youth_t: 17.491139<br />gdp_gr: 2.6631319<br />emigration_t/immigration_t: black","unemp_youth_t: 18.067089<br />gdp_gr: 2.6289505<br />emigration_t/immigration_t: black","unemp_youth_t: 18.643038<br />gdp_gr: 2.5947690<br />emigration_t/immigration_t: black","unemp_youth_t: 19.218987<br />gdp_gr: 2.5605876<br />emigration_t/immigration_t: black","unemp_youth_t: 19.794937<br />gdp_gr: 2.5264062<br />emigration_t/immigration_t: black","unemp_youth_t: 20.370886<br />gdp_gr: 2.4922247<br />emigration_t/immigration_t: black","unemp_youth_t: 20.946835<br />gdp_gr: 2.4580433<br />emigration_t/immigration_t: black","unemp_youth_t: 21.522785<br />gdp_gr: 2.4238618<br />emigration_t/immigration_t: black","unemp_youth_t: 22.098734<br />gdp_gr: 2.3896804<br />emigration_t/immigration_t: black","unemp_youth_t: 22.674684<br />gdp_gr: 2.3554989<br />emigration_t/immigration_t: black","unemp_youth_t: 23.250633<br />gdp_gr: 2.3213175<br />emigration_t/immigration_t: black","unemp_youth_t: 23.826582<br />gdp_gr: 2.2871361<br />emigration_t/immigration_t: black","unemp_youth_t: 24.402532<br />gdp_gr: 2.2529546<br />emigration_t/immigration_t: black","unemp_youth_t: 24.978481<br />gdp_gr: 2.2187732<br />emigration_t/immigration_t: black","unemp_youth_t: 25.554430<br />gdp_gr: 2.1845917<br />emigration_t/immigration_t: black","unemp_youth_t: 26.130380<br />gdp_gr: 2.1504103<br />emigration_t/immigration_t: black","unemp_youth_t: 26.706329<br />gdp_gr: 2.1162289<br />emigration_t/immigration_t: black","unemp_youth_t: 27.282278<br />gdp_gr: 2.0820474<br />emigration_t/immigration_t: black","unemp_youth_t: 27.858228<br />gdp_gr: 2.0478660<br />emigration_t/immigration_t: black","unemp_youth_t: 28.434177<br />gdp_gr: 2.0136845<br />emigration_t/immigration_t: black","unemp_youth_t: 29.010127<br />gdp_gr: 1.9795031<br />emigration_t/immigration_t: black","unemp_youth_t: 29.586076<br />gdp_gr: 1.9453217<br />emigration_t/immigration_t: black","unemp_youth_t: 30.162025<br />gdp_gr: 1.9111402<br />emigration_t/immigration_t: black","unemp_youth_t: 30.737975<br />gdp_gr: 1.8769588<br />emigration_t/immigration_t: black","unemp_youth_t: 31.313924<br />gdp_gr: 1.8427773<br />emigration_t/immigration_t: black","unemp_youth_t: 31.889873<br />gdp_gr: 1.8085959<br />emigration_t/immigration_t: black","unemp_youth_t: 32.465823<br />gdp_gr: 1.7744144<br />emigration_t/immigration_t: black","unemp_youth_t: 33.041772<br />gdp_gr: 1.7402330<br />emigration_t/immigration_t: black","unemp_youth_t: 33.617722<br />gdp_gr: 1.7060516<br />emigration_t/immigration_t: black","unemp_youth_t: 34.193671<br />gdp_gr: 1.6718701<br />emigration_t/immigration_t: black","unemp_youth_t: 34.769620<br />gdp_gr: 1.6376887<br />emigration_t/immigration_t: black","unemp_youth_t: 35.345570<br />gdp_gr: 1.6035072<br />emigration_t/immigration_t: black","unemp_youth_t: 35.921519<br />gdp_gr: 1.5693258<br />emigration_t/immigration_t: black","unemp_youth_t: 36.497468<br />gdp_gr: 1.5351444<br />emigration_t/immigration_t: black","unemp_youth_t: 37.073418<br />gdp_gr: 1.5009629<br />emigration_t/immigration_t: black","unemp_youth_t: 37.649367<br />gdp_gr: 1.4667815<br />emigration_t/immigration_t: black","unemp_youth_t: 38.225316<br />gdp_gr: 1.4326000<br />emigration_t/immigration_t: black","unemp_youth_t: 38.801266<br />gdp_gr: 1.3984186<br />emigration_t/immigration_t: black","unemp_youth_t: 39.377215<br />gdp_gr: 1.3642372<br />emigration_t/immigration_t: black","unemp_youth_t: 39.953165<br />gdp_gr: 1.3300557<br />emigration_t/immigration_t: black","unemp_youth_t: 40.529114<br />gdp_gr: 1.2958743<br />emigration_t/immigration_t: black","unemp_youth_t: 41.105063<br />gdp_gr: 1.2616928<br />emigration_t/immigration_t: black","unemp_youth_t: 41.681013<br />gdp_gr: 1.2275114<br />emigration_t/immigration_t: black","unemp_youth_t: 42.256962<br />gdp_gr: 1.1933300<br />emigration_t/immigration_t: black","unemp_youth_t: 42.832911<br />gdp_gr: 1.1591485<br />emigration_t/immigration_t: black","unemp_youth_t: 43.408861<br />gdp_gr: 1.1249671<br />emigration_t/immigration_t: black","unemp_youth_t: 43.984810<br />gdp_gr: 1.0907856<br />emigration_t/immigration_t: black","unemp_youth_t: 44.560759<br />gdp_gr: 1.0566042<br />emigration_t/immigration_t: black","unemp_youth_t: 45.136709<br />gdp_gr: 1.0224227<br />emigration_t/immigration_t: black","unemp_youth_t: 45.712658<br />gdp_gr: 0.9882413<br />emigration_t/immigration_t: black","unemp_youth_t: 46.288608<br />gdp_gr: 0.9540599<br />emigration_t/immigration_t: black","unemp_youth_t: 46.864557<br />gdp_gr: 0.9198784<br />emigration_t/immigration_t: black","unemp_youth_t: 47.440506<br />gdp_gr: 0.8856970<br />emigration_t/immigration_t: black","unemp_youth_t: 48.016456<br />gdp_gr: 0.8515155<br />emigration_t/immigration_t: black","unemp_youth_t: 48.592405<br />gdp_gr: 0.8173341<br />emigration_t/immigration_t: black","unemp_youth_t: 49.168354<br />gdp_gr: 0.7831527<br />emigration_t/immigration_t: black","unemp_youth_t: 49.744304<br />gdp_gr: 0.7489712<br />emigration_t/immigration_t: black","unemp_youth_t: 50.320253<br />gdp_gr: 0.7147898<br />emigration_t/immigration_t: black","unemp_youth_t: 50.896203<br />gdp_gr: 0.6806083<br />emigration_t/immigration_t: black","unemp_youth_t: 51.472152<br />gdp_gr: 0.6464269<br />emigration_t/immigration_t: black","unemp_youth_t: 52.048101<br />gdp_gr: 0.6122455<br />emigration_t/immigration_t: black","unemp_youth_t: 52.624051<br />gdp_gr: 0.5780640<br />emigration_t/immigration_t: black","unemp_youth_t: 53.200000<br />gdp_gr: 0.5438826<br />emigration_t/immigration_t: black"],"type":"scatter","mode":"lines","name":"fitted values","line":{"width":3.77952755905512,"color":"rgba(0,0,0,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[10],"y":[0],"name":"99_c173d41d9282c27920abc9e35ed9520f","type":"scatter","mode":"markers","opacity":0,"hoverinfo":"skip","showlegend":false,"marker":{"color":[0,1],"colorscale":[[0,"#132B43"],[0.0526315789473684,"#16314B"],[0.105263157894737,"#193754"],[0.157894736842105,"#1D3E5C"],[0.210526315789474,"#204465"],[0.263157894736842,"#234B6E"],[0.315789473684211,"#275277"],[0.368421052631579,"#2A5980"],[0.421052631578947,"#2E608A"],[0.473684210526316,"#316793"],[0.526315789473684,"#356E9D"],[0.578947368421053,"#3875A6"],[0.631578947368421,"#3C7CB0"],[0.684210526315789,"#3F83BA"],[0.736842105263158,"#438BC4"],[0.789473684210526,"#4792CE"],[0.842105263157895,"#4B9AD8"],[0.894736842105263,"#4EA2E2"],[0.947368421052632,"#52A9ED"],[1,"#56B1F7"]],"colorbar":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.88976377952756,"thickness":23.04,"title":"Ratio of Emigration <br /> to Immigration","titlefont":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"tickmode":"array","ticktext":["0.5","1.0","1.5","2.0","2.5"],"tickvals":[0.0649828718202924,0.286611571511304,0.508240271202315,0.729868970893327,0.951497670584338],"tickfont":{"color":"rgba(0,0,0,1)","family":"","size":11.689497716895},"ticklen":2,"len":0.5}},"xaxis":"x","yaxis":"y","frame":null}],"layout":{"margin":{"t":43.7625570776256,"r":7.30593607305936,"b":40.1826484018265,"l":43.1050228310502},"plot_bgcolor":"rgba(255,255,255,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"title":{"text":"GDP growth and youth unemployment in 2014","font":{"color":"rgba(0,0,0,1)","family":"","size":17.5342465753425},"x":0,"xref":"paper"},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[5.425,55.475],"tickmode":"array","ticktext":["10","20","30","40","50"],"tickvals":[10,20,30,40,50],"categoryorder":"array","categoryarray":["10","20","30","40","50"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":true,"linecolor":"rgba(0,0,0,1)","linewidth":0.66417600664176,"showgrid":false,"gridcolor":null,"gridwidth":0,"zeroline":false,"anchor":"y","title":{"text":"Share of Unemployed Youth (15-24) in Pct.","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-1.805,9.305],"tickmode":"array","ticktext":["0.0","2.5","5.0","7.5"],"tickvals":[0,2.5,5,7.5],"categoryorder":"array","categoryarray":["0.0","2.5","5.0","7.5"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":true,"linecolor":"rgba(0,0,0,1)","linewidth":0.66417600664176,"showgrid":false,"gridcolor":null,"gridwidth":0,"zeroline":false,"anchor":"x","title":{"text":"Real GDP growth rate (YOY)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":false,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.88976377952756,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.689497716895}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","showSendToCloud":false},"source":"A","attrs":{"a9767c825a24":{"size":{},"x":{},"y":{},"colour":{},"type":"scatter"},"a97651ec3158":{"x":{},"y":{},"colour":{}}},"cur_data":"a9767c825a24","visdat":{"a9767c825a24":["function (y) ","x"],"a97651ec3158":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

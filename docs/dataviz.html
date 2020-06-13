@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Data Viz</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">R Course PhD</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Introduction</a>
+</li>
+<li>
+  <a href="objectsndata.html">Objects and Data</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Data Management
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="datamanagement.html">Data Management Introduction</a>
+    </li>
+    <li>
+      <a href="datamanagement_eurostat.html">Eurostat Example</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Descriptives and Bivariate
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="descriptives.html">Descriptive Stats</a>
+    </li>
+    <li>
+      <a href="bivariate.html">Bivariate Stats</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Regression
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="other_regressions.html">Regression</a>
+    </li>
+    <li>
+      <a href="other_outlier.html">Outlier Analysis</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Data Viz
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="dataviz.html">Data Viz Introduction</a>
+    </li>
+    <li>
+      <a href="dataviz_eurostat.html">Eurostat Example</a>
+    </li>
+    <li>
+      <a href="dataviz_map.html">Map Example</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Data Viz</h1>
+
+</div>
+
+
+<p>Download the script <a href="https://raw.githubusercontent.com/LuMesserschmidt/stats_TUM/master/Files/Course%20Scripts/dataviz_clean.R">here</a>.</p>
+<div id="intro" class="section level1">
+<h1><span class="header-section-number">1</span> Intro</h1>
+<p>In this tutorial, we will learn how to produce this graph.</p>
+<pre><code>## Warning in as.POSIXlt.POSIXct(Sys.time()): unknown timezone &#39;zone/tz/2019c.
+## 1.0/zoneinfo/Europe/Berlin&#39;</code></pre>
+<p><img src="dataviz_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+<p>Actually, it only takes 12 lines of code (of which 5 are only related to the text captions) and some pretty straight forward logic.</p>
+<ul>
+<li>To get there, we first get a glimpse into <strong>base R plotting</strong>.</li>
+<li>Then, we move on the much more powerful <strong>ggplot2 package</strong> (part of the tidyverse).
+<ul>
+<li>We study the <strong>grammar of plotting</strong></li>
+<li>step by step, we will replicate the graph above (but with some lengthy digressions to learn about different ggplot options in-between.</li>
+</ul></li>
+</ul>
+<p>This site heavily builds upon <a href="https://therbootcamp.github.io/">The R Bootcamp</a> who employ the widely used mpg dataset and the accompanying coding instructions (see for example (see for example <a href="https://r4ds.had.co.nz/data-visualisation.html">R for Data Science</a>) for their data visualization tutorial.</p>
+<hr />
+</div>
+<div id="packages-and-script-set-up" class="section level1">
+<h1><span class="header-section-number">2</span> Packages and script set-up</h1>
+<p>But before we start, as always - clean the environment and load packages. First thing. Always.</p>
+<pre class="r"><code>rm(list = ls())
+library(tidyverse) # We will now be using ggplot2 which is part of the tidyverse</code></pre>
+<hr />
+</div>
+<div id="base-r-plotting" class="section level1">
+<h1><span class="header-section-number">3</span> Base R Plotting</h1>
+<p>Base R has several functions for data visualization. Crucially, you need separate functions for each type of plot. Some examples:</p>
+<pre class="r"><code>hist(x=mpg$displ)</code></pre>
+<p><img src="dataviz_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<pre class="r"><code>boxplot(displ~year,
+  data=mpg)</code></pre>
+<p><img src="dataviz_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<pre class="r"><code>plot(x=mpg$displ,
+     y=mpg$hwy)</code></pre>
+<p><img src="dataviz_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<hr />
+<div id="disadvantages-of-base-r" class="section level2">
+<h2><span class="header-section-number">3.1</span> Disadvantages of Base R</h2>
+<ul>
+<li>Pretty outdated looking plots</li>
+<li>Requires a lot of code and not very flexible</li>
+<li>Plot objects cannot be stored and modified in a tidy way</li>
+</ul>
+<p>Solution: <strong>ggplot2</strong></p>
+<hr />
+</div>
+</div>
+<div id="the-grammar-of-graphics-in-ggplot2" class="section level1">
+<h1><span class="header-section-number">4</span> The grammar of graphics in ggplot2</h1>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Aesthetics</th>
+<th>Description</th>
+<th>Code</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Data</td>
+<td>Which data do we want to use</td>
+<td>ggplot(<strong>data=</strong>)</td>
+</tr>
+<tr class="even">
+<td>Relationship</td>
+<td>Which relationship do we want to display (axes, color, ) color, size, shape, etc.</td>
+<td>ggplot(data=df, <br> <strong>mapping = aes(x= , y = , color= , size= , shape= )</strong>)</td>
+</tr>
+<tr class="odd">
+<td>Geometric Objects</td>
+<td>How (e.g. in which form) do we want to see the relationships in our data (histogram, points, etc…)</td>
+<td>ggplot(data=df, <br> mapping = aes(x= , y = , color= , size= )) <br> <strong>+ geom_XX()</strong></td>
+</tr>
+<tr class="even">
+<td>Additional stuff</td>
+<td>Some additional functions to adjust scales, labels, tick marks, titles</td>
+<td>among other things <strong>+labs()</strong>, <strong>+scale()</strong></td>
+</tr>
+</tbody>
+</table>
+<hr />
+</div>
+<div id="replicating-the-graph" class="section level1">
+<h1><span class="header-section-number">5</span> Replicating the graph</h1>
+<p>Step by step, with some digressions, we will now replicate the graph from above.</p>
+<div id="data-and-relationship" class="section level2">
+<h2><span class="header-section-number">5.1</span> Data and Relationship</h2>
+<p>Select the data (<em>mpg</em>) and attach <em>displ</em> (the engine displacement) to the x axis, <em>hwy</em> (Highway miles per gallon) for the y axis and the <em>class</em> (car class) as the color variable.</p>
+<pre class="r"><code>ggplot(data = mpg,
+       mapping = aes(x = displ, 
+                     y = hwy, 
+                     color = class))</code></pre>
+<p><img src="dataviz_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>Well, we don’t see much. The reason is that we have only specified the data and the relationship, so far. But we have not told ggplot, which kinds of objects it should plot.</p>
+<hr />
+</div>
+<div id="geometric-objects" class="section level2">
+<h2><span class="header-section-number">5.2</span> Geometric objects</h2>
+<pre class="r"><code>ggplot(data = mpg,
+       mapping = aes(x = displ, 
+                     y = hwy, 
+                     color = class))+
+  geom_point()</code></pre>
+<p><img src="dataviz_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<hr />
+<div id="practice-with-different-geoms" class="section level3">
+<h3><span class="header-section-number">5.2.1</span> Practice with different geoms</h3>
+<p>Now, it is up to you.</p>
+<p><span style="color:red">Task</span> <u><strong>Reproduce the following plots!</strong></u></p>
+<p>Follow the instructions about the mapping and the type of geom below each plot.</p>
+<hr />
+<div id="boxplot" class="section level4">
+<h4><span class="header-section-number">5.2.1.1</span> Boxplot</h4>
+<p><img src="dataviz_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<ul>
+<li>Change the Axis as displayed in the plot. Use no color variable.</li>
+<li>Use the <code>geom_boxplot()</code> function</li>
+</ul>
+<hr />
+</div>
+<div id="violin-plot" class="section level4">
+<h4><span class="header-section-number">5.2.1.2</span> Violin Plot</h4>
+<p><img src="dataviz_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<ul>
+<li>Change the Axis as displayed in the plot. Use no color variable.</li>
+<li>Use the <code>geom_violin()</code> function</li>
+</ul>
+<hr />
+</div>
+<div id="density-plot-a" class="section level4">
+<h4><span class="header-section-number">5.2.1.3</span> Density Plot a)</h4>
+<p><img src="dataviz_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<ul>
+<li>Change the Axis as displayed in the plot (keep only x axis). Use no color variable.</li>
+<li>Use the <code>geom_density()</code> function.</li>
+</ul>
+<hr />
+</div>
+<div id="histogram" class="section level4">
+<h4><span class="header-section-number">5.2.1.4</span> Histogram</h4>
+<p><img src="dataviz_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<ul>
+<li>Can you imagine how to plot the histogram?</li>
+</ul>
+<hr />
+</div>
+<div id="bar-plot" class="section level4">
+<h4><span class="header-section-number">5.2.1.5</span> Bar Plot</h4>
+<p><img src="dataviz_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<ul>
+<li>Change the Axis as displayed in the plot (keep only x axis). Use no color variable.</li>
+<li>Use the <code>geom_bar()</code> function.</li>
+</ul>
+<hr />
+</div>
+<div id="number-of-observations-per-location" class="section level4">
+<h4><span class="header-section-number">5.2.1.6</span> Number of observations per location</h4>
+<p><img src="dataviz_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<ul>
+<li>Change the Axis as displayed in the plot. Use no color variable.</li>
+<li>Use the <code>geom_count()</code> function.</li>
+<li>Can you tell the difference to <code>geom_point()</code>?</li>
+</ul>
+<hr />
+</div>
+</div>
+</div>
+<div id="additional-stuff" class="section level2">
+<h2><span class="header-section-number">5.3</span> Additional Stuff</h2>
+<p>Back to business. Let’s continue working on our replication.</p>
+<div id="smoothed-regression-line" class="section level3">
+<h3><span class="header-section-number">5.3.1</span> Smoothed regression line</h3>
+<p>A smoothed regression line (standard OLS) can be added by adding <code>geom_smooth()</code>. Choose <code>method = &quot;lm&quot;</code> for standard OLS.</p>
+<pre class="r"><code>ggplot(data = mpg,
+       mapping = aes(x = displ, 
+                     y = hwy, 
+                     color = class))+
+  geom_point()+
+  geom_smooth(color = &quot;blue&quot;, 
+              method = &quot;lm&quot;)</code></pre>
+<p><img src="dataviz_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<hr />
+</div>
+<div id="labels" class="section level3">
+<h3><span class="header-section-number">5.3.2</span> Labels</h3>
+<p>This is largely self-explanatory.</p>
+<pre class="r"><code>ggplot(data = mpg, 
+       mapping = aes(x = displ, 
+                     y = hwy, 
+                     color = class)) +
+  geom_point() + 
+  geom_smooth(col = &quot;blue&quot;, 
+              method = &quot;lm&quot;)+
+  labs(x = &quot;Engine Displacement in Liters&quot;,
+       y = &quot;Highway miles per gallon&quot;,
+       title = &quot;MPG data&quot;,
+       subtitle = &quot;Cars with higher engine displacement tend to have lower highway mpg&quot;,
+       caption = &quot;Source: mpg data in ggplot2 \n Credits for the tutorial: TheRBootcamp&quot;,
+       color = &quot;Car Classes&quot;)</code></pre>
+<p><img src="dataviz_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<hr />
+</div>
+<div id="themes" class="section level3">
+<h3><span class="header-section-number">5.3.3</span> Themes</h3>
+<p>We can modify the theme - the non-data components, e.g. (besides titles and labels) fonts, background, gridlines, and legends - as much as we would like to with <code>theme()</code>.</p>
+<p>Further <a href="https://beselufri.github.io/RforISG/dataviz.html#6_minor_addenda">below</a> we will explain how to build this beautiful graph:</p>
+<p><img src="dataviz_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+<hr />
+<div id="serious-themes" class="section level4">
+<h4><span class="header-section-number">5.3.3.1</span> Serious themes</h4>
+<p>While you can adjust the theme as much as you want, the lazy but safer (e.g. plot designs which are deemed acceptable by more people than just yourself), you can rely on the large set of predesigned themes from ggplot2. Additionally, you can also make use of the ggthemes package, which offers even more themes.</p>
+<pre class="r"><code>ggplot(data = mpg, 
+       mapping = aes(x = displ, 
+                     y = hwy, 
+                     color = class)) +
+  geom_point() + 
+  geom_smooth(col = &quot;blue&quot;, 
+              method = &quot;lm&quot;)+
+  labs(x = &quot;Engine Displacement in Liters&quot;,
+       y = &quot;Highway miles per gallon&quot;,
+       title = &quot;MPG data&quot;,
+       subtitle = &quot;Cars with higher engine displacement tend to have lower highway mpg&quot;,
+       caption = &quot;Source: mpg data in ggplot2 \n Credits for the tutorial: TheRBootcamp&quot;,
+       color = &quot;Car Classes&quot;)+
+  theme_classic()</code></pre>
+<p><img src="dataviz_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+<p>There are many more themes (for example, <code>theme_grey</code>, <code>theme_void</code>, <code>theme_dark</code>, <code>theme_minimal</code>)</p>
+</div>
+<div id="themes-from-ggthemes" class="section level4">
+<h4><span class="header-section-number">5.3.3.2</span> Themes from ggthemes</h4>
+<p>With the ggthemes packages, you have even more themes at hand:</p>
+<pre class="r"><code>library(ggthemes)
+
+ggplot(data = mpg, 
+       mapping = aes(x = displ, 
+                     y = hwy, 
+                     color = class)) +
+  geom_point() + 
+  geom_smooth(col = &quot;blue&quot;, 
+              method = &quot;lm&quot;)+
+  labs(x = &quot;Engine Displacement in Liters&quot;,
+       y = &quot;Highway miles per gallon&quot;,
+       title = &quot;MPG data&quot;,
+       subtitle = &quot;Cars with higher engine displacement tend to have lower highway mpg&quot;,
+       caption = &quot;Source: mpg data in ggplot2 \n Credits for the tutorial: TheRBootcamp&quot;,
+       color = &quot;Car Classes&quot;)+
+  theme_fivethirtyeight()</code></pre>
+<p><img src="dataviz_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+<p>Other themes from the ggthemes package include <code>theme_economist</code> (The Economist style graphs), <code>theme_stata()</code> (for those who miss Stata), or <code>theme_tufte()</code>. It has also a cool functionality for creating color scales for color blind people.</p>
+<hr />
+</div>
+</div>
+</div>
+<div id="finish" class="section level2">
+<h2><span class="header-section-number">5.4</span> Finish</h2>
+<p>… This still doesn’t look like the plot we wanted to create. Actually, the plot from above was build with the <code>theme_bw()</code></p>
+<pre class="r"><code>ggplot(data = mpg, 
+       mapping = aes(x = displ, 
+                     y = hwy, 
+                     color = class)) +
+  geom_point() + 
+  geom_smooth(col = &quot;blue&quot;, 
+              method = &quot;lm&quot;)+
+  labs(x = &quot;Engine Displacement in Liters&quot;,
+       y = &quot;Highway miles per gallon&quot;,
+       title = &quot;MPG data&quot;,
+       subtitle = &quot;Cars with higher engine displacement tend to have lower highway mpg&quot;,
+       caption = &quot;Source: mpg data in ggplot2 \n Credits for the tutorial: TheRBootcamp&quot;,
+       color = &quot;Car Classes&quot;)+
+  theme_bw()</code></pre>
+<p><img src="dataviz_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+<hr />
+</div>
+</div>
+<div id="minor-addenda" class="section level1">
+<h1><span class="header-section-number">6</span> Minor Addenda</h1>
+<div id="saving-a-ggplot-object-in-the-environment" class="section level2">
+<h2><span class="header-section-number">6.1</span> Saving a ggplot object in the environment</h2>
+<p>Just to mention this, you can save a ggplot object in the environment like everything else (remember, everything in R is an object).</p>
+<p>Storing our final plot from above as final_plot</p>
+<pre class="r"><code>final_plot &lt;- ggplot(data = mpg, 
+       mapping = aes(x = displ, 
+                     y = hwy, 
+                     color = class)) +
+  geom_point() + 
+  geom_smooth(col = &quot;blue&quot;, 
+              method = &quot;lm&quot;)+
+  labs(x = &quot;Engine Displacement in Liters&quot;,
+       y = &quot;Highway miles per gallon&quot;,
+       title = &quot;MPG data&quot;,
+       subtitle = &quot;Cars with higher engine displacement tend to have lower highway mpg&quot;,
+       caption = &quot;Source: mpg data in ggplot2 \n Credits for the tutorial: TheRBootcamp&quot;,
+       color = &quot;Car Classes&quot;)+
+  theme_bw()</code></pre>
+<p>We can then add stuff to the ggplot object in the usual way.</p>
+<p>Suppose, we want to add a fat vertical line (x=3) again:</p>
+<pre class="r"><code>final_plot+
+  geom_vline(xintercept = 3, size=5)</code></pre>
+<p><img src="dataviz_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+<hr />
+</div>
+<div id="integrating-ggplot-with-other-tidyverse-functions" class="section level2">
+<h2><span class="header-section-number">6.2</span> Integrating ggplot with other tidyverse functions</h2>
+<p>GGplot, being part of the tidyverse, can be perfectly integrated with other functions of the tidyverse.</p>
+<p>As an easy example, suppose, we only want to keep hwy values above 25:</p>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>## Warning: package &#39;tidyverse&#39; was built under R version 3.4.2</code></pre>
+<pre><code>## ── Attaching packages ──────────────────────── tidyverse 1.2.1 ──</code></pre>
+<pre><code>## ✔ tibble  2.1.3     ✔ purrr   0.3.2
+## ✔ tidyr   1.0.0     ✔ dplyr   0.8.3
+## ✔ readr   1.3.1     ✔ stringr 1.4.0
+## ✔ tibble  2.1.3     ✔ forcats 0.4.0</code></pre>
+<pre><code>## Warning: package &#39;readr&#39; was built under R version 3.4.4</code></pre>
+<pre><code>## Warning: package &#39;purrr&#39; was built under R version 3.4.4</code></pre>
+<pre><code>## Warning: package &#39;stringr&#39; was built under R version 3.4.4</code></pre>
+<pre><code>## Warning: package &#39;forcats&#39; was built under R version 3.4.4</code></pre>
+<pre><code>## ── Conflicts ─────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()</code></pre>
+<pre class="r"><code>mpg %&gt;% 
+  filter(hwy&gt;=25)%&gt;%
+  ggplot(                           # do not call data=mpg again here! 
+       mapping = aes(x = displ, 
+                     y = hwy, 
+                     color = class)) +
+  geom_point() + 
+  geom_smooth(col = &quot;blue&quot;, 
+              method = &quot;lm&quot;)+
+  labs(x = &quot;Engine Displacement in Liters&quot;,
+       y = &quot;Highway miles per gallon&quot;,
+       title = &quot;MPG data&quot;,
+       subtitle = &quot;Cars with higher engine displacement tend to have lower highway mpg&quot;,
+       caption = &quot;Source: mpg data in ggplot2 \n Credits for the tutorial: TheRBootcamp&quot;,
+       color = &quot;Car Classes&quot;)+
+  theme_bw()</code></pre>
+<p><img src="dataviz_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
+<hr />
+</div>
+<div id="ggsave" class="section level2">
+<h2><span class="header-section-number">6.3</span> ggsave</h2>
+<p>You can print a ggplot object with <code>ggsave</code>. For this, we use the plot object <code>final_plot</code> which we created above.</p>
+<pre class="r"><code>ggsave(plot = final_plot, 
+       file= &quot;FILEDIRECTORYtoSAVEto.png&quot;)</code></pre>
+<hr />
+</div>
+</div>
+<div id="addenda-ii" class="section level1">
+<h1><span class="header-section-number">7</span> Addenda II</h1>
+<p>Below, find information on how to create a Likert scale type of graph and the basics on how to create an individual theme.</p>
+<div id="likert-scale" class="section level2">
+<h2><span class="header-section-number">7.1</span> Likert scale</h2>
+<p>Let’s create fake Likert scale data. Let’s pretend that the different types of transmissions are the levels of a Likert scale and that car classes are the Likert items.</p>
+<p>Before we can plot this fake Likert scale, we have to do some data transformation:</p>
+<pre class="r"><code>mpg2 &lt;- mpg %&gt;%
+  group_by(class) %&gt;%
+  mutate(length.class = n()) %&gt;%
+  group_by(trans, add = TRUE) %&gt;%
+  mutate(length.trans = n(),
+         percentage.trans = 100 * length.trans / length.class) %&gt;%
+  distinct(trans, class, .keep_all = TRUE)</code></pre>
+<pre class="r"><code>ggplot(data = mpg2,
+  mapping = aes(x = class,
+                y = percentage.trans,
+                fill=trans)) + 
+  geom_bar(stat=&quot;identity&quot;, width = 0.7)+
+  coord_flip()</code></pre>
+<p><img src="dataviz_files/figure-html/unnamed-chunk-25-1.png" width="672" /></p>
+<ul>
+<li>Use class as x-axis and percentage.trans as y axis. fill=trans (different color for different trans levels)</li>
+<li>Use the <code>geom_bar()</code> function.
+<ul>
+<li>use stat=“identity” to indicate that the height of the bars should represent values in the data (default is stat = “bin” which simply counts the number of occurrences of the x aesthetic)</li>
+<li>use widht = 0.7 to reduce the bar widht a bit</li>
+</ul></li>
+<li>Use <code>+coord_flip()</code> ?</li>
+</ul>
+<hr />
+</div>
+<div id="playing-with-themes" class="section level2">
+<h2><span class="header-section-number">7.2</span> Playing with themes</h2>
+<p>As indicated above, here is an example of a manually (ridiculously) adjusted theme.</p>
+<p>Some random ideas for the theme (through the function <code>theme'()</code>:</p>
+<ul>
+<li>Set background color to pink: <code>panel.background = element_rect(fill = &quot;pink&quot;)</code></li>
+<li>Change color of horizontal gridlines to green: <code>panel.grid.major.y = element_line(colour = &quot;green&quot;), panel.grid.minor.y = element_line(colour = &quot;green&quot;)</code></li>
+<li>Move the legend to the bottom: <code>legend.position = &quot;bottom&quot;</code></li>
+<li>Add a box around the plot: <code>panel.border = element_rect(color=&quot;orange&quot;, fill = NA, size=5)</code></li>
+</ul>
+<p>Additionally, outside of theme, we also want to add even more beautiful stuff:</p>
+<ul>
+<li>add a fat vertical line at 3: <code>+geom_vline(xintercept = 3, size=5)</code></li>
+<li>Add ticks for every 0.5 on the x-axis: <code>+scale_x_continuous(breaks = seq(1,8, by=0.5)</code></li>
+</ul>
+<p><span style="color:red">Task</span> <u><strong>Reproduce the plot below and follow the instructions from above!</strong></u></p>
+<p><img src="dataviz_files/figure-html/unnamed-chunk-26-1.png" width="672" /></p>
+<hr />
+</div>
+</div>
+<div id="some-resources-for-ggplot2" class="section level1">
+<h1><span class="header-section-number">8</span> Some resources for ggplot2</h1>
+<p><a href="https://tutorials.iq.harvard.edu/R/Rgraphics/Rgraphics.html#aesthetic_mapping">Tutorial</a> on replicating a graph from The Economist from Harvard Data Science Services.</p>
+<p><a href="http://socviz.co/index.html#preface">Book</a> on Data Vizualizaton by Kieran Healy, freely available online</p>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Regression Analysis</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="site_libs/htmlwidgets-1.5.1/htmlwidgets.js"></script>
+<script src="site_libs/viz-0.3/viz.js"></script>
+<link href="site_libs/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
+<script src="site_libs/grViz-binding-1.0.1/grViz.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">R Course PhD</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Introduction</a>
+</li>
+<li>
+  <a href="objectsndata.html">Objects and Data</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Data Management
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="datamanagement.html">Data Management Introduction</a>
+    </li>
+    <li>
+      <a href="datamanagement_eurostat.html">Eurostat Example</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Descriptives and Bivariate
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="descriptives.html">Descriptive Stats</a>
+    </li>
+    <li>
+      <a href="bivariate.html">Bivariate Stats</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Regression
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="other_regressions.html">Regression</a>
+    </li>
+    <li>
+      <a href="other_outlier.html">Outlier Analysis</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Data Viz
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="dataviz.html">Data Viz Introduction</a>
+    </li>
+    <li>
+      <a href="dataviz_eurostat.html">Eurostat Example</a>
+    </li>
+    <li>
+      <a href="dataviz_map.html">Map Example</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Regression Analysis</h1>
+
+</div>
+
+
+<p>Download the script <a href="https://raw.githubusercontent.com/LuMesserschmidt/stats_TUM/master/Files/Course%20Scripts/other_regressions_clean.R">here</a>. There are no exercises so this script contains all necessary code already.</p>
+<p>Download the data <a href="https://raw.githubusercontent.com/LuMesserschmidt/stats_TUM/master/data/eurostat_data.csv">here</a> (same data as on the <a href="https://beselufri.github.io/RforISG/dataviz_eurostat.html">DataViz Eurostat page</a>)</p>
+<hr />
+<div id="tldr" class="section level1">
+<h1><span class="header-section-number">1</span> Tl;dr</h1>
+<p>This is how standard OLS regressions are done:</p>
+<pre class="r"><code>ols_object &lt;- lm(regressand ~ regressor1 + regressor2 + regressor3,
+                 data = data.frame)</code></pre>
+<p>This is how a (two-ways FE) panel regression is done</p>
+<pre class="r"><code>library(plm)
+panel_object &lt;-
+   plm(
+      regressand ~ regressor1 + regressor2 + regressor3,
+      index = c(&quot;unit&quot;, &quot;time&quot;),
+      model = &quot;within&quot;,
+      effect = &quot;twoways&quot;,
+      # for two-ways fixed effect regressions
+      data = data.frame
+   )</code></pre>
+<p>This is how you can get a summary of your regression:</p>
+<pre class="r"><code>summary(ols_object, panel_object)</code></pre>
+<p>This is a nicer way for getting a summary and exporting (journal style)</p>
+<pre class="r"><code>library(stargazer)
+stargazer(ols_object, panel_object,
+          type = &quot;html&quot;, # either html, latex, or text
+          out = &quot;output.html&quot;) # if a file should be produced</code></pre>
+</div>
+<div id="introduction" class="section level1">
+<h1><span class="header-section-number">2</span> Introduction</h1>
+<div id="workflow" class="section level2">
+<h2><span class="header-section-number">2.1</span> Workflow</h2>
+<pre><code>## Warning in as.POSIXlt.POSIXct(Sys.time()): unknown timezone &#39;zone/tz/2019c.
+## 1.0/zoneinfo/Europe/Berlin&#39;</code></pre>
+<div id="htmlwidget-00b1c8620d927329ab94" style="width:800px;height:400px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-00b1c8620d927329ab94">{"x":{"diagram":"digraph {\n\n  rankdir=LR\n\n  # a \"graph\" statement\n  node[shape = note margin=0.25]\n  graph [overlap = true, fontsize = 10]\n\n   formula [label = \"Model Formula\"]\n\n  node[shape = hexagon]\n    lm [label = \"Fit Model \\n lm()\"]\n  \n  node [shape = cylinder]\n    data [label = \"Data\"]\n    \n    out [label = \"lm - Output\"]\n    \n  node [shape = box]\n  \n    inspect [label = \"Inspect & Plot\"]\n    evaluate [label = \"Evaluate\"]\n    export [label = \"Display & Export\"]\n\n  data -> lm\n  formula -> lm\n  \n  lm -> out\n  \n  out -> evaluate\n  out -> inspect\n  out -> export\n\n\n  # several \"edge\" statements\n\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<hr />
+</div>
+<div id="the-lm-function" class="section level2">
+<h2><span class="header-section-number">2.2</span> The <code>lm</code> Function</h2>
+<pre class="r"><code>lm(formula,
+   data,
+   subset,
+   na.action)</code></pre>
+<p><code>formula</code> - Specification of our regression model</p>
+<p><code>data</code> - The dataset containing the variables of the regression</p>
+<p><code>subset</code> - An option to subset the data</p>
+<p><code>na.action</code> - Option that specifies how to deal with missing values</p>
+<hr />
+</div>
+<div id="the-formula-argument" class="section level2">
+<h2><span class="header-section-number">2.3</span> The <code>formula</code> Argument</h2>
+<p>We can write our models using the following syntax:</p>
+<pre class="r"><code>model &lt;- formula(regressand ~ regressors)</code></pre>
+<p>Where <code>regressand</code> is just our dependent variable / response usually denoted by <span class="math inline">\(y\)</span> and <code>model</code> is our formula of independent variables / regressors, e.g.:</p>
+<pre class="r"><code>kicker_success_formula &lt;- formula(kicker_success ~ experience + training + luck)</code></pre>
+<hr />
+<p>We can construct formulas with the following syntax:</p>
+<ul>
+<li>Adding variables with <code>+</code></li>
+</ul>
+<pre class="r"><code>formula(y ~ a + b)</code></pre>
+<ul>
+<li>Interactions with <code>:</code></li>
+</ul>
+<pre class="r"><code>formula(y ~ a + b + a:b)</code></pre>
+<ul>
+<li>Crossing: <code>a * b</code> is equivalent to <code>a + b + a:b</code></li>
+</ul>
+<pre class="r"><code>formula(y ~ a + b + a:b) # and
+formula(y ~ a * b) # are equivalent</code></pre>
+<ul>
+<li>Transformations with <code>I()</code></li>
+</ul>
+<pre class="r"><code>formula(y ~ a + I(a ^ 2)) # quadratic term must be in I() to evaluate correctly
+formula(y ~ log(a)) # log can stay by itself</code></pre>
+<ul>
+<li>Include all variables in your data with <code>.</code></li>
+</ul>
+<pre class="r"><code>formula(y ~ .) # is equivalent to
+formula(y ~ a + b + ... + z) # for a dataset with variables from a to z</code></pre>
+<hr />
+</div>
+<div id="the-subset-argument" class="section level2">
+<h2><span class="header-section-number">2.4</span> The <code>subset</code> Argument</h2>
+<ul>
+<li>Sometimes, we want to run our model on a subset of our data (without changing the data themselves)</li>
+<li>We can specify subsets of certain variables as follows:</li>
+</ul>
+<pre class="r"><code>lm(formula,
+   data,
+   subset = age &lt; 30)</code></pre>
+<ul>
+<li>Connect multiple subset arguments with logical operators:</li>
+</ul>
+<pre class="r"><code>lm(formula,
+   data,
+   subset = age &lt; 30 &amp; height &gt; 180)</code></pre>
+<p>Note that although this works, a best practice is to subset your data prior to the estimation. By keeping these steps distinct, your code will be much easier for someone else to understand.</p>
+<hr />
+</div>
+<div id="the-na.action-argument" class="section level2">
+<h2><span class="header-section-number">2.5</span> The <code>na.action</code> Argument</h2>
+<p>If the data contains missing values, <code>lm</code> automatically deletes the whole observation.</p>
+<ul>
+<li>Specify <code>na.action = na.fail</code> if you want an error when the data contains missing values</li>
+</ul>
+<p>Again, it is a best practice to look for missing values in your data prior to the estimation to keep your code transparent.</p>
+<ul>
+<li>You can use the <code>missmap</code> function from the <code>Amelia</code> package to get a nice visualisation of missing values in your data</li>
+</ul>
+<hr />
+</div>
+<div id="example-call-of-lm-with-eurostat-data" class="section level2">
+<h2><span class="header-section-number">2.6</span> Example Call of <code>lm</code> with Eurostat Data</h2>
+<pre class="r"><code>eur_data &lt;- read.csv2(&quot;data/eurostat_data.csv&quot;)
+
+m1 &lt;-
+   formula(unemp_workagepop_t ~ gdp_gr + inv_per_empl + immigration_t,
+           subset = year == 2014)
+model &lt;- lm(formula = m1,
+            data = eur_data)</code></pre>
+<hr />
+</div>
+<div id="output-of-lm" class="section level2">
+<h2><span class="header-section-number">2.7</span> Output of <code>lm</code></h2>
+<p>The <code>lm</code> function returns a list. Relevant components of this list are:</p>
+<ul>
+<li><code>call</code> - the function call that generated the output</li>
+<li><code>coefficients</code> the OLS coefficients</li>
+<li><code>residuals</code></li>
+<li><code>fitted.values</code> The estimates for our dependent variable (unemployment)</li>
+<li><code>model</code> The model matrix used for estimation</li>
+</ul>
+<p>The full list of outputs can be looked up via</p>
+<ul>
+<li><code>?lm()</code></li>
+<li><code>str(model)</code> where model is our saved output from <code>lm</code></li>
+<li>the <code>$</code> operator and <code>tab</code>, e.g. <code>model$...</code></li>
+</ul>
+<p>Lets look up our coefficients <span class="math inline">\(\beta\)</span>, fitted values <span class="math inline">\(\hat{y}\)</span> and OLS residuals <span class="math inline">\(\varepsilon\)</span></p>
+<pre class="r"><code>model$coefficients</code></pre>
+<pre><code>##   (Intercept)        gdp_gr  inv_per_empl immigration_t 
+##  1.284087e+01 -1.636299e-01 -3.228256e-01 -2.266933e-06</code></pre>
+<pre class="r"><code>model$fitted.values[1:7] # first 7 fitted values</code></pre>
+<pre><code>##       14       15       16       17       18       19       20 
+## 7.844069 9.367108 8.414682 8.144617 8.612589 8.671478 8.847128</code></pre>
+<pre class="r"><code>model$residuals[1:7] # first 7 residuals</code></pre>
+<pre><code>##        14        15        16        17        18        19        20 
+## -3.644069 -3.967108 -3.514682 -3.544617 -3.712589 -3.271478 -3.147128</code></pre>
+<p>We can visualise the results very simply with <code>hist</code> or <code>plot</code>:</p>
+<pre class="r"><code>hist(model$residuals, breaks = 30)</code></pre>
+<p><img src="other_regressions_files/figure-html/unnamed-chunk-21-1.png" width="960" /></p>
+<pre class="r"><code>hist(model$fitted.values, breaks = 30)</code></pre>
+<p><img src="other_regressions_files/figure-html/unnamed-chunk-22-1.png" width="960" /></p>
+<hr />
+</div>
+<div id="output-of-lm-with-the-summary-function" class="section level2">
+<h2><span class="header-section-number">2.8</span> Output of <code>lm</code> with the <code>summary()</code> function</h2>
+<pre class="r"><code>summary(model)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = m1, data = eur_data)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -6.446 -2.790 -1.099  1.529 16.458 
+## 
+## Coefficients:
+##                 Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)    1.284e+01  5.628e-01  22.815  &lt; 2e-16 ***
+## gdp_gr        -1.636e-01  7.869e-02  -2.080   0.0386 *  
+## inv_per_empl  -3.228e-01  5.039e-02  -6.406 7.91e-10 ***
+## immigration_t -2.267e-06  1.438e-06  -1.576   0.1164    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 4.386 on 238 degrees of freedom
+##   (671 observations deleted due to missingness)
+## Multiple R-squared:  0.1887, Adjusted R-squared:  0.1785 
+## F-statistic: 18.46 on 3 and 238 DF,  p-value: 8.453e-11</code></pre>
+<hr />
+</div>
+<div id="display-and-export-tables-with-stargazer" class="section level2">
+<h2><span class="header-section-number">2.9</span> Display and Export Tables with <code>stargazer()</code></h2>
+<pre class="r"><code>stargazer::stargazer(model, type = &quot;text&quot;)</code></pre>
+<pre><code>## 
+## ===============================================
+##                         Dependent variable:    
+##                     ---------------------------
+##                         unemp_workagepop_t     
+## -----------------------------------------------
+## gdp_gr                       -0.164**          
+##                               (0.079)          
+##                                                
+## inv_per_empl                 -0.323***         
+##                               (0.050)          
+##                                                
+## immigration_t                -0.00000          
+##                              (0.00000)         
+##                                                
+## Constant                     12.841***         
+##                               (0.563)          
+##                                                
+## -----------------------------------------------
+## Observations                    242            
+## R2                             0.189           
+## Adjusted R2                    0.179           
+## Residual Std. Error      4.386 (df = 238)      
+## F Statistic           18.457*** (df = 3; 238)  
+## ===============================================
+## Note:               *p&lt;0.1; **p&lt;0.05; ***p&lt;0.01</code></pre>
+<p>Jake Russ has the <a href="https://www.jakeruss.com/cheatsheets/stargazer/">ultimate overview</a> over all <code>stargazer()</code> functions (there are many!!).</p>
+<hr />
+<div id="export-stargazer-output-to-file" class="section level3">
+<h3><span class="header-section-number">2.9.1</span> Export Stargazer Output to File</h3>
+<pre class="r"><code>stargazer::stargazer(model,
+                     type = &quot;html&quot;,
+                     out = &quot;model.html&quot;)</code></pre>
+<hr />
+</div>
+</div>
+<div id="compare-different-models" class="section level2">
+<h2><span class="header-section-number">2.10</span> Compare different Models</h2>
+<pre class="r"><code>model2 &lt;- lm(unemp_workagepop_t ~ gdp_gr,
+             data = eur_data)</code></pre>
+<pre class="r"><code>stargazer::stargazer(model, model2,
+                     type = &quot;html&quot;)</code></pre>
+<table style="text-align:center">
+<tr>
+<td colspan="3" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td colspan="2">
+<em>Dependent variable:</em>
+</td>
+</tr>
+<tr>
+<td>
+</td>
+<td colspan="2" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td colspan="2">
+unemp_workagepop_t
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(1)
+</td>
+<td>
+(2)
+</td>
+</tr>
+<tr>
+<td colspan="3" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+gdp_gr
+</td>
+<td>
+-0.164<sup>**</sup>
+</td>
+<td>
+-0.343<sup>***</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.079)
+</td>
+<td>
+(0.065)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+inv_per_empl
+</td>
+<td>
+-0.323<sup>***</sup>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.050)
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+immigration_t
+</td>
+<td>
+-0.00000
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.00000)
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Constant
+</td>
+<td>
+12.841<sup>***</sup>
+</td>
+<td>
+9.152<sup>***</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.563)
+</td>
+<td>
+(0.258)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td colspan="3" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Observations
+</td>
+<td>
+242
+</td>
+<td>
+360
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+R<sup>2</sup>
+</td>
+<td>
+0.189
+</td>
+<td>
+0.071
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Adjusted R<sup>2</sup>
+</td>
+<td>
+0.179
+</td>
+<td>
+0.069
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Residual Std. Error
+</td>
+<td>
+4.386 (df = 238)
+</td>
+<td>
+4.423 (df = 358)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+F Statistic
+</td>
+<td>
+18.457<sup>***</sup> (df = 3; 238)
+</td>
+<td>
+27.447<sup>***</sup> (df = 1; 358)
+</td>
+</tr>
+<tr>
+<td colspan="3" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+<em>Note:</em>
+</td>
+<td colspan="2" style="text-align:right">
+<sup><em></sup>p&lt;0.1; <sup><strong></sup>p&lt;0.05; <sup></strong></em></sup>p&lt;0.01
+</td>
+</tr>
+</table>
+<p>Specify the folder and file were your table should be saved as <code>&quot;path/name.type&quot;</code></p>
+<ol style="list-style-type: decimal">
+<li>Output as <code>.html</code> : Open the file in your web browser and copy it into Word</li>
+<li>Output as <code>.tex</code> : Include in LaTeX</li>
+</ol>
+<hr />
+</div>
+</div>
+<div id="panel-regression" class="section level1">
+<h1><span class="header-section-number">3</span> Panel Regression</h1>
+<p>Just a very quick glimpse into panel regressions with plm.</p>
+<pre class="r"><code>library(plm)
+panel_object &lt;- plm(
+   unemp_workagepop_t ~ gdp_gr,
+   data = eur_data,
+   index = c(&quot;geo_code&quot;, &quot;time&quot;),
+   model = &quot;within&quot;,
+   effect = &quot;twoways&quot;
+) # for two-ways fixed effect regressions</code></pre>
+<p>For further information on panel regressions, I recommend</p>
+<ul>
+<li>the <a href="https://www.princeton.edu/~otorres/Panel101R.pdf">slides</a> by Oscar Torres-Reyna</li>
+<li>the <a href="http://www.urfie.net/read/mobile/index.html#p=208">Chapter 13</a> from the Econometrics with R book</li>
+</ul>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

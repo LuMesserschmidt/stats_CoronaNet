@@ -1,0 +1,63 @@
+name: my-website
+output:
+  html_document:
+    css: style.css
+    number_sections: yes
+    toc: yes
+    toc_float:
+      collapsed: no
+      smooth_scroll: yes
+    lib_dir: site_libs
+    self_contained: no
+output_dir: docs
+navbar:
+  title: Learning Platform CoronaNet
+  left:
+  - text: Introduction
+    href: index.html
+  - text: Objects and Data
+    href: objectsndata.html
+  - text: Data Management
+    href: datamanagement.html
+    menu:
+      - text: "Data Management Introduction"
+        href: datamanagement.html
+      - text: "CoronaNet Example"
+        href: datamanagement_corona.html
+      - text: "Data Examples"
+        href: datamanagement_others.html
+      - text: "Eurostat Example"
+        href: datamanagement_eurostat.html
+  - text: Descriptives and Bivariate
+    href: descriptives.html
+    menu:
+      - text: Descriptive Stats
+        href: descriptives.html
+      - text: Bivariate Stats
+        href: bivariate.html
+      - text: "CoronaNet Example"
+        href: descriptives_corona.html
+  - text: Regression
+    href: other_regressions.html
+    menu:
+      - text: Regression
+        href: other_regressions.html
+      - text: Outlier Analysis
+        href: other_outlier.html
+      - text: "CoronaNet Example"
+        href: regression_corona.html
+  - text: Data Viz
+    href: dataviz.html
+    menu:
+      - text: "Data Viz Introduction"
+        href: dataviz.html
+      - text: "CoronaNet Example"
+        href: dataviz_corona.html
+      - text: "Eurostat Example"
+        href: dataviz_eurostat.html
+      - text: "Map Example"
+        href: dataviz_map.html
+  - text: About
+    href: about.html
+
+

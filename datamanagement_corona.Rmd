@@ -1,0 +1,198 @@
+---
+title: "Datamanagement: Eurostat Example"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,warning = FALSE)
+```
+
+Download the script [here](https://raw.githubusercontent.com/LuMesserschmidt/stats_TUM/master/Files/Course%20Scripts/R_code_CoronaNet_1.R)
+
+
+***
+
+# Setup the script
+* Remember: You should clean the environment and load the necessary packages. 
+    + If packages aren't installed yet, do so. 
+    + We need the tidyverse and the readr package.
+
+<span style="color:red">Task</span> <u>**Clean the environment and load the packages**</u>
+```{r, eval=FALSE}
+
+
+```
+
+```{r, echo=T, message=FALSE}
+rm(list=ls())
+library(tidyverse)
+library(readr)
+
+```
+
+
+# Load the data
+```{r, eval=FALSE}
+
+# Download Data
+##CoronaNet Core Data: 
+
+download.file("https://raw.githubusercontent.com/saudiwin/corona_tscs/master/data/CoronaNet/coronanet_release.csv", "./data/coronanet_release.csv")
+
+##CoronaNet All Vars Data: 
+
+download.file("https://raw.githubusercontent.com/saudiwin/corona_tscs/master/data/CoronaNet/coronanet_release_allvars.csv", "./data/coronanet_release_allvars.csv")
+
+#Load data
+
+coronaNet <- read.csv('data/coronanet_release.csv')
+
+# Worldbank Data 
+
+# Datasets can come from a variety of sources. 
+# Today we will be investigating GDP data from the World Bank and Penn World Tables in particular
+ 
+
+## * Getting World Bank Data: * 
+#   i) Go to the https://data.worldbank.org
+#  ii) Search for the indicator that you want
+# iii) Download the corresponding data in .csv format
+
+
+## How to load .csvs
+# First identify where your downloaded .csv is located....
+# ..... or probably better, put your downloaded .csv in a specified place and note the file path
+# (the file path is the path to your file of interest.)
+
+# then there are any number of ways you can try to access your data
+
+# a) directly type in the file path
+
+
+ 
+wb <- read.csv('data/API_NY.GDP.PCAP.PP.CD_DS2_en_csv_v2_988619.csv',stringsAsFactors = FALSE,  header = TRUE, skip = 4)
+
+
+```
+
+## Explore the Data
+```{r, eval=FALSE}
+# lets take a look at the first 6 rows
+head(coronaNet)
+
+# lets take a look at what classes the different data are stored in and the values they can take on
+str(coronaNet)
+
+# lets take a look at the distribution of the countries that have initiated a policy
+table(coronaNet$country)%>% sort(decreasing = TRUE) 
+
+# lets look at the distribution of different policies
+table(coronaNet$type) %>% sort()
+
+# Class question: how could you look at the distribution of different sub-types: type_sub_cat ? 
+
+names(coronaNet)
+
+```
+
+## Clean the Data
+
+```{r, eval=FALSE}
+coronaNet  = coronaNet %>% 
+  mutate(type = ifelse(type == 'Quarantine/Lockdown', 'Lockdown', type)) #We want the variable Quarantine/Lockdown to be called "Lockdown"
+
+
+# We want to gather the WB data and reshape it in order to have the right merging data
+
+# Gather data: 
+stocks <- tibble(
+  time = as.Date('2009-01-01') + 0:9,
+  X = rnorm(10, 0, 1),
+  Y = rnorm(10, 0, 2),
+  Z = rnorm(10, 0, 4)
+)
+
+stocks
+
+gather(stocks, "stock", "price", -time)
+stocks %>% gather("stock", "price", -time) %>% data.frame()
+
+# Now with the Worldbank Data
+
+wb = wb %>% gather("year", "gdpPPP", -`Country Name`, -`Country Code`, -`Indicator Name`, -`Indicator Code`, -X65)
+
+?gather
+
+wb = wb %>% select( -`Indicator Name`, -`Indicator Code`, -X65)
+wb$year = as.numeric(wb$year)
+wb$lgdpPPP= log(wb$gdpPPP)
+
+```
+
+# Subset the Data
+```{r, eval=FALSE}
+
+# Let´s assume we are only interested in the Business Restrictions
+
+businessRestrict = coronaNet %>% filter(type == "Restriction of Non-Essential Businesses")
+
+# what are the dimensions of this new subsetted data?
+dim(businessRestrict)
+# which countries have instituted restrictions of non-essential businesses?
+
+businessRestrict$country %>% unique()
+unique(businessRestrict$country)
+
+
+# what are the different sub types for the broader non-essentital businesses policy type?
+unique(businessRestrict$type_sub_cat)
+
+
+```
+
+
+# Merge data 
+```{r, eval=FALSE}
+# We want to merge the information on GDP per Capita to the CoronaNet data
+# This means we will have countries as the identifier 
+
+
+names(wb)[1] = 'country'
+
+names(businessRestrict)
+
+data = merge(businessRestrict, wb %>% filter(year == 2018), by= 'country', all.x = TRUE)
+
+
+# how can we find out what gdp of the Germany is in this 'data'?
+data %>% filter(country == 'Germany') %>% select(gdpPPP)
+
+
+# how can we find out what the gdp of the United States is in this data?
+data %>% filter(country == 'United States of America') %>% select(gdpPPP)
+
+
+# how can we investigate which countries match across different datasets?
+intersect(coronaNet$country, wb$country)
+
+
+# and the countries that don't match?
+cbind(setdiff(coronaNet$country, wb$country), 
+      setdiff( wb$country, coronaNet$country)) %>% head()
+
+
+
+# The problem: The country names differ between both datasets. We therefore take the country code (ISO3) as an optimal unique identifieer
+
+names(wb)[2] = 'ccode'
+names(businessRestrict)[31] = 'ccode'
+
+
+data = merge(businessRestrict, wb %>% filter(year == 2018), by= 'ccode', all.x = TRUE)
+
+# how can we find out what the gdp of the United States is in this data?
+data %>% filter(ccode == 'USA') %>% select(gdpPPP)
+
+# IT WORKED!
+```
+
+

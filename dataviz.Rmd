@@ -1,0 +1,540 @@
+---
+title: "Data Viz"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+```
+
+Download the script [here](https://raw.githubusercontent.com/LuMesserschmidt/stats_TUM/master/Files/Course%20Scripts/dataviz_clean.R).
+
+# Intro
+
+In this tutorial, we will learn how to produce this graph.
+
+```{r, echo=FALSE}
+library(ggplot2)
+ggplot(data = mpg, 
+       mapping = aes(x = displ, 
+                     y = hwy, 
+                     color = class)) +
+  geom_point() + 
+  geom_smooth(col = "blue", 
+              method = "lm")+
+  labs(x = "Engine Displacement in Liters",
+       y = "Highway miles per gallon",
+       title = "MPG data",
+       subtitle = "Cars with higher engine displacement tend to have lower highway mpg",
+       caption = "Source: mpg data in ggplot2 \n Credits for the tutorial: TheRBootcamp",
+       color = "Car Classes") + 
+  theme_bw()
+```
+
+Actually, it only takes 12 lines of code (of which 5 are only related to the text captions) and some pretty straight forward logic. 
+
+* To get there, we first get a glimpse into **base R plotting**. 
+* Then, we move on the much more powerful **ggplot2 package** (part of the tidyverse). 
+    + We study the **grammar of plotting**
+    + step by step, we will replicate the graph above (but with some lengthy digressions to learn about different ggplot options in-between. 
+
+This site heavily builds upon [The R Bootcamp](https://therbootcamp.github.io/) who employ the widely used mpg dataset and the accompanying coding instructions (see for example (see for example [R for Data Science](https://r4ds.had.co.nz/data-visualisation.html)) for their data visualization tutorial. 
+
+***
+
+# Packages and script set-up 
+
+But before we start, as always - clean the environment and load packages. First thing. Always. 
+
+```{r,eval=FALSE}
+rm(list = ls())
+library(tidyverse) # We will now be using ggplot2 which is part of the tidyverse
+```
+
+***
+
+# Base R Plotting
+
+Base R has several functions for data visualization. Crucially, you need separate functions for each type of plot. Some examples:
+
+```{r}
+hist(x=mpg$displ)
+```
+
+```{r}
+boxplot(displ~year,
+  data=mpg)
+```
+
+```{r}
+plot(x=mpg$displ,
+     y=mpg$hwy)
+```
+
+***
+
+## Disadvantages of Base R
+
+* Pretty outdated looking plots
+* Requires a lot of code and not very flexible
+* Plot objects cannot be stored and modified in a tidy way
+
+Solution: **ggplot2**
+
+***
+
+# The grammar of graphics in ggplot2
+
+Aesthetics  | Description | Code
+----------- | ----------- | -----------
+Data        | Which data do we want to use | ggplot(**data=**)
+Relationship | Which relationship do we want to display (axes, color, ) color, size, shape, etc. | ggplot(data=df, <br>  **mapping = aes(x= , y = , color= , size= , shape=  )**)
+Geometric Objects | How (e.g. in which form) do we want to see the relationships in our data (histogram, points, etc...) | ggplot(data=df, <br>  mapping = aes(x= , y = , color= , size=  )) <br> **+ geom_XX()**
+Additional stuff | Some additional functions to adjust scales, labels, tick marks, titles | among other things **+labs()**, **+scale()**
+
+***
+
+# Replicating the graph
+
+Step by step, with some digressions, we will now replicate the graph from above. 
+
+## Data and Relationship
+
+Select the data (*mpg*) and attach *displ* (the engine displacement) to the x axis,  *hwy* (Highway miles per gallon) for the y axis and the *class* (car class) as the color variable. 
+
+```{r}
+ggplot(data = mpg,
+       mapping = aes(x = displ, 
+                     y = hwy, 
+                     color = class))
+```
+
+Well, we don't see much. The reason is that we have only specified the data and the relationship, so far. But we have not told ggplot, which kinds of objects it should plot. 
+
+***
+
+## Geometric objects
+
+```{r}
+ggplot(data = mpg,
+       mapping = aes(x = displ, 
+                     y = hwy, 
+                     color = class))+
+  geom_point()
+```
+
+***
+
+### Practice with different geoms
+
+Now, it is up to you. 
+
+<span style="color:red">Task</span> <u>**Reproduce the following plots!**</u> 
+
+Follow the instructions about the mapping and the type of geom below each plot. 
+
+***
+
+#### Boxplot
+
+```{r, echo=FALSE}
+ggplot(data = mpg,
+  mapping = aes(x = class,
+                y = hwy)) + 
+  geom_boxplot()
+```
+
+* Change the Axis as displayed in the plot. Use no color variable. 
+* Use the `geom_boxplot()` function
+
+***
+
+#### Violin Plot
+
+
+```{r, echo=FALSE}
+ggplot(data = mpg,
+  mapping = aes(x = class,
+                y = hwy)) + 
+  geom_violin()
+```
+
+* Change the Axis as displayed in the plot. Use no color variable. 
+* Use the `geom_violin()` function
+
+***
+
+#### Density Plot a)
+
+```{r, echo=FALSE}
+ggplot(data = mpg,
+  mapping = aes(x=hwy
+                )) + 
+  geom_density()
+```
+
+* Change the Axis as displayed in the plot (keep only x axis). Use no color variable. 
+* Use the `geom_density()` function.
+
+***
+
+#### Histogram
+
+```{r, echo=FALSE, message=FALSE}
+ggplot(data = mpg,
+  mapping = aes(x=hwy
+                )) + 
+  geom_histogram()
+```
+
+* Can you imagine how to plot the histogram? 
+
+***
+
+#### Bar Plot
+
+```{r, echo=FALSE}
+ggplot(data = mpg,
+  mapping = aes(x = class)) + 
+  geom_bar()
+```
+
+
+* Change the Axis as displayed in the plot (keep only x axis). Use no color variable. 
+* Use the `geom_bar()` function.
+
+***
+
+#### Number of observations per location
+
+```{r, echo=FALSE}
+ggplot(data = mpg,
+  mapping = aes(x = displ,
+                y = hwy)) + 
+  geom_count()
+```
+
+* Change the Axis as displayed in the plot. Use no color variable. 
+* Use the `geom_count()` function.
+* Can you tell the difference to `geom_point()`?
+
+***
+
+## Additional Stuff
+
+Back to business. Let's continue working on our replication. 
+
+### Smoothed regression line
+
+A smoothed regression line (standard OLS) can be added by adding `geom_smooth()`. Choose `method = "lm"` for standard OLS. 
+
+```{r, warning=FALSE, message=FALSE}
+ggplot(data = mpg,
+       mapping = aes(x = displ, 
+                     y = hwy, 
+                     color = class))+
+  geom_point()+
+  geom_smooth(color = "blue", 
+              method = "lm")
+```
+
+***
+
+### Labels
+
+This is largely self-explanatory. 
+
+```{r}
+ggplot(data = mpg, 
+       mapping = aes(x = displ, 
+                     y = hwy, 
+                     color = class)) +
+  geom_point() + 
+  geom_smooth(col = "blue", 
+              method = "lm")+
+  labs(x = "Engine Displacement in Liters",
+       y = "Highway miles per gallon",
+       title = "MPG data",
+       subtitle = "Cars with higher engine displacement tend to have lower highway mpg",
+       caption = "Source: mpg data in ggplot2 \n Credits for the tutorial: TheRBootcamp",
+       color = "Car Classes")
+```
+
+***
+
+### Themes 
+
+We can modify the theme - the non-data components, e.g. (besides titles and labels) fonts, background, gridlines, and legends - as much as we would like to with `theme()`. 
+
+Further [below](https://beselufri.github.io/RforISG/dataviz.html#6_minor_addenda) we will explain how to build this beautiful graph:
+
+```{r, echo=FALSE}
+
+ggplot(data = mpg, 
+       mapping = aes(x = displ, 
+                     y = hwy, 
+                     color = class)) +
+  geom_point() + 
+  geom_smooth(col = "blue", 
+              method = "lm")+
+  labs(x = "Engine Displacement in Liters",
+       y = "Highway miles per gallon",
+       title = "MPG data",
+       subtitle = "Cars with higher engine displacement tend to have lower highway mpg",
+       caption = "Source: mpg data in ggplot2 \n Credits for the tutorial: TheRBootcamp",
+       color = "Car Classes")+
+  theme(panel.background = element_rect(fill = "pink"),
+        panel.grid.major.y = element_line(colour = "green"),
+        panel.grid.minor.y = element_line(colour = "green"),
+        legend.position = "bottom",
+        panel.border = element_rect(color="orange", fill = NA, size=5))+
+  scale_x_continuous(breaks = seq(1,8, by=0.5))+
+  geom_vline(xintercept = 3, size=5)
+```
+
+
+***
+
+#### Serious themes
+
+While you can adjust the theme as much as you want, the lazy but safer (e.g. plot designs which are deemed acceptable by more people than just yourself), you can rely on the large set of predesigned themes from ggplot2. Additionally, you can also make use of the ggthemes package, which offers even more themes. 
+
+
+
+```{r}
+ggplot(data = mpg, 
+       mapping = aes(x = displ, 
+                     y = hwy, 
+                     color = class)) +
+  geom_point() + 
+  geom_smooth(col = "blue", 
+              method = "lm")+
+  labs(x = "Engine Displacement in Liters",
+       y = "Highway miles per gallon",
+       title = "MPG data",
+       subtitle = "Cars with higher engine displacement tend to have lower highway mpg",
+       caption = "Source: mpg data in ggplot2 \n Credits for the tutorial: TheRBootcamp",
+       color = "Car Classes")+
+  theme_classic()
+```
+
+There are many more themes (for example, `theme_grey`, `theme_void`, `theme_dark`, `theme_minimal`)
+
+#### Themes from ggthemes
+
+With the ggthemes packages, you have even more themes at hand:
+
+```{r}
+library(ggthemes)
+
+ggplot(data = mpg, 
+       mapping = aes(x = displ, 
+                     y = hwy, 
+                     color = class)) +
+  geom_point() + 
+  geom_smooth(col = "blue", 
+              method = "lm")+
+  labs(x = "Engine Displacement in Liters",
+       y = "Highway miles per gallon",
+       title = "MPG data",
+       subtitle = "Cars with higher engine displacement tend to have lower highway mpg",
+       caption = "Source: mpg data in ggplot2 \n Credits for the tutorial: TheRBootcamp",
+       color = "Car Classes")+
+  theme_fivethirtyeight()
+
+```
+
+Other themes from the ggthemes package include `theme_economist` (The Economist style graphs), `theme_stata()` (for those who miss Stata), or `theme_tufte()`. It has also a cool functionality for creating color scales for color blind people. 
+
+***
+
+## Finish
+
+... This still doesn't look like the plot we wanted to create. Actually, the plot from above was build with the `theme_bw()`
+
+```{r}
+ggplot(data = mpg, 
+       mapping = aes(x = displ, 
+                     y = hwy, 
+                     color = class)) +
+  geom_point() + 
+  geom_smooth(col = "blue", 
+              method = "lm")+
+  labs(x = "Engine Displacement in Liters",
+       y = "Highway miles per gallon",
+       title = "MPG data",
+       subtitle = "Cars with higher engine displacement tend to have lower highway mpg",
+       caption = "Source: mpg data in ggplot2 \n Credits for the tutorial: TheRBootcamp",
+       color = "Car Classes")+
+  theme_bw()
+```
+
+***
+
+# Minor Addenda
+
+## Saving a ggplot object in the environment
+
+Just to mention this, you can save a ggplot object in the environment like everything else (remember, everything in R is an object).
+
+Storing our final plot from above as final_plot
+
+```{r}
+final_plot <- ggplot(data = mpg, 
+       mapping = aes(x = displ, 
+                     y = hwy, 
+                     color = class)) +
+  geom_point() + 
+  geom_smooth(col = "blue", 
+              method = "lm")+
+  labs(x = "Engine Displacement in Liters",
+       y = "Highway miles per gallon",
+       title = "MPG data",
+       subtitle = "Cars with higher engine displacement tend to have lower highway mpg",
+       caption = "Source: mpg data in ggplot2 \n Credits for the tutorial: TheRBootcamp",
+       color = "Car Classes")+
+  theme_bw()
+```
+
+We can then add stuff to the ggplot object in the usual way.
+
+Suppose, we want to add a fat vertical line (x=3) again:
+
+```{r}
+final_plot+
+  geom_vline(xintercept = 3, size=5)
+```
+
+***
+
+## Integrating ggplot with other tidyverse functions
+
+GGplot, being part of the tidyverse, can be perfectly integrated with other functions of the tidyverse.
+
+As an easy example, suppose, we only want to keep hwy values above 25:
+
+```{r}
+library(tidyverse)
+mpg %>% 
+  filter(hwy>=25)%>%
+  ggplot(                           # do not call data=mpg again here! 
+       mapping = aes(x = displ, 
+                     y = hwy, 
+                     color = class)) +
+  geom_point() + 
+  geom_smooth(col = "blue", 
+              method = "lm")+
+  labs(x = "Engine Displacement in Liters",
+       y = "Highway miles per gallon",
+       title = "MPG data",
+       subtitle = "Cars with higher engine displacement tend to have lower highway mpg",
+       caption = "Source: mpg data in ggplot2 \n Credits for the tutorial: TheRBootcamp",
+       color = "Car Classes")+
+  theme_bw()
+  
+
+```
+
+
+
+***
+
+## ggsave
+You can print a ggplot object with `ggsave`. 
+For this, we use the plot object `final_plot` which we created above. 
+
+```{r, eval=FALSE, message=FALSE}
+ggsave(plot = final_plot, 
+       file= "FILEDIRECTORYtoSAVEto.png")
+```
+
+
+***
+# Addenda II
+
+Below, find information on how to create a Likert scale type of graph and the basics on how to create an individual theme.
+
+## Likert scale
+Let's create fake Likert scale data. Let's pretend that the different types of transmissions are the levels of a Likert scale and that car classes are the Likert items. 
+
+Before we can plot this fake Likert scale, we have to do some data transformation:
+
+```{r}
+mpg2 <- mpg %>%
+  group_by(class) %>%
+  mutate(length.class = n()) %>%
+  group_by(trans, add = TRUE) %>%
+  mutate(length.trans = n(),
+         percentage.trans = 100 * length.trans / length.class) %>%
+  distinct(trans, class, .keep_all = TRUE)
+```
+
+```{r}
+ggplot(data = mpg2,
+  mapping = aes(x = class,
+                y = percentage.trans,
+                fill=trans)) + 
+  geom_bar(stat="identity", width = 0.7)+
+  coord_flip()
+```
+
+* Use class as x-axis and percentage.trans as y axis. fill=trans (different color for different trans levels)
+* Use the `geom_bar()` function.
+    + use stat="identity" to indicate that the height of the bars should represent values in the data (default is stat = "bin" which simply counts the number of occurrences of the x aesthetic)
+    + use widht = 0.7 to reduce the bar widht a bit
+* Use `+coord_flip()` ?
+
+***
+
+## Playing with themes
+
+As indicated above, here is an example of a manually (ridiculously) adjusted theme.
+
+Some random ideas for the theme (through the function `theme'()`:
+
+* Set background color to pink: `panel.background = element_rect(fill = "pink")`
+* Change color of horizontal gridlines to green: `panel.grid.major.y = element_line(colour = "green"), panel.grid.minor.y = element_line(colour = "green")`
+* Move the legend to the bottom: `legend.position = "bottom"`
+* Add a box around the plot: `panel.border = element_rect(color="orange", fill = NA, size=5)`
+
+Additionally, outside of theme, we also want to add even more beautiful stuff:
+
+* add a fat vertical line at 3: `+geom_vline(xintercept = 3, size=5)`
+* Add ticks for every 0.5 on the x-axis: `+scale_x_continuous(breaks = seq(1,8, by=0.5)` 
+
+<span style="color:red">Task</span> <u>**Reproduce the plot below and follow the instructions from above!**</u> 
+
+```{r, echo=FALSE}
+
+ggplot(data = mpg, 
+       mapping = aes(x = displ, 
+                     y = hwy, 
+                     color = class)) +
+  geom_point() + 
+  geom_smooth(col = "blue", 
+              method = "lm")+
+  labs(x = "Engine Displacement in Liters",
+       y = "Highway miles per gallon",
+       title = "MPG data",
+       subtitle = "Cars with higher engine displacement tend to have lower highway mpg",
+       caption = "Source: mpg data in ggplot2 \n Credits for the tutorial: TheRBootcamp",
+       color = "Car Classes")+
+  theme(panel.background = element_rect(fill = "pink"),
+        panel.grid.major.y = element_line(colour = "green"),
+        panel.grid.minor.y = element_line(colour = "green"),
+        legend.position = "bottom",
+        panel.border = element_rect(color="orange", fill = NA, size=5))+
+  scale_x_continuous(breaks = seq(1,8, by=0.5))+
+  geom_vline(xintercept = 3, size=5)
+```
+
+
+
+***
+
+# Some resources for ggplot2
+
+
+[Tutorial](https://tutorials.iq.harvard.edu/R/Rgraphics/Rgraphics.html#aesthetic_mapping) on replicating a graph from The Economist from Harvard Data Science Services. 
+
+[Book](http://socviz.co/index.html#preface) on Data Vizualizaton by Kieran Healy, freely available online

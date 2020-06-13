@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Datamanagement: Eurostat Example</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">R Course PhD</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Introduction</a>
+</li>
+<li>
+  <a href="objectsndata.html">Objects and Data</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Data Management
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="datamanagement.html">Data Management Introduction</a>
+    </li>
+    <li>
+      <a href="datamanagement_eurostat.html">Eurostat Example</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Descriptives and Bivariate
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="descriptives.html">Descriptive Stats</a>
+    </li>
+    <li>
+      <a href="bivariate.html">Bivariate Stats</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Regression
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="other_regressions.html">Regression</a>
+    </li>
+    <li>
+      <a href="other_outlier.html">Outlier Analysis</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Data Viz
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="dataviz.html">Data Viz Introduction</a>
+    </li>
+    <li>
+      <a href="dataviz_eurostat.html">Eurostat Example</a>
+    </li>
+    <li>
+      <a href="dataviz_map.html">Map Example</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Datamanagement: Eurostat Example</h1>
+
+</div>
+
+
+<p>Download the script <a href="https://raw.githubusercontent.com/LuMesserschmidt/stats_TUM/master/Files/Course%20Scripts/datamanagement_eurostat_clean.R">here</a></p>
+<p>Solutions can be downloaded <a href="https://raw.githubusercontent.com/LuMesserschmidt/stats_TUM/master/Files/Course%20Scripts/datamanagement_eurostat_solutions.R">here</a> - but try to solve everything without the solutions first! You will feel far more at ease with the basics of data manipulation if you write your own code.</p>
+<hr />
+<div id="general" class="section level1">
+<h1><span class="header-section-number">1</span> General</h1>
+<ul>
+<li>This page is for you to practice the data management techniques you learned on the last <a href="https://beselufri.github.io/RforISG/datamanagement.html">page</a>. You have to collect, manipulate and merge multiple several variables (from different data sets) by your own. Code wise, there is nothing new. All the operations can be solved with the tidyverse/dplyr grammar from before.
+<ul>
+<li>To be fair, there are three new functions (all from the tidyverse or base R): <code>bind_rows()</code>, <code>str_replace()</code>, and <code>paste()</code>. We will explain the orally in the example below. If in doubt, try <code>?function.name</code> or google ;)</li>
+</ul></li>
+<li><p>Your task is to gather several variables from Eurostat. To make matters a bit more difficult, you have to colelct the data twice: Once on the country level and once on the region (NUTS2) level.</p></li>
+<li><p>The only new thing is that we now use an API to download the data (see next section).</p></li>
+</ul>
+<hr />
+</div>
+<div id="about-api" class="section level1">
+<h1><span class="header-section-number">2</span> About API</h1>
+<p>APIs (=Application Programming Interface) in our R context can be thought of as a function to directly retrieve data from online data bases in a clearly defined way. The data base provider builds an interface which enables machines to download the data.</p>
+<p>This makes life easier for everybody coding with data as the data can be readily downloaded into the (R-) environment and has not to be downloaded in a (foreign) format manually. Downloading data by code also increases reproducibility and transparency.</p>
+<hr />
+</div>
+<div id="info-about-the-eurostat-api-and-the-general-approach." class="section level1">
+<h1><span class="header-section-number">3</span> Info about the Eurostat API and the general approach.</h1>
+<div id="general-coding-information" class="section level2">
+<h2><span class="header-section-number">3.1</span> General Coding Information</h2>
+<ul>
+<li>Retrieve and manage data for the PES project directly via the Eurostat API and the related eurostat R package</li>
+<li>Links: <a href="https://github.com/rstudio/cheatsheets/raw/master/eurostat.pdf">eurostat Cheat Sheet</a> and <a href="https://cran.r-project.org/web/packages/eurostat/eurostat.pdf">eurostat Documentation</a></li>
+</ul>
+<hr />
+</div>
+<div id="important-data-management-decisions" class="section level2">
+<h2><span class="header-section-number">3.2</span> Important Data Management Decisions</h2>
+<ul>
+<li>For Belgium regions the following geo identifiers have been used
+<ul>
+<li><strong>BE1</strong> Région de Bruxelles-Capitale / Brussels Hoofdstedelijk Gewest –&gt; ATTENTION BE10 seems to be identical</li>
+<li><strong>BE2</strong> Vlaams Gewest</li>
+<li><strong>BE3</strong> Région wallonne</li>
+</ul></li>
+<li>Youth and working age population
+<ul>
+<li>Youth defined as “From 15 to 24 years”</li>
+<li>Working age populations as “From 15 to 64 years”,</li>
+</ul></li>
+</ul>
+<hr />
+</div>
+<div id="the-data-management-structure" class="section level2">
+<h2><span class="header-section-number">3.3</span> The data management structure</h2>
+<ul>
+<li>Each variable/group of related variables has its own header and is downloaded and manipulated in the same fashion:
+<ul>
+<li>There are three code chunks: one for a) all countries, b) Belgian regions and c) merging a and b</li>
+</ul></li>
+<li>.a) and b) themselves have the same order:
+<ul>
+<li>Download data via API with get_eurostat</li>
+<li>Label all codes (for easier readability) with label_eurostat</li>
+<li>Filter, select and spread the data</li>
+</ul></li>
+<li>The first variable (Employment) has extensive comments to ease the understanding of the code</li>
+<li>To retrieve the eurostat codes for datasets check the subchapter “Search for Eurostat codes”</li>
+</ul>
+<hr />
+</div>
+<div id="search-for-eurostat-codes" class="section level2">
+<h2><span class="header-section-number">3.4</span> Search for Eurostat codes</h2>
+<ul>
+<li>Eurostat codes for data tables can be retrieved via search_eurostat</li>
+<li>An example (looking for all data containing the name employment in the title):
+<ul>
+<li><code>query &lt;- search_eurostat(&quot;Employment&quot;, type = &quot;all&quot;)</code></li>
+<li>You can then inspect the query via <code>View(query)</code></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<div id="setup-the-script" class="section level1">
+<h1><span class="header-section-number">4</span> Setup the script</h1>
+<ul>
+<li>Remember: You should clean the environment and load the necessary packages.
+<ul>
+<li>If packages aren’t installed yet, do so.</li>
+<li>We need the tidyverse and the eurostat package.</li>
+</ul></li>
+</ul>
+<p><span style="color:red">Task</span> <u><strong>Clean the environment and load the packages</strong></u></p>
+</div>
+<div id="employment-rate-by-educational-attainment-levels" class="section level1">
+<h1><span class="header-section-number">5</span> Employment rate by educational attainment levels</h1>
+<div id="countries-lfsa_ergaed-employment-rates-by-sex-age-and-educational-attainment-level" class="section level2">
+<h2><span class="header-section-number">5.1</span> Countries: <strong>lfsa_ergaed</strong> Employment rates by sex, age and educational attainment level</h2>
+<pre class="r"><code>data_a &lt;-
+  get_eurostat(id = &quot;lfsa_ergaed&quot;, # the relevant id to be downloaded
+               time_format = &quot;num&quot;) # retrieve time column as.numeric right away (bc we only have yearly data)
+               
+data_a &lt;- label_eurostat(data_a,
+                           code = c(&quot;geo&quot;,
+                                    &quot;isced11&quot;,
+                                    &quot;sex&quot;), # we want to keep the &quot;geo&quot; plus relevant identifier items to be able to merge data easily
+                           lang = &quot;en&quot;) # English is the default, line included for transparency
+
+data_a &lt;- data_a %&gt;%
+  filter(age == &quot;From 15 to 64 years&quot;,
+         # filter for appropriate values --&gt; if more variables (for example sex or age) are needed, make changes here!
+         isced11_code %in% c(&quot;ED0-2&quot;, &quot;ED3_4&quot;, &quot;ED5-8&quot;)) %&gt;%
+  mutate(
+    variab = &quot;emp&quot;, # Add variable identifier
+    isced11_code = str_replace(isced11_code, &quot;-&quot;, &quot;_&quot;),
+    # R doesn&#39;t like &#39;-&#39;(minus) in column names, change that to &#39;_&#39;
+    key = paste(variab, isced11_code, sex_code, sep = &quot;_&quot;)
+  ) %&gt;% # Merge sex and isced to get different data vars
+  select(-c(unit, sex, isced11, sex_code, isced11_code, age, geo)) %&gt;% # remove unnecessary rows (which would be in the way of spread)
+  spread(key = key, value = values) %&gt;% # spread out the column whose individual levels are needed as columns
+  rename_all(tolower) # all column names in lowercase</code></pre>
+</div>
+<div id="belgium-lfst_r_lfe2emprtn-employment-rates-by-sex-age-educational-attainment-level-citizenship-and-nuts-2-regions" class="section level2">
+<h2><span class="header-section-number">5.2</span> Belgium: <strong>lfst_r_lfe2emprtn</strong> Employment rates by sex, age, educational attainment level, citizenship and NUTS 2 regions</h2>
+<pre class="r"><code>data_b &lt;-
+  get_eurostat(id = &quot;lfst_r_lfe2emprtn&quot;, # the relevant id to be downloaded
+               time_format = &quot;num&quot;) # retrieve time column as.numeric right away (bc we only have yearly data)
+
+
+data_b &lt;- label_eurostat(
+  data_b,
+  code = c(&quot;geo&quot;,
+           &quot;isced11&quot;,
+           &quot;sex&quot;),
+  # we want to keep the &quot;geo&quot; and &quot;na_item&quot; column to be able to merge data easily
+  lang = &quot;en&quot;,
+  # English is the default, line included for transparency
+  fix_duplicated = TRUE
+)
+
+data_b &lt;- data_b %&gt;%
+  filter(
+    geo_code %in% c(&quot;BE1&quot;, &quot;BE2&quot;, &quot;BE3&quot;),
+    citizen == &quot;Total&quot;, # geo_code and citizen are the only two differences in Belgium compared to Country level for the filter
+    age == &quot;From 15 to 64 years&quot;,
+    # filter for appropriate values --&gt; if more variables (for example sex or age) are needed, make changes here!
+    isced11_code %in% c(&quot;ED0-2&quot;, &quot;ED3_4&quot;, &quot;ED5-8&quot;)
+  ) %&gt;%
+  mutate(
+    variab = &quot;emp&quot;, # Add variable identifier
+    isced11_code = str_replace(isced11_code, &quot;-&quot;, &quot;_&quot;),
+    # R doesn&#39;t like &#39;-&#39;(minus) in column names, change that to &#39;_&#39;
+    key = paste(variab, isced11_code, sex_code, sep = &quot;_&quot;)
+  ) %&gt;% # Merge sex and isced to get different data vars
+  select(-c(unit, sex, isced11, sex_code, isced11_code, age, geo, citizen)) %&gt;% # remove unnecessary rows (which would be in the way of spread) + Do not forget also to unfilter citizen (extra variable in the Belgium data)
+  spread(key = key, value = values) %&gt;% # spread out the column whose individual levels are needed as columns
+  rename_all(tolower) # all column names in lowercase</code></pre>
+</div>
+<div id="rbind-a-and-b" class="section level2">
+<h2><span class="header-section-number">5.3</span> Rbind a and b</h2>
+<p>This is the only new thing. <code>bind_rows()</code> appends rows from different data frames if the column names and types are identical.</p>
+<pre class="r"><code>empl_educ &lt;- bind_rows(data_a, data_b)</code></pre>
+</div>
+</div>
+<div id="time-to-practice" class="section level1">
+<h1><span class="header-section-number">6</span> Time to practice!</h1>
+<ul>
+<li>You can now work on your own.</li>
+<li>I would highly recommend you to follow the structure of
+<ul>
+<li><ol style="list-style-type: lower-alpha">
+<li>get and manipulate data for all countries, b) get and manipulate data for Belgian regions and c) merge a and b</li>
+</ol></li>
+</ul></li>
+<li>Below you get all the eurostat codes you need as well as the name you should give each respective variable.</li>
+<li>Once you have all variables, we want to merge them by their geo_code and time identification.</li>
+<li>Don’t forget to recode values if they are supposed to become a variable
+<ul>
+<li>E.g. if in the column size_emp one value is called “From 0 to 9 persons employed” and this value should become a column name, you should recode the value (while it is possible to have column names with spaces this is not very tidy): <code>.... %&gt;% mutate (size_emp = recode(size_emp, &quot;From 0 to 9 persons employed&quot; = &quot;empsize_verysmall&quot;))</code></li>
+</ul></li>
+</ul>
+<pre class="r"><code># A. Employment rate by sex and age
+
+## Countries: **lfsa_ergaed** Employment rates by sex, age and educational attainment level 
+
+## Belgium: **lfst_r_lfe2emprtn** Employment rates by sex, age, educational attainment level, citizenship and NUTS 2 regions----
+
+## Rbind a and b: empl_educ
+
+
+# B. Unemployment rates
+
+## Unemployment rates by sex, age and citizenship (%) [lfsa_urgan]
+
+## Unemployment rates by sex, age, ((, country of birth)) and NUTS 2 regions (%) [lfst_r_lfu3rt AND lfst_r_lfur2gac]
+
+#&#39; There is only one single data management task for you here: 
+#&#39; * Somewhat randomly, Unemployment data for Youth and working age population exist but in different datasets:
+#&#39;   + lfst_r_lfur2gac has 15-64
+#*   + lfst_r_lfu3rt has 15-24
+#&#39; * Accordingly, we load and manipulate both data seperately and merge them
+
+
+## Rbind a and b: unempl
+
+
+
+
+
+# C. Nominal GDP per capita
+
+## Gross domestic product at market prices tec00001
+
+## Gross domestic product (GDP) at current market prices by NUTS 2 regions [nama_10r_2gdp]
+
+## Rbind a and b gdp.pc
+
+
+
+
+# D. Investment Rate
+
+## Annual enterprise statistics for special aggregates of activities (NACE Rev. 2) [sbs_na_sca_r2]
+#&#39; * Only Data for country level
+#&#39; * getting data for the variables:
+#&#39;   + Investment rate (investment/value added at factors cost) - percentage
+#&#39;   + Investment per person employed - milliers deuros
+
+## Only data for country level available
+
+## Rbind a and b: Just save data_a as inv </code></pre>
+</div>
+<div id="difficult" class="section level1">
+<h1><span class="header-section-number">7</span> Difficult</h1>
+<ul>
+<li><p>For Employment Growth (growth in employment YoY) you have to create column with the lagged employment values (e.g. give in the same row the employment values from the present year in one column and in another column the employment from the year before).</p></li>
+<li><p>Lagging can be done with <code>lag()</code>. Don’t forget to use <code>group_by</code> before!</p></li>
+</ul>
+<pre class="r"><code># Employment Growth 
+
+## Employment and activity by sex and age  - annual data  [lfsi_emp_a]
+
+## Employment by sex, age and NUTS 2 regions (1 000) [lfst_r_lfe2emp]
+
+## Rbind a and b:empl_growth</code></pre>
+</div>
+<div id="merge-all-df-together-and-save-as-csv" class="section level1">
+<h1><span class="header-section-number">8</span> Merge all df together and save as csv</h1>
+<pre class="r"><code>df_final &lt;-
+  Reduce(
+    function(x, y)
+      full_join(x, y, by = c(&quot;geo_code&quot;, &quot;time&quot;)),
+    list(empl_educ, unempl, empl_sex_age, transition, empl_growth, totemp, gdp_gr, gdp_pc, inv, min_wage, empsize, dropout,  
+         literacy, childcare, gr_productiv, popul, depratio, immigr, emmigr, tempemp, jobsrch, activtyrate, parttime, death)
+  )
+
+df_final &lt;- df_final %&gt;%
+  group_by(geo_code, time) %&gt;%
+  rename_all(tolower)
+
+write_excel_csv2(df_final, &quot;data_uptodate.csv&quot;)</code></pre>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,128 @@
+---
+title: "Bivariate Statistics"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,warning = FALSE)
+```
+
+Download the script [here](https://raw.githubusercontent.com/LuMesserschmidt/stats_TUM/master/Files/Course%20Scripts/bivariate.R)
+
+***
+
+Often, before conducting regression analysis, quantitative papers will present a series of bivariate relationships in order to establish unconditional relationships. Here are some common ones.
+
+# T-test (independent and dependent)
+
+You can run an independent sample t-test across groups using the t.test() command. You have to reference the two groups separately.
+
+Conduct an independent sample t-test of the miles per gallon variable across cylinders
+
+```{r, eval=FALSE}
+t.test(data$mpg[data$cyl==4],
+       data$mpg[data$cyl==8])
+
+Welch Two Sample t-test
+
+data:  data$mpg[data$cyl == 4] and data$mpg[data$cyl == 8]
+t = 7.5967, df = 14.967, p-value = 1.641e-06
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+  8.318518 14.808755
+sample estimates:
+mean of x mean of y 
+ 26.66364  15.10000 
+ 
+```
+
+
+The t.test() command takes two arguments at its most basic, and it conducts an independent sample t-test on those variables.
+
+You can run also an dependent sample t-test between two variables. You have to reference the two variables separately and specify that it is paired.
+
+```{r, eval=FALSE}
+t.test(data$gear, data$carb, paired=TRUE)
+
+Paired t-test
+
+data:  data$gear and data$carb
+t = 3.1305, df = 31, p-value = 0.003789
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ 0.3049387 1.4450613
+sample estimates:
+mean of the differences 
+                  0.875 
+                  
+```
+
+
+# One-way ANOVA
+
+Though it is not used often, you can indeed do one-way analysis of variance in R. However, I will note that the results you get in terms of statistical significance are identical to those you could get from running a linear model. See below for the code to run a one-way ANOVA.
+
+```{r, eval=FALSE}
+# Run the one-way ANOVA model
+aov(data$mpg ~ data$cyl, data=data)
+# Display full ANOVA results
+summary(aov(data$mpg ~ data$cyl, data=data))
+            Df Sum Sq Mean Sq F value   Pr(>F)    
+data$cyl     1  817.7   817.7   79.56 6.11e-10 ***
+Residuals   30  308.3    10.3                     
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+                  
+```
+
+
+There are three important differences between this command and the other commands we see in this tutorial that are important to note. They are especially important because we will see them pop up again in the next discussion of linear regression.
+
+* Note the ~ operator setup. You should read this as “A one-way analysis of variance of the mpg variable across values of the cyl variable.” Essentially, it is setting up a model where there is a dependent variable of interest, mpg, and an independent variable of interest, cyl.
+* We did not have to refer to each variable by the object name, api. Instead, we set the data that the variables are coming from in a separate argument called data. This is something unique to functions that are running models, as we will see again when doing linear regression.
+* Notice that on its face, the result from the aov() command are not particularly informative. To get the full results of one of these models (again, similar to we will see with regression), you need to apply the summary() command, as shown below.
+
+# Chi-squared test
+
+You can test for the statistical relationship between two categorical variables using the chisq.test() function. At it’s base, it takes two variables as input.
+
+```{r, eval=FALSE}
+chisq.test(data$mpg, data$cyl, correct=FALSE)        
+
+
+	Pearson`s Chi-squared test
+
+data:  data$mpg and data$cyl
+X-squared = 56.831, df = 48, p-value = 0.1792
+
+                  
+```
+
+
+Notice that we include the correct=FALSE argument in order to make sure that R does not automatically (as you can see in the help file) apply a continuity correction.
+
+# Correlation
+
+You can calculate the correlation between two variables specifically with the cor() command.
+
+
+```{r, eval=FALSE}
+cor(data$cyl,data$mpg, use="complete.obs")
+
+[1] -0.852162
+
+
+# Get a subset of variables
+correlationsubset <- data[c("mpg","cyl","hp")]
+# Get the correlation matrix
+cor(correlationsubset, use="complete.obs")
+
+           mpg        cyl         hp
+mpg  1.0000000 -0.8521620 -0.7761684
+cyl -0.8521620  1.0000000  0.8324475
+hp  -0.7761684  0.8324475  1.0000000
+
+```
+
+Here, you enter the two variables separately as separate arguments. In addition, note the complete.obs setting. Like the mean() and sd() functions from before, cor() by default does not omit missing data. You need to include use="complete.obs" to make cor() omit missing data.
+
+To make a correlation matrix of several variables, the command is the same except instead of entering the variables separately, you create a subset of the variables, and just enter them all at once.
