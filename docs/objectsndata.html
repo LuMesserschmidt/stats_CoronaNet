@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
@@ -14,6 +13,7 @@
 
 <title>Objects and Data Frames</title>
 
+<script src="site_libs/header-attrs-2.1/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
@@ -236,6 +236,7 @@ $(document).ready(function () {
   border: none;
   display: inline-block;
   border-radius: 4px;
+  background-color: transparent;
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li {
@@ -264,6 +265,12 @@ $(document).ready(function () {
 }
 }
 
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
 
 .toc-content {
   padding-left: 30px;
@@ -344,7 +351,7 @@ div.tocify {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">R Course PhD</a>
+      <a class="navbar-brand" href="index.html">Learning Platform CoronaNet</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -365,6 +372,12 @@ div.tocify {
       <a href="datamanagement.html">Data Management Introduction</a>
     </li>
     <li>
+      <a href="datamanagement_corona.html">CoronaNet Example</a>
+    </li>
+    <li>
+      <a href="datamanagement_others.html">Data Examples</a>
+    </li>
+    <li>
       <a href="datamanagement_eurostat.html">Eurostat Example</a>
     </li>
   </ul>
@@ -382,6 +395,9 @@ div.tocify {
     <li>
       <a href="bivariate.html">Bivariate Stats</a>
     </li>
+    <li>
+      <a href="descriptives_corona.html">CoronaNet Example</a>
+    </li>
   </ul>
 </li>
 <li class="dropdown">
@@ -397,6 +413,9 @@ div.tocify {
     <li>
       <a href="other_outlier.html">Outlier Analysis</a>
     </li>
+    <li>
+      <a href="regression_corona.html">CoronaNet Example</a>
+    </li>
   </ul>
 </li>
 <li class="dropdown">
@@ -408,6 +427,9 @@ div.tocify {
   <ul class="dropdown-menu" role="menu">
     <li>
       <a href="dataviz.html">Data Viz Introduction</a>
+    </li>
+    <li>
+      <a href="dataviz_corona.html">CoronaNet Example</a>
     </li>
     <li>
       <a href="dataviz_eurostat.html">Eurostat Example</a>
@@ -440,9 +462,9 @@ div.tocify {
 <p>Download the script <a href="https://raw.githubusercontent.com/LuMesserschmidt/stats_TUM/master/Files/Course%20Scripts/objectsndata_clean.R">here</a>.</p>
 <p>Solutions can be downloaded <a href="https://raw.githubusercontent.com/LuMesserschmidt/stats_TUM/master/Files/Course%20Scripts/objectsndata_solutions.R">here</a> - but try to solve everything without the solutions first!</p>
 <hr />
-<div id="objects-in-r-basic-calculations" class="section level1">
-<h1><span class="header-section-number">1</span> Objects in R: Basic Calculations</h1>
-<p>We will most often want to store results of calculations to reuse them later. For this, we can work with basic objects. An object has a name and a content. We can freely choose the name of an object and give certain rules - they have to start with a letter and include only letters, numbers and some special characters (“.”, &quot;_“,”-&quot;). <strong>R is case sensitive so “x” and “X” are different object names</strong>.</p>
+<div id="objects-in-r-basic-calculations" class="section level1" number="1">
+<h1 number="1"><span class="header-section-number">1</span> Objects in R: Basic Calculations</h1>
+<p>We will most often want to store results of calculations to reuse them later. For this, we can work with basic objects. An object has a name and a content. We can freely choose the name of an object and give certain rules - they have to start with a letter and include only letters, numbers and some special characters (“.”, "_“,”-"). <strong>R is case sensitive so “x” and “X” are different object names</strong>.</p>
 <p>The content of an object is assigned using “&lt;-” or “=” (for tidy readability, you should always use the former, though).</p>
 <p>In order to assign the value of 5 to an object with name x do</p>
 <pre class="r"><code>x &lt;- 5
@@ -462,8 +484,8 @@ rm(x) # Deletes an object
 rm(list=ls()) # all objects are removed</code></pre>
 <hr />
 </div>
-<div id="everything-in-r-is-an-object" class="section level1">
-<h1><span class="header-section-number">2</span> Everything in R Is an Object</h1>
+<div id="everything-in-r-is-an-object" class="section level1" number="2">
+<h1 number="2"><span class="header-section-number">2</span> Everything in R Is an Object</h1>
 <p>Coming from excel or stata, you might think that objects are objects storing data. However, everything in R is an object: functions, symbols, and even R expressions: functions, symbols, and even R expressions (see <a href="https://www.oreilly.com/library/view/r-in-a/9781449358204/ch05s06.html">R in a Nutshell</a>).</p>
 <p>For example, function names in R are really symbol objects that point to function objects. (That relationship is, in turn, stored in an environment object.) You can assign a symbol to refer to a numeric object and then change the symbol to refer to a function:</p>
 <p><span style="color:red">Task</span> <u><strong>Try to understand the different meanigs of x!</strong></u></p>
@@ -482,8 +504,8 @@ x
 x(2)</code></pre>
 <hr />
 </div>
-<div id="vectors" class="section level1">
-<h1><span class="header-section-number">3</span> Vectors</h1>
+<div id="vectors" class="section level1" number="3">
+<h1 number="3"><span class="header-section-number">3</span> Vectors</h1>
 <p>For statistical calculations, we obviously need to work with data sets including many numbers of instead of scalars. The simplest way to collect many numbers (or other types of information) is called a vector in R terminology (you have already been familiarized with vectors on the page before).</p>
 <p>To define a vector, we can collect different values using <code>c(value1, value2,...)</code>.</p>
 <pre class="r"><code># Examples
@@ -515,8 +537,8 @@ seq(50)
 5:15
 seq(4, 20, 2)</code></pre>
 <hr />
-<div id="logical-operators-and-logical-vectors" class="section level2">
-<h2><span class="header-section-number">3.1</span> Logical Operators and Logical Vectors</h2>
+<div id="logical-operators-and-logical-vectors" class="section level2" number="3.1">
+<h2 number="3.1"><span class="header-section-number">3.1</span> Logical Operators and Logical Vectors</h2>
 <p><span style="color:red">Task</span> <u><strong>Do you understand all of these operators?</strong></u></p>
 <pre class="r"><code>x &lt;- 10
 y &lt;- 9 
@@ -556,10 +578,10 @@ typeof(int_var)</code></pre>
 <pre><code>## [1] &quot;integer&quot;</code></pre>
 <hr />
 </div>
-<div id="naming-and-indexing-vectors" class="section level2">
-<h2><span class="header-section-number">3.2</span> Naming and Indexing Vectors</h2>
+<div id="naming-and-indexing-vectors" class="section level2" number="3.2">
+<h2 number="3.2"><span class="header-section-number">3.2</span> Naming and Indexing Vectors</h2>
 <p>The elements of a vector can be named which can increase the readability of the output. Given a vector <code>vec</code> and a string vector <code>namevec</code> of the same length, the names are attached to the vector elements using <code>names(vec) &lt;- namevec</code>.</p>
-<p>If we want to access a single element or a subset from a vector, we can work with <strong>indices</strong>. They are written in square brackets next to the vector name. For example `<code>myvector[4]</code> returns the 4th element of <code>myvector</code> and <code>myvector[6] &lt;- 8</code> changes the 6th element to take the value of 8. If the vector elements have names, we can also use those as indices like in <code>myvector[&quot;elementname&quot;]</code></p>
+<p>If we want to access a single element or a subset from a vector, we can work with <strong>indices</strong>. They are written in square brackets next to the vector name. For example `<code>myvector[4]</code> returns the 4th element of <code>myvector</code> and <code>myvector[6] &lt;- 8</code> changes the 6th element to take the value of 8. If the vector elements have names, we can also use those as indices like in <code>myvector["elementname"]</code></p>
 <p><span style="color:red">Task</span> <u><strong>Complete the empty spaces!</strong></u></p>
 <pre class="r"><code># Create a vector &quot;kicker.skills&quot;:
 kicker.skills &lt;- c(0.2, 4, 3, 10, 5,-2)
@@ -587,8 +609,8 @@ kicker.skills[_ == min(_)] # DO you understand every part of this line? </code><
 <hr />
 </div>
 </div>
-<div id="data-frames" class="section level1">
-<h1><span class="header-section-number">4</span> Data Frames</h1>
+<div id="data-frames" class="section level1" number="4">
+<h1 number="4"><span class="header-section-number">4</span> Data Frames</h1>
 <p>A data frame is an object that collects several variables and can be thought of as a rectangular shape with the rows representing the observational units and the columns representing the variables. As such, it is similar to a matrix (see below). For us, the most important difference to a matrix is that a data frame can contain variables of different types (like numerical, logical, string and factor), whereas matrices can only contain values of one type.</p>
 <p>Unlike a matrix, the columns always contain names which represent the variables. We can define a data frame from scratch by using the command <code>data.frame</code>.</p>
 <pre class="r"><code># Define one x vector for the days:
@@ -618,7 +640,7 @@ presence[__ , __]
 
 # Show all entries of the variables days, Julia and Lena
 presence[__ , __________]</code></pre>
-<p>We can address a single variable var of a data frame df using the matrix-like syntax <code>df[, &quot;var&quot;]</code> or by stating <code>df$var</code>. This can be used for extracting the values of a variable but also for creating new variables. Sometimes, it is convenient not to have to type the name of the data frame several times within a command. The function <code>with(df, some expression using vars of df</code> can help.</p>
+<p>We can address a single variable var of a data frame df using the matrix-like syntax <code>df[, "var"]</code> or by stating <code>df$var</code>. This can be used for extracting the values of a variable but also for creating new variables. Sometimes, it is convenient not to have to type the name of the data frame several times within a command. The function <code>with(df, some expression using vars of df</code> can help.</p>
 <p><span style="color:red">Task</span> <u><strong>Complete the empty spaces!</strong></u></p>
 <pre class="r"><code># Accessing a single variable:
 presence$Eugen
@@ -635,11 +657,11 @@ presence$total.presence2 &lt;- with(presence, Eugen+Julia+Lena)</code></pre>
 subset(presence, __==___) </code></pre>
 <hr />
 </div>
-<div id="other-object-types" class="section level1">
-<h1><span class="header-section-number">5</span> Other object types</h1>
+<div id="other-object-types" class="section level1" number="5">
+<h1 number="5"><span class="header-section-number">5</span> Other object types</h1>
 <p>The following three object types are of secondary importance for our tutorial but nevertheless you should become familiar with them over time.</p>
-<div id="factors" class="section level2">
-<h2><span class="header-section-number">5.1</span> Factors</h2>
+<div id="factors" class="section level2" number="5.1">
+<h2 number="5.1"><span class="header-section-number">5.1</span> Factors</h2>
 <p>Seemingly similar to vectors but behaving (sometimes) differently: factors. Factors are very useful to work with binary variables.</p>
 <p><span style="color:red">Task</span> <u><strong>What is the difference between xf1 and xf2?</strong></u></p>
 <pre class="r"><code># Costumer Ratings
@@ -658,8 +680,8 @@ gender &lt;- _    # CREATE gender as factor
 summary(gender) </code></pre>
 <hr />
 </div>
-<div id="matrices" class="section level2">
-<h2><span class="header-section-number">5.2</span> Matrices</h2>
+<div id="matrices" class="section level2" number="5.2">
+<h2 number="5.2"><span class="header-section-number">5.2</span> Matrices</h2>
 <p>Matrices are important tools for data analysis. R has a powerful matrix algebra system. Most often, matrices will be generated from an existing data set. But you can also build the from scratch with <code>matrix(vec, nrow=m)</code> (takes the numbers stored in vector <code>vec</code> and puts them into a matrix with m rows). Other options include: <code>rbind(r1,r2)</code> and <code>cbind(c1,c2)</code> in binding several vectors (which obviously need to have the same length) by row or column.</p>
 <p><span style="color:red">Task</span> <u><strong>Complete the empty spaces!</strong></u></p>
 <pre class="r"><code># GENERATE matrix A from one vector with two rows
@@ -707,8 +729,8 @@ C &lt;- t(B)
 solve(D)</code></pre>
 <hr />
 </div>
-<div id="lists" class="section level2">
-<h2><span class="header-section-number">5.3</span> Lists</h2>
+<div id="lists" class="section level2" number="5.3">
+<h2 number="5.3"><span class="header-section-number">5.3</span> Lists</h2>
 <p>A list is a generic collection of objects. Unlike vectors, components can be of different types.</p>
 <pre class="r"><code># Generate a list object:
 mylist &lt;- list(A = seq(8, 36, 4),

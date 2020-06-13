@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
@@ -14,6 +13,7 @@
 
 <title>Regression Analysis</title>
 
+<script src="site_libs/header-attrs-2.1/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
@@ -27,9 +27,9 @@
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <script src="site_libs/htmlwidgets-1.5.1/htmlwidgets.js"></script>
-<script src="site_libs/viz-0.3/viz.js"></script>
+<script src="site_libs/viz-1.8.2/viz.js"></script>
 <link href="site_libs/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
-<script src="site_libs/grViz-binding-1.0.1/grViz.js"></script>
+<script src="site_libs/grViz-binding-1.0.6.1/grViz.js"></script>
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
@@ -240,6 +240,7 @@ $(document).ready(function () {
   border: none;
   display: inline-block;
   border-radius: 4px;
+  background-color: transparent;
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li {
@@ -268,6 +269,12 @@ $(document).ready(function () {
 }
 }
 
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
 
 .toc-content {
   padding-left: 30px;
@@ -348,7 +355,7 @@ div.tocify {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">R Course PhD</a>
+      <a class="navbar-brand" href="index.html">Learning Platform CoronaNet</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -369,6 +376,12 @@ div.tocify {
       <a href="datamanagement.html">Data Management Introduction</a>
     </li>
     <li>
+      <a href="datamanagement_corona.html">CoronaNet Example</a>
+    </li>
+    <li>
+      <a href="datamanagement_others.html">Data Examples</a>
+    </li>
+    <li>
       <a href="datamanagement_eurostat.html">Eurostat Example</a>
     </li>
   </ul>
@@ -386,6 +399,9 @@ div.tocify {
     <li>
       <a href="bivariate.html">Bivariate Stats</a>
     </li>
+    <li>
+      <a href="descriptives_corona.html">CoronaNet Example</a>
+    </li>
   </ul>
 </li>
 <li class="dropdown">
@@ -401,6 +417,9 @@ div.tocify {
     <li>
       <a href="other_outlier.html">Outlier Analysis</a>
     </li>
+    <li>
+      <a href="regression_corona.html">CoronaNet Example</a>
+    </li>
   </ul>
 </li>
 <li class="dropdown">
@@ -412,6 +431,9 @@ div.tocify {
   <ul class="dropdown-menu" role="menu">
     <li>
       <a href="dataviz.html">Data Viz Introduction</a>
+    </li>
+    <li>
+      <a href="dataviz_corona.html">CoronaNet Example</a>
     </li>
     <li>
       <a href="dataviz_eurostat.html">Eurostat Example</a>
@@ -444,8 +466,8 @@ div.tocify {
 <p>Download the script <a href="https://raw.githubusercontent.com/LuMesserschmidt/stats_TUM/master/Files/Course%20Scripts/other_regressions_clean.R">here</a>. There are no exercises so this script contains all necessary code already.</p>
 <p>Download the data <a href="https://raw.githubusercontent.com/LuMesserschmidt/stats_TUM/master/data/eurostat_data.csv">here</a> (same data as on the <a href="https://beselufri.github.io/RforISG/dataviz_eurostat.html">DataViz Eurostat page</a>)</p>
 <hr />
-<div id="tldr" class="section level1">
-<h1><span class="header-section-number">1</span> Tl;dr</h1>
+<div id="tldr" class="section level1" number="1">
+<h1 number="1"><span class="header-section-number">1</span> Tl;dr</h1>
 <p>This is how standard OLS regressions are done:</p>
 <pre class="r"><code>ols_object &lt;- lm(regressand ~ regressor1 + regressor2 + regressor3,
                  data = data.frame)</code></pre>
@@ -468,18 +490,16 @@ stargazer(ols_object, panel_object,
           type = &quot;html&quot;, # either html, latex, or text
           out = &quot;output.html&quot;) # if a file should be produced</code></pre>
 </div>
-<div id="introduction" class="section level1">
-<h1><span class="header-section-number">2</span> Introduction</h1>
-<div id="workflow" class="section level2">
-<h2><span class="header-section-number">2.1</span> Workflow</h2>
-<pre><code>## Warning in as.POSIXlt.POSIXct(Sys.time()): unknown timezone &#39;zone/tz/2019c.
-## 1.0/zoneinfo/Europe/Berlin&#39;</code></pre>
-<div id="htmlwidget-00b1c8620d927329ab94" style="width:800px;height:400px;" class="grViz html-widget"></div>
-<script type="application/json" data-for="htmlwidget-00b1c8620d927329ab94">{"x":{"diagram":"digraph {\n\n  rankdir=LR\n\n  # a \"graph\" statement\n  node[shape = note margin=0.25]\n  graph [overlap = true, fontsize = 10]\n\n   formula [label = \"Model Formula\"]\n\n  node[shape = hexagon]\n    lm [label = \"Fit Model \\n lm()\"]\n  \n  node [shape = cylinder]\n    data [label = \"Data\"]\n    \n    out [label = \"lm - Output\"]\n    \n  node [shape = box]\n  \n    inspect [label = \"Inspect & Plot\"]\n    evaluate [label = \"Evaluate\"]\n    export [label = \"Display & Export\"]\n\n  data -> lm\n  formula -> lm\n  \n  lm -> out\n  \n  out -> evaluate\n  out -> inspect\n  out -> export\n\n\n  # several \"edge\" statements\n\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div id="introduction" class="section level1" number="2">
+<h1 number="2"><span class="header-section-number">2</span> Introduction</h1>
+<div id="workflow" class="section level2" number="2.1">
+<h2 number="2.1"><span class="header-section-number">2.1</span> Workflow</h2>
+<div id="htmlwidget-aa5d11f1b225a3823694" style="width:800px;height:400px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-aa5d11f1b225a3823694">{"x":{"diagram":"digraph {\n\n  rankdir=LR\n\n  # a \"graph\" statement\n  node[shape = note margin=0.25]\n  graph [overlap = true, fontsize = 10]\n\n   formula [label = \"Model Formula\"]\n\n  node[shape = hexagon]\n    lm [label = \"Fit Model \\n lm()\"]\n  \n  node [shape = cylinder]\n    data [label = \"Data\"]\n    \n    out [label = \"lm - Output\"]\n    \n  node [shape = box]\n  \n    inspect [label = \"Inspect & Plot\"]\n    evaluate [label = \"Evaluate\"]\n    export [label = \"Display & Export\"]\n\n  data -> lm\n  formula -> lm\n  \n  lm -> out\n  \n  out -> evaluate\n  out -> inspect\n  out -> export\n\n\n  # several \"edge\" statements\n\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 <hr />
 </div>
-<div id="the-lm-function" class="section level2">
-<h2><span class="header-section-number">2.2</span> The <code>lm</code> Function</h2>
+<div id="the-lm-function" class="section level2" number="2.2">
+<h2 number="2.2"><span class="header-section-number">2.2</span> The <code>lm</code> Function</h2>
 <pre class="r"><code>lm(formula,
    data,
    subset,
@@ -490,8 +510,8 @@ stargazer(ols_object, panel_object,
 <p><code>na.action</code> - Option that specifies how to deal with missing values</p>
 <hr />
 </div>
-<div id="the-formula-argument" class="section level2">
-<h2><span class="header-section-number">2.3</span> The <code>formula</code> Argument</h2>
+<div id="the-formula-argument" class="section level2" number="2.3">
+<h2 number="2.3"><span class="header-section-number">2.3</span> The <code>formula</code> Argument</h2>
 <p>We can write our models using the following syntax:</p>
 <pre class="r"><code>model &lt;- formula(regressand ~ regressors)</code></pre>
 <p>Where <code>regressand</code> is just our dependent variable / response usually denoted by <span class="math inline">\(y\)</span> and <code>model</code> is our formula of independent variables / regressors, e.g.:</p>
@@ -523,8 +543,8 @@ formula(y ~ log(a)) # log can stay by itself</code></pre>
 formula(y ~ a + b + ... + z) # for a dataset with variables from a to z</code></pre>
 <hr />
 </div>
-<div id="the-subset-argument" class="section level2">
-<h2><span class="header-section-number">2.4</span> The <code>subset</code> Argument</h2>
+<div id="the-subset-argument" class="section level2" number="2.4">
+<h2 number="2.4"><span class="header-section-number">2.4</span> The <code>subset</code> Argument</h2>
 <ul>
 <li>Sometimes, we want to run our model on a subset of our data (without changing the data themselves)</li>
 <li>We can specify subsets of certain variables as follows:</li>
@@ -541,8 +561,8 @@ formula(y ~ a + b + ... + z) # for a dataset with variables from a to z</code></
 <p>Note that although this works, a best practice is to subset your data prior to the estimation. By keeping these steps distinct, your code will be much easier for someone else to understand.</p>
 <hr />
 </div>
-<div id="the-na.action-argument" class="section level2">
-<h2><span class="header-section-number">2.5</span> The <code>na.action</code> Argument</h2>
+<div id="the-na.action-argument" class="section level2" number="2.5">
+<h2 number="2.5"><span class="header-section-number">2.5</span> The <code>na.action</code> Argument</h2>
 <p>If the data contains missing values, <code>lm</code> automatically deletes the whole observation.</p>
 <ul>
 <li>Specify <code>na.action = na.fail</code> if you want an error when the data contains missing values</li>
@@ -553,8 +573,8 @@ formula(y ~ a + b + ... + z) # for a dataset with variables from a to z</code></
 </ul>
 <hr />
 </div>
-<div id="example-call-of-lm-with-eurostat-data" class="section level2">
-<h2><span class="header-section-number">2.6</span> Example Call of <code>lm</code> with Eurostat Data</h2>
+<div id="example-call-of-lm-with-eurostat-data" class="section level2" number="2.6">
+<h2 number="2.6"><span class="header-section-number">2.6</span> Example Call of <code>lm</code> with Eurostat Data</h2>
 <pre class="r"><code>eur_data &lt;- read.csv2(&quot;data/eurostat_data.csv&quot;)
 
 m1 &lt;-
@@ -564,8 +584,8 @@ model &lt;- lm(formula = m1,
             data = eur_data)</code></pre>
 <hr />
 </div>
-<div id="output-of-lm" class="section level2">
-<h2><span class="header-section-number">2.7</span> Output of <code>lm</code></h2>
+<div id="output-of-lm" class="section level2" number="2.7">
+<h2 number="2.7"><span class="header-section-number">2.7</span> Output of <code>lm</code></h2>
 <p>The <code>lm</code> function returns a list. Relevant components of this list are:</p>
 <ul>
 <li><code>call</code> - the function call that generated the output</li>
@@ -578,7 +598,7 @@ model &lt;- lm(formula = m1,
 <ul>
 <li><code>?lm()</code></li>
 <li><code>str(model)</code> where model is our saved output from <code>lm</code></li>
-<li>the <code>$</code> operator and <code>tab</code>, e.g. <code>model$...</code></li>
+<li>the <code>$</code> operator and <code>tab</code>, e.g. <code>model$...</code></li>
 </ul>
 <p>Lets look up our coefficients <span class="math inline">\(\beta\)</span>, fitted values <span class="math inline">\(\hat{y}\)</span> and OLS residuals <span class="math inline">\(\varepsilon\)</span></p>
 <pre class="r"><code>model$coefficients</code></pre>
@@ -597,8 +617,8 @@ model &lt;- lm(formula = m1,
 <p><img src="other_regressions_files/figure-html/unnamed-chunk-22-1.png" width="960" /></p>
 <hr />
 </div>
-<div id="output-of-lm-with-the-summary-function" class="section level2">
-<h2><span class="header-section-number">2.8</span> Output of <code>lm</code> with the <code>summary()</code> function</h2>
+<div id="output-of-lm-with-the-summary-function" class="section level2" number="2.8">
+<h2 number="2.8"><span class="header-section-number">2.8</span> Output of <code>lm</code> with the <code>summary()</code> function</h2>
 <pre class="r"><code>summary(model)</code></pre>
 <pre><code>## 
 ## Call:
@@ -623,8 +643,8 @@ model &lt;- lm(formula = m1,
 ## F-statistic: 18.46 on 3 and 238 DF,  p-value: 8.453e-11</code></pre>
 <hr />
 </div>
-<div id="display-and-export-tables-with-stargazer" class="section level2">
-<h2><span class="header-section-number">2.9</span> Display and Export Tables with <code>stargazer()</code></h2>
+<div id="display-and-export-tables-with-stargazer" class="section level2" number="2.9">
+<h2 number="2.9"><span class="header-section-number">2.9</span> Display and Export Tables with <code>stargazer()</code></h2>
 <pre class="r"><code>stargazer::stargazer(model, type = &quot;text&quot;)</code></pre>
 <pre><code>## 
 ## ===============================================
@@ -654,16 +674,16 @@ model &lt;- lm(formula = m1,
 ## Note:               *p&lt;0.1; **p&lt;0.05; ***p&lt;0.01</code></pre>
 <p>Jake Russ has the <a href="https://www.jakeruss.com/cheatsheets/stargazer/">ultimate overview</a> over all <code>stargazer()</code> functions (there are many!!).</p>
 <hr />
-<div id="export-stargazer-output-to-file" class="section level3">
-<h3><span class="header-section-number">2.9.1</span> Export Stargazer Output to File</h3>
+<div id="export-stargazer-output-to-file" class="section level3" number="2.9.1">
+<h3 number="2.9.1"><span class="header-section-number">2.9.1</span> Export Stargazer Output to File</h3>
 <pre class="r"><code>stargazer::stargazer(model,
                      type = &quot;html&quot;,
                      out = &quot;model.html&quot;)</code></pre>
 <hr />
 </div>
 </div>
-<div id="compare-different-models" class="section level2">
-<h2><span class="header-section-number">2.10</span> Compare different Models</h2>
+<div id="compare-different-models" class="section level2" number="2.10">
+<h2 number="2.10"><span class="header-section-number">2.10</span> Compare different Models</h2>
 <pre class="r"><code>model2 &lt;- lm(unemp_workagepop_t ~ gdp_gr,
              data = eur_data)</code></pre>
 <pre class="r"><code>stargazer::stargazer(model, model2,
@@ -891,7 +911,7 @@ F Statistic
 </td>
 </tr>
 </table>
-<p>Specify the folder and file were your table should be saved as <code>&quot;path/name.type&quot;</code></p>
+<p>Specify the folder and file were your table should be saved as <code>"path/name.type"</code></p>
 <ol style="list-style-type: decimal">
 <li>Output as <code>.html</code> : Open the file in your web browser and copy it into Word</li>
 <li>Output as <code>.tex</code> : Include in LaTeX</li>
@@ -899,8 +919,8 @@ F Statistic
 <hr />
 </div>
 </div>
-<div id="panel-regression" class="section level1">
-<h1><span class="header-section-number">3</span> Panel Regression</h1>
+<div id="panel-regression" class="section level1" number="3">
+<h1 number="3"><span class="header-section-number">3</span> Panel Regression</h1>
 <p>Just a very quick glimpse into panel regressions with plm.</p>
 <pre class="r"><code>library(plm)
 panel_object &lt;- plm(

@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
@@ -14,6 +13,7 @@
 
 <title>Data Viz</title>
 
+<script src="site_libs/header-attrs-2.1/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
@@ -236,6 +236,7 @@ $(document).ready(function () {
   border: none;
   display: inline-block;
   border-radius: 4px;
+  background-color: transparent;
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li {
@@ -264,6 +265,12 @@ $(document).ready(function () {
 }
 }
 
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
 
 .toc-content {
   padding-left: 30px;
@@ -344,7 +351,7 @@ div.tocify {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">R Course PhD</a>
+      <a class="navbar-brand" href="index.html">Learning Platform CoronaNet</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -365,6 +372,12 @@ div.tocify {
       <a href="datamanagement.html">Data Management Introduction</a>
     </li>
     <li>
+      <a href="datamanagement_corona.html">CoronaNet Example</a>
+    </li>
+    <li>
+      <a href="datamanagement_others.html">Data Examples</a>
+    </li>
+    <li>
       <a href="datamanagement_eurostat.html">Eurostat Example</a>
     </li>
   </ul>
@@ -382,6 +395,9 @@ div.tocify {
     <li>
       <a href="bivariate.html">Bivariate Stats</a>
     </li>
+    <li>
+      <a href="descriptives_corona.html">CoronaNet Example</a>
+    </li>
   </ul>
 </li>
 <li class="dropdown">
@@ -397,6 +413,9 @@ div.tocify {
     <li>
       <a href="other_outlier.html">Outlier Analysis</a>
     </li>
+    <li>
+      <a href="regression_corona.html">CoronaNet Example</a>
+    </li>
   </ul>
 </li>
 <li class="dropdown">
@@ -408,6 +427,9 @@ div.tocify {
   <ul class="dropdown-menu" role="menu">
     <li>
       <a href="dataviz.html">Data Viz Introduction</a>
+    </li>
+    <li>
+      <a href="dataviz_corona.html">CoronaNet Example</a>
     </li>
     <li>
       <a href="dataviz_eurostat.html">Eurostat Example</a>
@@ -438,11 +460,10 @@ div.tocify {
 
 
 <p>Download the script <a href="https://raw.githubusercontent.com/LuMesserschmidt/stats_TUM/master/Files/Course%20Scripts/dataviz_clean.R">here</a>.</p>
-<div id="intro" class="section level1">
-<h1><span class="header-section-number">1</span> Intro</h1>
+<div id="intro" class="section level1" number="1">
+<h1 number="1"><span class="header-section-number">1</span> Intro</h1>
 <p>In this tutorial, we will learn how to produce this graph.</p>
-<pre><code>## Warning in as.POSIXlt.POSIXct(Sys.time()): unknown timezone &#39;zone/tz/2019c.
-## 1.0/zoneinfo/Europe/Berlin&#39;</code></pre>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
 <p><img src="dataviz_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
 <p>Actually, it only takes 12 lines of code (of which 5 are only related to the text captions) and some pretty straight forward logic.</p>
 <ul>
@@ -456,15 +477,15 @@ div.tocify {
 <p>This site heavily builds upon <a href="https://therbootcamp.github.io/">The R Bootcamp</a> who employ the widely used mpg dataset and the accompanying coding instructions (see for example (see for example <a href="https://r4ds.had.co.nz/data-visualisation.html">R for Data Science</a>) for their data visualization tutorial.</p>
 <hr />
 </div>
-<div id="packages-and-script-set-up" class="section level1">
-<h1><span class="header-section-number">2</span> Packages and script set-up</h1>
+<div id="packages-and-script-set-up" class="section level1" number="2">
+<h1 number="2"><span class="header-section-number">2</span> Packages and script set-up</h1>
 <p>But before we start, as always - clean the environment and load packages. First thing. Always.</p>
 <pre class="r"><code>rm(list = ls())
 library(tidyverse) # We will now be using ggplot2 which is part of the tidyverse</code></pre>
 <hr />
 </div>
-<div id="base-r-plotting" class="section level1">
-<h1><span class="header-section-number">3</span> Base R Plotting</h1>
+<div id="base-r-plotting" class="section level1" number="3">
+<h1 number="3"><span class="header-section-number">3</span> Base R Plotting</h1>
 <p>Base R has several functions for data visualization. Crucially, you need separate functions for each type of plot. Some examples:</p>
 <pre class="r"><code>hist(x=mpg$displ)</code></pre>
 <p><img src="dataviz_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
@@ -475,8 +496,8 @@ library(tidyverse) # We will now be using ggplot2 which is part of the tidyverse
      y=mpg$hwy)</code></pre>
 <p><img src="dataviz_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
 <hr />
-<div id="disadvantages-of-base-r" class="section level2">
-<h2><span class="header-section-number">3.1</span> Disadvantages of Base R</h2>
+<div id="disadvantages-of-base-r" class="section level2" number="3.1">
+<h2 number="3.1"><span class="header-section-number">3.1</span> Disadvantages of Base R</h2>
 <ul>
 <li>Pretty outdated looking plots</li>
 <li>Requires a lot of code and not very flexible</li>
@@ -486,8 +507,8 @@ library(tidyverse) # We will now be using ggplot2 which is part of the tidyverse
 <hr />
 </div>
 </div>
-<div id="the-grammar-of-graphics-in-ggplot2" class="section level1">
-<h1><span class="header-section-number">4</span> The grammar of graphics in ggplot2</h1>
+<div id="the-grammar-of-graphics-in-ggplot2" class="section level1" number="4">
+<h1 number="4"><span class="header-section-number">4</span> The grammar of graphics in ggplot2</h1>
 <table>
 <colgroup>
 <col width="33%" />
@@ -526,11 +547,11 @@ library(tidyverse) # We will now be using ggplot2 which is part of the tidyverse
 </table>
 <hr />
 </div>
-<div id="replicating-the-graph" class="section level1">
-<h1><span class="header-section-number">5</span> Replicating the graph</h1>
+<div id="replicating-the-graph" class="section level1" number="5">
+<h1 number="5"><span class="header-section-number">5</span> Replicating the graph</h1>
 <p>Step by step, with some digressions, we will now replicate the graph from above.</p>
-<div id="data-and-relationship" class="section level2">
-<h2><span class="header-section-number">5.1</span> Data and Relationship</h2>
+<div id="data-and-relationship" class="section level2" number="5.1">
+<h2 number="5.1"><span class="header-section-number">5.1</span> Data and Relationship</h2>
 <p>Select the data (<em>mpg</em>) and attach <em>displ</em> (the engine displacement) to the x axis, <em>hwy</em> (Highway miles per gallon) for the y axis and the <em>class</em> (car class) as the color variable.</p>
 <pre class="r"><code>ggplot(data = mpg,
        mapping = aes(x = displ, 
@@ -540,8 +561,8 @@ library(tidyverse) # We will now be using ggplot2 which is part of the tidyverse
 <p>Well, we don’t see much. The reason is that we have only specified the data and the relationship, so far. But we have not told ggplot, which kinds of objects it should plot.</p>
 <hr />
 </div>
-<div id="geometric-objects" class="section level2">
-<h2><span class="header-section-number">5.2</span> Geometric objects</h2>
+<div id="geometric-objects" class="section level2" number="5.2">
+<h2 number="5.2"><span class="header-section-number">5.2</span> Geometric objects</h2>
 <pre class="r"><code>ggplot(data = mpg,
        mapping = aes(x = displ, 
                      y = hwy, 
@@ -549,14 +570,14 @@ library(tidyverse) # We will now be using ggplot2 which is part of the tidyverse
   geom_point()</code></pre>
 <p><img src="dataviz_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 <hr />
-<div id="practice-with-different-geoms" class="section level3">
-<h3><span class="header-section-number">5.2.1</span> Practice with different geoms</h3>
+<div id="practice-with-different-geoms" class="section level3" number="5.2.1">
+<h3 number="5.2.1"><span class="header-section-number">5.2.1</span> Practice with different geoms</h3>
 <p>Now, it is up to you.</p>
 <p><span style="color:red">Task</span> <u><strong>Reproduce the following plots!</strong></u></p>
 <p>Follow the instructions about the mapping and the type of geom below each plot.</p>
 <hr />
-<div id="boxplot" class="section level4">
-<h4><span class="header-section-number">5.2.1.1</span> Boxplot</h4>
+<div id="boxplot" class="section level4" number="5.2.1.1">
+<h4 number="5.2.1.1"><span class="header-section-number">5.2.1.1</span> Boxplot</h4>
 <p><img src="dataviz_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
 <ul>
 <li>Change the Axis as displayed in the plot. Use no color variable.</li>
@@ -564,8 +585,8 @@ library(tidyverse) # We will now be using ggplot2 which is part of the tidyverse
 </ul>
 <hr />
 </div>
-<div id="violin-plot" class="section level4">
-<h4><span class="header-section-number">5.2.1.2</span> Violin Plot</h4>
+<div id="violin-plot" class="section level4" number="5.2.1.2">
+<h4 number="5.2.1.2"><span class="header-section-number">5.2.1.2</span> Violin Plot</h4>
 <p><img src="dataviz_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
 <ul>
 <li>Change the Axis as displayed in the plot. Use no color variable.</li>
@@ -573,8 +594,8 @@ library(tidyverse) # We will now be using ggplot2 which is part of the tidyverse
 </ul>
 <hr />
 </div>
-<div id="density-plot-a" class="section level4">
-<h4><span class="header-section-number">5.2.1.3</span> Density Plot a)</h4>
+<div id="density-plot-a" class="section level4" number="5.2.1.3">
+<h4 number="5.2.1.3"><span class="header-section-number">5.2.1.3</span> Density Plot a)</h4>
 <p><img src="dataviz_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
 <ul>
 <li>Change the Axis as displayed in the plot (keep only x axis). Use no color variable.</li>
@@ -582,16 +603,16 @@ library(tidyverse) # We will now be using ggplot2 which is part of the tidyverse
 </ul>
 <hr />
 </div>
-<div id="histogram" class="section level4">
-<h4><span class="header-section-number">5.2.1.4</span> Histogram</h4>
+<div id="histogram" class="section level4" number="5.2.1.4">
+<h4 number="5.2.1.4"><span class="header-section-number">5.2.1.4</span> Histogram</h4>
 <p><img src="dataviz_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
 <ul>
 <li>Can you imagine how to plot the histogram?</li>
 </ul>
 <hr />
 </div>
-<div id="bar-plot" class="section level4">
-<h4><span class="header-section-number">5.2.1.5</span> Bar Plot</h4>
+<div id="bar-plot" class="section level4" number="5.2.1.5">
+<h4 number="5.2.1.5"><span class="header-section-number">5.2.1.5</span> Bar Plot</h4>
 <p><img src="dataviz_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
 <ul>
 <li>Change the Axis as displayed in the plot (keep only x axis). Use no color variable.</li>
@@ -599,8 +620,8 @@ library(tidyverse) # We will now be using ggplot2 which is part of the tidyverse
 </ul>
 <hr />
 </div>
-<div id="number-of-observations-per-location" class="section level4">
-<h4><span class="header-section-number">5.2.1.6</span> Number of observations per location</h4>
+<div id="number-of-observations-per-location" class="section level4" number="5.2.1.6">
+<h4 number="5.2.1.6"><span class="header-section-number">5.2.1.6</span> Number of observations per location</h4>
 <p><img src="dataviz_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
 <ul>
 <li>Change the Axis as displayed in the plot. Use no color variable.</li>
@@ -611,12 +632,12 @@ library(tidyverse) # We will now be using ggplot2 which is part of the tidyverse
 </div>
 </div>
 </div>
-<div id="additional-stuff" class="section level2">
-<h2><span class="header-section-number">5.3</span> Additional Stuff</h2>
+<div id="additional-stuff" class="section level2" number="5.3">
+<h2 number="5.3"><span class="header-section-number">5.3</span> Additional Stuff</h2>
 <p>Back to business. Let’s continue working on our replication.</p>
-<div id="smoothed-regression-line" class="section level3">
-<h3><span class="header-section-number">5.3.1</span> Smoothed regression line</h3>
-<p>A smoothed regression line (standard OLS) can be added by adding <code>geom_smooth()</code>. Choose <code>method = &quot;lm&quot;</code> for standard OLS.</p>
+<div id="smoothed-regression-line" class="section level3" number="5.3.1">
+<h3 number="5.3.1"><span class="header-section-number">5.3.1</span> Smoothed regression line</h3>
+<p>A smoothed regression line (standard OLS) can be added by adding <code>geom_smooth()</code>. Choose <code>method = "lm"</code> for standard OLS.</p>
 <pre class="r"><code>ggplot(data = mpg,
        mapping = aes(x = displ, 
                      y = hwy, 
@@ -627,8 +648,8 @@ library(tidyverse) # We will now be using ggplot2 which is part of the tidyverse
 <p><img src="dataviz_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
 <hr />
 </div>
-<div id="labels" class="section level3">
-<h3><span class="header-section-number">5.3.2</span> Labels</h3>
+<div id="labels" class="section level3" number="5.3.2">
+<h3 number="5.3.2"><span class="header-section-number">5.3.2</span> Labels</h3>
 <p>This is largely self-explanatory.</p>
 <pre class="r"><code>ggplot(data = mpg, 
        mapping = aes(x = displ, 
@@ -643,17 +664,19 @@ library(tidyverse) # We will now be using ggplot2 which is part of the tidyverse
        subtitle = &quot;Cars with higher engine displacement tend to have lower highway mpg&quot;,
        caption = &quot;Source: mpg data in ggplot2 \n Credits for the tutorial: TheRBootcamp&quot;,
        color = &quot;Car Classes&quot;)</code></pre>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
 <p><img src="dataviz_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
 <hr />
 </div>
-<div id="themes" class="section level3">
-<h3><span class="header-section-number">5.3.3</span> Themes</h3>
-<p>We can modify the theme - the non-data components, e.g. (besides titles and labels) fonts, background, gridlines, and legends - as much as we would like to with <code>theme()</code>.</p>
+<div id="themes" class="section level3" number="5.3.3">
+<h3 number="5.3.3"><span class="header-section-number">5.3.3</span> Themes</h3>
+<p>We can modify the theme - the non-data components, e.g. (besides titles and labels) fonts, background, gridlines, and legends - as much as we would like to with <code>theme()</code>.</p>
 <p>Further <a href="https://beselufri.github.io/RforISG/dataviz.html#6_minor_addenda">below</a> we will explain how to build this beautiful graph:</p>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
 <p><img src="dataviz_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
 <hr />
-<div id="serious-themes" class="section level4">
-<h4><span class="header-section-number">5.3.3.1</span> Serious themes</h4>
+<div id="serious-themes" class="section level4" number="5.3.3.1">
+<h4 number="5.3.3.1"><span class="header-section-number">5.3.3.1</span> Serious themes</h4>
 <p>While you can adjust the theme as much as you want, the lazy but safer (e.g. plot designs which are deemed acceptable by more people than just yourself), you can rely on the large set of predesigned themes from ggplot2. Additionally, you can also make use of the ggthemes package, which offers even more themes.</p>
 <pre class="r"><code>ggplot(data = mpg, 
        mapping = aes(x = displ, 
@@ -669,11 +692,12 @@ library(tidyverse) # We will now be using ggplot2 which is part of the tidyverse
        caption = &quot;Source: mpg data in ggplot2 \n Credits for the tutorial: TheRBootcamp&quot;,
        color = &quot;Car Classes&quot;)+
   theme_classic()</code></pre>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
 <p><img src="dataviz_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
 <p>There are many more themes (for example, <code>theme_grey</code>, <code>theme_void</code>, <code>theme_dark</code>, <code>theme_minimal</code>)</p>
 </div>
-<div id="themes-from-ggthemes" class="section level4">
-<h4><span class="header-section-number">5.3.3.2</span> Themes from ggthemes</h4>
+<div id="themes-from-ggthemes" class="section level4" number="5.3.3.2">
+<h4 number="5.3.3.2"><span class="header-section-number">5.3.3.2</span> Themes from ggthemes</h4>
 <p>With the ggthemes packages, you have even more themes at hand:</p>
 <pre class="r"><code>library(ggthemes)
 
@@ -691,14 +715,15 @@ ggplot(data = mpg,
        caption = &quot;Source: mpg data in ggplot2 \n Credits for the tutorial: TheRBootcamp&quot;,
        color = &quot;Car Classes&quot;)+
   theme_fivethirtyeight()</code></pre>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
 <p><img src="dataviz_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
 <p>Other themes from the ggthemes package include <code>theme_economist</code> (The Economist style graphs), <code>theme_stata()</code> (for those who miss Stata), or <code>theme_tufte()</code>. It has also a cool functionality for creating color scales for color blind people.</p>
 <hr />
 </div>
 </div>
 </div>
-<div id="finish" class="section level2">
-<h2><span class="header-section-number">5.4</span> Finish</h2>
+<div id="finish" class="section level2" number="5.4">
+<h2 number="5.4"><span class="header-section-number">5.4</span> Finish</h2>
 <p>… This still doesn’t look like the plot we wanted to create. Actually, the plot from above was build with the <code>theme_bw()</code></p>
 <pre class="r"><code>ggplot(data = mpg, 
        mapping = aes(x = displ, 
@@ -714,14 +739,15 @@ ggplot(data = mpg,
        caption = &quot;Source: mpg data in ggplot2 \n Credits for the tutorial: TheRBootcamp&quot;,
        color = &quot;Car Classes&quot;)+
   theme_bw()</code></pre>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
 <p><img src="dataviz_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
 <hr />
 </div>
 </div>
-<div id="minor-addenda" class="section level1">
-<h1><span class="header-section-number">6</span> Minor Addenda</h1>
-<div id="saving-a-ggplot-object-in-the-environment" class="section level2">
-<h2><span class="header-section-number">6.1</span> Saving a ggplot object in the environment</h2>
+<div id="minor-addenda" class="section level1" number="6">
+<h1 number="6"><span class="header-section-number">6</span> Minor Addenda</h1>
+<div id="saving-a-ggplot-object-in-the-environment" class="section level2" number="6.1">
+<h2 number="6.1"><span class="header-section-number">6.1</span> Saving a ggplot object in the environment</h2>
 <p>Just to mention this, you can save a ggplot object in the environment like everything else (remember, everything in R is an object).</p>
 <p>Storing our final plot from above as final_plot</p>
 <pre class="r"><code>final_plot &lt;- ggplot(data = mpg, 
@@ -742,27 +768,26 @@ ggplot(data = mpg,
 <p>Suppose, we want to add a fat vertical line (x=3) again:</p>
 <pre class="r"><code>final_plot+
   geom_vline(xintercept = 3, size=5)</code></pre>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
 <p><img src="dataviz_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
 <hr />
 </div>
-<div id="integrating-ggplot-with-other-tidyverse-functions" class="section level2">
-<h2><span class="header-section-number">6.2</span> Integrating ggplot with other tidyverse functions</h2>
+<div id="integrating-ggplot-with-other-tidyverse-functions" class="section level2" number="6.2">
+<h2 number="6.2"><span class="header-section-number">6.2</span> Integrating ggplot with other tidyverse functions</h2>
 <p>GGplot, being part of the tidyverse, can be perfectly integrated with other functions of the tidyverse.</p>
 <p>As an easy example, suppose, we only want to keep hwy values above 25:</p>
 <pre class="r"><code>library(tidyverse)</code></pre>
-<pre><code>## Warning: package &#39;tidyverse&#39; was built under R version 3.4.2</code></pre>
-<pre><code>## ── Attaching packages ──────────────────────── tidyverse 1.2.1 ──</code></pre>
-<pre><code>## ✔ tibble  2.1.3     ✔ purrr   0.3.2
-## ✔ tidyr   1.0.0     ✔ dplyr   0.8.3
-## ✔ readr   1.3.1     ✔ stringr 1.4.0
-## ✔ tibble  2.1.3     ✔ forcats 0.4.0</code></pre>
-<pre><code>## Warning: package &#39;readr&#39; was built under R version 3.4.4</code></pre>
-<pre><code>## Warning: package &#39;purrr&#39; was built under R version 3.4.4</code></pre>
-<pre><code>## Warning: package &#39;stringr&#39; was built under R version 3.4.4</code></pre>
-<pre><code>## Warning: package &#39;forcats&#39; was built under R version 3.4.4</code></pre>
-<pre><code>## ── Conflicts ─────────────────────────── tidyverse_conflicts() ──
-## ✖ dplyr::filter() masks stats::filter()
-## ✖ dplyr::lag()    masks stats::lag()</code></pre>
+<pre><code>## ── Attaching packages ───────────────────────────────────────── tidyverse 1.3.0 ──</code></pre>
+<pre><code>## ✓ tibble  3.0.1     ✓ dplyr   0.8.5
+## ✓ tidyr   1.0.3     ✓ stringr 1.4.0
+## ✓ readr   1.3.1     ✓ forcats 0.5.0
+## ✓ purrr   0.3.4</code></pre>
+<pre><code>## Warning: package &#39;tibble&#39; was built under R version 3.6.2</code></pre>
+<pre><code>## Warning: package &#39;tidyr&#39; was built under R version 3.6.2</code></pre>
+<pre><code>## Warning: package &#39;purrr&#39; was built under R version 3.6.2</code></pre>
+<pre><code>## ── Conflicts ──────────────────────────────────────────── tidyverse_conflicts() ──
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()</code></pre>
 <pre class="r"><code>mpg %&gt;% 
   filter(hwy&gt;=25)%&gt;%
   ggplot(                           # do not call data=mpg again here! 
@@ -779,22 +804,23 @@ ggplot(data = mpg,
        caption = &quot;Source: mpg data in ggplot2 \n Credits for the tutorial: TheRBootcamp&quot;,
        color = &quot;Car Classes&quot;)+
   theme_bw()</code></pre>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
 <p><img src="dataviz_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
 <hr />
 </div>
-<div id="ggsave" class="section level2">
-<h2><span class="header-section-number">6.3</span> ggsave</h2>
+<div id="ggsave" class="section level2" number="6.3">
+<h2 number="6.3"><span class="header-section-number">6.3</span> ggsave</h2>
 <p>You can print a ggplot object with <code>ggsave</code>. For this, we use the plot object <code>final_plot</code> which we created above.</p>
 <pre class="r"><code>ggsave(plot = final_plot, 
        file= &quot;FILEDIRECTORYtoSAVEto.png&quot;)</code></pre>
 <hr />
 </div>
 </div>
-<div id="addenda-ii" class="section level1">
-<h1><span class="header-section-number">7</span> Addenda II</h1>
+<div id="addenda-ii" class="section level1" number="7">
+<h1 number="7"><span class="header-section-number">7</span> Addenda II</h1>
 <p>Below, find information on how to create a Likert scale type of graph and the basics on how to create an individual theme.</p>
-<div id="likert-scale" class="section level2">
-<h2><span class="header-section-number">7.1</span> Likert scale</h2>
+<div id="likert-scale" class="section level2" number="7.1">
+<h2 number="7.1"><span class="header-section-number">7.1</span> Likert scale</h2>
 <p>Let’s create fake Likert scale data. Let’s pretend that the different types of transmissions are the levels of a Likert scale and that car classes are the Likert items.</p>
 <p>Before we can plot this fake Likert scale, we have to do some data transformation:</p>
 <pre class="r"><code>mpg2 &lt;- mpg %&gt;%
@@ -822,15 +848,15 @@ ggplot(data = mpg,
 </ul>
 <hr />
 </div>
-<div id="playing-with-themes" class="section level2">
-<h2><span class="header-section-number">7.2</span> Playing with themes</h2>
+<div id="playing-with-themes" class="section level2" number="7.2">
+<h2 number="7.2"><span class="header-section-number">7.2</span> Playing with themes</h2>
 <p>As indicated above, here is an example of a manually (ridiculously) adjusted theme.</p>
 <p>Some random ideas for the theme (through the function <code>theme'()</code>:</p>
 <ul>
-<li>Set background color to pink: <code>panel.background = element_rect(fill = &quot;pink&quot;)</code></li>
-<li>Change color of horizontal gridlines to green: <code>panel.grid.major.y = element_line(colour = &quot;green&quot;), panel.grid.minor.y = element_line(colour = &quot;green&quot;)</code></li>
-<li>Move the legend to the bottom: <code>legend.position = &quot;bottom&quot;</code></li>
-<li>Add a box around the plot: <code>panel.border = element_rect(color=&quot;orange&quot;, fill = NA, size=5)</code></li>
+<li>Set background color to pink: <code>panel.background = element_rect(fill = "pink")</code></li>
+<li>Change color of horizontal gridlines to green: <code>panel.grid.major.y = element_line(colour = "green"), panel.grid.minor.y = element_line(colour = "green")</code></li>
+<li>Move the legend to the bottom: <code>legend.position = "bottom"</code></li>
+<li>Add a box around the plot: <code>panel.border = element_rect(color="orange", fill = NA, size=5)</code></li>
 </ul>
 <p>Additionally, outside of theme, we also want to add even more beautiful stuff:</p>
 <ul>
@@ -838,12 +864,13 @@ ggplot(data = mpg,
 <li>Add ticks for every 0.5 on the x-axis: <code>+scale_x_continuous(breaks = seq(1,8, by=0.5)</code></li>
 </ul>
 <p><span style="color:red">Task</span> <u><strong>Reproduce the plot below and follow the instructions from above!</strong></u></p>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
 <p><img src="dataviz_files/figure-html/unnamed-chunk-26-1.png" width="672" /></p>
 <hr />
 </div>
 </div>
-<div id="some-resources-for-ggplot2" class="section level1">
-<h1><span class="header-section-number">8</span> Some resources for ggplot2</h1>
+<div id="some-resources-for-ggplot2" class="section level1" number="8">
+<h1 number="8"><span class="header-section-number">8</span> Some resources for ggplot2</h1>
 <p><a href="https://tutorials.iq.harvard.edu/R/Rgraphics/Rgraphics.html#aesthetic_mapping">Tutorial</a> on replicating a graph from The Economist from Harvard Data Science Services.</p>
 <p><a href="http://socviz.co/index.html#preface">Book</a> on Data Vizualizaton by Kieran Healy, freely available online</p>
 </div>

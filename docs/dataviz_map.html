@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
@@ -14,6 +13,7 @@
 
 <title>Data Viz: Map with Eurostat Data</title>
 
+<script src="site_libs/header-attrs-2.1/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
@@ -236,6 +236,7 @@ $(document).ready(function () {
   border: none;
   display: inline-block;
   border-radius: 4px;
+  background-color: transparent;
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li {
@@ -264,6 +265,12 @@ $(document).ready(function () {
 }
 }
 
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
 
 .toc-content {
   padding-left: 30px;
@@ -344,7 +351,7 @@ div.tocify {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">R Course PhD</a>
+      <a class="navbar-brand" href="index.html">Learning Platform CoronaNet</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -365,6 +372,12 @@ div.tocify {
       <a href="datamanagement.html">Data Management Introduction</a>
     </li>
     <li>
+      <a href="datamanagement_corona.html">CoronaNet Example</a>
+    </li>
+    <li>
+      <a href="datamanagement_others.html">Data Examples</a>
+    </li>
+    <li>
       <a href="datamanagement_eurostat.html">Eurostat Example</a>
     </li>
   </ul>
@@ -382,6 +395,9 @@ div.tocify {
     <li>
       <a href="bivariate.html">Bivariate Stats</a>
     </li>
+    <li>
+      <a href="descriptives_corona.html">CoronaNet Example</a>
+    </li>
   </ul>
 </li>
 <li class="dropdown">
@@ -397,6 +413,9 @@ div.tocify {
     <li>
       <a href="other_outlier.html">Outlier Analysis</a>
     </li>
+    <li>
+      <a href="regression_corona.html">CoronaNet Example</a>
+    </li>
   </ul>
 </li>
 <li class="dropdown">
@@ -408,6 +427,9 @@ div.tocify {
   <ul class="dropdown-menu" role="menu">
     <li>
       <a href="dataviz.html">Data Viz Introduction</a>
+    </li>
+    <li>
+      <a href="dataviz_corona.html">CoronaNet Example</a>
     </li>
     <li>
       <a href="dataviz_eurostat.html">Eurostat Example</a>
@@ -439,17 +461,17 @@ div.tocify {
 
 <p>Download the script <a href="https://raw.githubusercontent.com/LuMesserschmidt/stats_TUM/master/Files/Course%20Scripts/dataviz_map_clean.R">here</a></p>
 <p>Download the data <a href="https://raw.githubusercontent.com/LuMesserschmidt/stats_TUM/master/data/eurostat_data.csv">here</a> (same data as on the <a href="https://beselufri.github.io/RforISG/dataviz_eurostat.html">DataViz Eurostat page</a>)</p>
-<div id="intro" class="section level1">
-<h1><span class="header-section-number">1</span> Intro</h1>
+<div id="intro" class="section level1" number="1">
+<h1 number="1"><span class="header-section-number">1</span> Intro</h1>
 <p>Creating maps with ggplot is easy. You just have to supply longitudinal data as the x variable and latitudinal data as the y variable and additionally give a group variable (so that R knows, which rows are to be filled together).</p>
 <p>This kind of data (long, lat, group) is something which you can get from external sources (we present two options below). Then you have to merge this data with your values (e.g. what you want to fill into the map). So in addition, you need a fourth variable (like the code or the name of the geography).</p>
 </div>
-<div id="setup" class="section level1">
-<h1><span class="header-section-number">2</span> Setup</h1>
+<div id="setup" class="section level1" number="2">
+<h1 number="2"><span class="header-section-number">2</span> Setup</h1>
 <p>What do we always do first? Besides the tidyverse, we need the rwolrdmap package (which you have to install).</p>
 </div>
-<div id="country-level-map-with-rworldmap" class="section level1">
-<h1><span class="header-section-number">3</span> Country level map with rworldmap</h1>
+<div id="country-level-map-with-rworldmap" class="section level1" number="3">
+<h1 number="3"><span class="header-section-number">3</span> Country level map with rworldmap</h1>
 <pre class="r"><code>eurost &lt;- read_csv2(&quot;data/eurostat_data.csv&quot;)
 
 eurost &lt;- eurost %&gt;%
@@ -483,8 +505,8 @@ P</code></pre>
 P2</code></pre>
 <p><img src="dataviz_map_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
 </div>
-<div id="nuts2-level-plots-with-eurostat" class="section level1">
-<h1><span class="header-section-number">4</span> NUTS2 level plots with eurostat</h1>
+<div id="nuts2-level-plots-with-eurostat" class="section level1" number="4">
+<h1 number="4"><span class="header-section-number">4</span> NUTS2 level plots with eurostat</h1>
 <p>The eurstat package, which you already know by now, has the function <code>get_eurostat_geospatial</code> which allows you to retrieve a data frame with longitudinal, latitudinal, and group data for maps on different levels of agglomeration.</p>
 <p>The overall procedure is the same as above. Once we have data on long, lat, and group, we merge it with our data of interest.</p>
 <pre class="r"><code>library(&quot;eurostat&quot;)

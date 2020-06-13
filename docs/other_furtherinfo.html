@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
@@ -14,6 +13,7 @@
 
 <title>Further Information</title>
 
+<script src="site_libs/header-attrs-2.1/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
@@ -26,11 +26,6 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
-<script src="site_libs/htmlwidgets-1.5.1/htmlwidgets.js"></script>
-<link href="site_libs/wordcloud2-0.0.1/wordcloud.css" rel="stylesheet" />
-<script src="site_libs/wordcloud2-0.0.1/wordcloud2-all.js"></script>
-<script src="site_libs/wordcloud2-0.0.1/hover.js"></script>
-<script src="site_libs/wordcloud2-binding-0.2.1/wordcloud2.js"></script>
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
@@ -241,6 +236,7 @@ $(document).ready(function () {
   border: none;
   display: inline-block;
   border-radius: 4px;
+  background-color: transparent;
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li {
@@ -269,6 +265,12 @@ $(document).ready(function () {
 }
 }
 
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
 
 .toc-content {
   padding-left: 30px;
@@ -349,7 +351,7 @@ div.tocify {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">R Course PhD</a>
+      <a class="navbar-brand" href="index.html">Learning Platform CoronaNet</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -370,6 +372,12 @@ div.tocify {
       <a href="datamanagement.html">Data Management Introduction</a>
     </li>
     <li>
+      <a href="datamanagement_corona.html">CoronaNet Example</a>
+    </li>
+    <li>
+      <a href="datamanagement_others.html">Data Examples</a>
+    </li>
+    <li>
       <a href="datamanagement_eurostat.html">Eurostat Example</a>
     </li>
   </ul>
@@ -387,6 +395,9 @@ div.tocify {
     <li>
       <a href="bivariate.html">Bivariate Stats</a>
     </li>
+    <li>
+      <a href="descriptives_corona.html">CoronaNet Example</a>
+    </li>
   </ul>
 </li>
 <li class="dropdown">
@@ -402,6 +413,9 @@ div.tocify {
     <li>
       <a href="other_outlier.html">Outlier Analysis</a>
     </li>
+    <li>
+      <a href="regression_corona.html">CoronaNet Example</a>
+    </li>
   </ul>
 </li>
 <li class="dropdown">
@@ -413,6 +427,9 @@ div.tocify {
   <ul class="dropdown-menu" role="menu">
     <li>
       <a href="dataviz.html">Data Viz Introduction</a>
+    </li>
+    <li>
+      <a href="dataviz_corona.html">CoronaNet Example</a>
     </li>
     <li>
       <a href="dataviz_eurostat.html">Eurostat Example</a>
@@ -443,13 +460,13 @@ div.tocify {
 
 
 <script src="hideOutput.js"></script>
-<div id="next-steps" class="section level1">
-<h1><span class="header-section-number">1</span> Next steps</h1>
+<div id="next-steps" class="section level1" number="1">
+<h1 number="1"><span class="header-section-number">1</span> Next steps</h1>
 <p>Of course, this page provided only a glimpse into the basics of coding with R.</p>
 <p>Nevertheless, I am fairly confident that this page is a good basis for all standard data tasks (data management, visualizations, regressions) and that &gt;80% of all of those tasks are covered by the packages and functions which are on this page.</p>
 <p>There are seemingly endless possibilities to go on from here. To provide some orientation, this page lists a couple of (free online) resources (see below).</p>
-<div id="if-we-had-a-little-more-time" class="section level2">
-<h2><span class="header-section-number">1.1</span> If we had a little more time…</h2>
+<div id="if-we-had-a-little-more-time" class="section level2" number="1.1">
+<h2 number="1.1"><span class="header-section-number">1.1</span> If we had a little more time…</h2>
 <p>If we had an additional day or so, I would have covered the topics in the list below. This list is an indication of what I consider to be “logical” next learning steps. <strong>At least the looping architecture is something you should consider learning one day</strong> even if you want to stick to the basics of data management, visualizations, and regressions.</p>
 <ul>
 <li><p><a href="https://www.datacamp.com/community/tutorials/tutorial-on-loops-in-r">Loops/Apply Family</a>: This free DataCamp Intro familiarizes you with loops and their alternatives. Loops are about automating a multi-step process by organizing sequences of actions or ‘batch’ processes and by grouping the parts that need to be repeated.</p></li>
@@ -458,93 +475,8 @@ div.tocify {
 </ul>
 </div>
 </div>
-<div id="a-glimpse-into-new-stuff" class="section level1">
-<h1><span class="header-section-number">2</span> A glimpse into new stuff</h1>
-<div class="fold s">
-<pre class="r"><code>library(&quot;tidyverse&quot;)</code></pre>
-<pre><code>## Warning: package &#39;tidyverse&#39; was built under R version 3.4.2</code></pre>
-<pre><code>## Warning in as.POSIXlt.POSIXct(Sys.time()): unknown timezone &#39;zone/tz/2019c.
-## 1.0/zoneinfo/Europe/Berlin&#39;</code></pre>
-<pre><code>## Warning: package &#39;readr&#39; was built under R version 3.4.4</code></pre>
-<pre><code>## Warning: package &#39;purrr&#39; was built under R version 3.4.4</code></pre>
-<pre><code>## Warning: package &#39;stringr&#39; was built under R version 3.4.4</code></pre>
-<pre><code>## Warning: package &#39;forcats&#39; was built under R version 3.4.4</code></pre>
-<pre class="r"><code>library(&quot;rvest&quot;)
-library(&quot;tidytext&quot;)
-library(&quot;SnowballC&quot;)</code></pre>
-<pre><code>## Warning: package &#39;SnowballC&#39; was built under R version 3.4.4</code></pre>
-<pre class="r"><code>library(&quot;wordcloud2&quot;)</code></pre>
-<pre><code>## Warning: package &#39;wordcloud2&#39; was built under R version 3.4.3</code></pre>
-<pre class="r"><code># get list via https://www.xml-sitemaps.com/
-ma &lt;- c(&quot;jenny-bennett&quot;, 
-        &quot;dr-dietrich-engels&quot;, 
-        &quot;ferzaneh-fakdani&quot;, 
-        &quot;stefan-feldens&quot;, 
-        &quot;dr-philipp-fuchs&quot;, 
-        &quot;katrin-hunger&quot;, 
-        &quot;lisa-huppertz&quot;, 
-        &quot;georg-kalvelage&quot;, 
-        &quot;dr-regine-koeller&quot;, 
-        &quot;kunze&quot;, 
-        &quot;christian-loschelder&quot;, 
-        &quot;vanita-matta&quot;, 
-        &quot;christine-maur&quot;, 
-        &quot;uta-micic&quot;, 
-        &quot;franziska-porwol&quot;, 
-        &quot;marco-puxi&quot;, 
-        &quot;eva-roth&quot;, 
-        &quot;friedrich-scheller&quot;, 
-        &quot;alina-schmitz&quot;, 
-        &quot;anne-marie-scholz&quot;, 
-        &quot;katja-seidel&quot;, 
-        &quot;hans-verbeek&quot;, 
-        &quot;juergen-viedenz&quot;, 
-        &quot;wellmer&quot;, 
-        &quot;kunze&quot;)
-
-# url parameters
-base_url &lt;- &quot;https://www.isg-institut.de/autor/&quot;
-
-# scrap profiles  
-data &lt;- lapply(ma, function(person) {
-  url &lt;- paste0(base_url, person)
-  
-  html &lt;- read_html(url, verbose = TRUE)
-  
-  core &lt;- html %&gt;%
-    html_nodes(&quot;.ma-text p&quot;) %&gt;% 
-    html_text()
-})
-
-# create dataframe
-text &lt;- tibble(profil = unlist(data))
-
-# list of stopwords
-stopwords_de &lt;- enframe(stopwords::stopwords(&quot;de&quot;), name = NULL, value = &quot;words&quot;)
-
-# tokenize / remove stopwords and numbers 
-token &lt;- text %&gt;%
-  filter(profil != &quot;&quot;) %&gt;%
-  unnest_tokens(input = profil, output = words, to_lower = FALSE) %&gt;%
-  filter(str_detect(words, &quot;[A-Z]+&quot;)) %&gt;%
-  mutate(lower = str_to_lower(words, locale = &quot;de&quot;)) %&gt;%
-  anti_join(stopwords_de, by = c(&quot;lower&quot; = &quot;words&quot;))
-
-# aggregate words / filter freqs
-wordcounts &lt;- token %&gt;%
-  count(words) %&gt;%
-  arrange(desc(n)) %&gt;%
-  filter(words != &quot;Seit&quot;) %&gt;% # quick fix
-  filter(n &gt; 2)
-
-# generate wordcloud
-wordcloud2(wordcounts, shuffle = FALSE, color = &quot;blue&quot;) </code></pre>
-<div id="htmlwidget-4a9d59bf3c79c911638d" style="width:672px;height:480px;" class="wordcloud2 html-widget"></div>
-<script type="application/json" data-for="htmlwidget-4a9d59bf3c79c911638d">{"x":{"word":["Universität","ISG","Köln","Evaluation","Studium","Mitarbeiterin","Soziologie","ESF","Sozialforschung","Bereich","Berlin","Schwerpunkten","Forschungsinteressen","Mitarbeiter","Arbeitsmarkt","Bereichen","Europäischen","M.A","Diplom","Institut","Monitoring","Sozialwissenschaften","Dr","Duisburg","Essen","Maßnahmen","Sozialfonds","Rahmen","Volkswirtschaftslehre","Arbeits","Arbeitsmarktpolitik","Büro","Dissertation","Erstellung","Forschungsschwerpunkte","Göttingen","Hilfskraft","Kunze","Methoden","Operationellen","Potsdam","Programms","Sozialberichterstattung","Studiums","Arbeit","Arbeitsmarktforschung","Armuts","Aufgabenschwerpunkt","Bayern","Berliner","Europa","Europäische","Gerontologie","Jahr","Lehrstuhl","M.Sc","Menschen","Praktika","Schwerpunkt","Teilhabe","Thema","Ungleichheit","Wirtschaftsforschung","Wissensmanagement"],"freq":[36,34,22,18,18,16,14,12,12,11,11,11,10,9,8,8,8,8,7,7,7,7,6,6,6,6,6,5,5,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3],"fontFamily":"Segoe UI","fontWeight":"bold","color":"blue","minSize":0,"weightFactor":5,"backgroundColor":"white","gridSize":0,"minRotation":-0.785398163397448,"maxRotation":0.785398163397448,"shuffle":false,"rotateRatio":0.4,"shape":"circle","ellipticity":0.65,"figBase64":null,"hover":null},"evals":[],"jsHooks":{"render":[{"code":"function(el,x){\n                        console.log(123);\n                        if(!iii){\n                          window.location.reload();\n                          iii = False;\n\n                        }\n  }","data":null}]}}</script>
-</div>
-</div>
-<div id="important-resources" class="section level1">
-<h1><span class="header-section-number">3</span> Important Resources</h1>
+<div id="important-resources" class="section level1" number="2">
+<h1 number="2"><span class="header-section-number">2</span> Important Resources</h1>
 <p>As you cannot emphasize this enough, here again a list of resources to help you in your workflow.</p>
 <p><a href="https://www.stackoverflow.com/">Stackoverflow</a>: A general discussion forum for programmers, including many R users. Just google your question and make sure to place an “R” in the beginning of your question. Most often you will be directed to stackoverflow.</p>
 <p><a href="https://www.datacamp.com/">DataCamp</a>: Online tutorials with in-browser coding tasks. Everything beyond beginners levels is behind a paywall. If you want to avoid DataCamp, <a href="https://docs.google.com/spreadsheets/d/1LtaeWPzEhRiy-kdNZBn0gPwc6aTYkWtt6Cau6PzcXuo/edit#gid=0">here</a> is a list of DataCamp tutorials with mostly free alternatives.</p>
@@ -554,8 +486,8 @@ wordcloud2(wordcounts, shuffle = FALSE, color = &quot;blue&quot;) </code></pre>
 <li><a href="https://www.rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf">Cheat Sheet dplyr</a></li>
 <li><a href="https://www.rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf">Cheat Sheet ggplot</a></li>
 </ul>
-<div id="individual-trouble-shooting" class="section level2">
-<h2><span class="header-section-number">3.1</span> Individual Trouble Shooting</h2>
+<div id="individual-trouble-shooting" class="section level2" number="2.1">
+<h2 number="2.1"><span class="header-section-number">2.1</span> Individual Trouble Shooting</h2>
 <p>Learning how to find out about stuff in R by yourself is one of the key techniques for smooth coding.</p>
 <p>If you have any questions, one of the following might help:</p>
 <ul>
@@ -565,8 +497,8 @@ wordcloud2(wordcounts, shuffle = FALSE, color = &quot;blue&quot;) </code></pre>
 </ul>
 </div>
 </div>
-<div id="online-books" class="section level1">
-<h1><span class="header-section-number">4</span> (Online) Books</h1>
+<div id="online-books" class="section level1" number="3">
+<h1 number="3"><span class="header-section-number">3</span> (Online) Books</h1>
 <p>Credits for gathering most of these books go to <a href="https://therbootcamp.github.io/">TheRBootcamp</a> - see this <a href="https://therbootcamp.github.io/R4DS_2019Feb/_sessions/NextSteps/NextSteps.html#13">page</a>.</p>
 <p>Most but not all of the books are free and online accessible.</p>
 <p>Books are ordered by complexity, beginning with user-friendly books on learning statistics in R and ending with books focusing on the more advanced topics of the R language.</p>
