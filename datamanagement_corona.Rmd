@@ -6,7 +6,7 @@ title: "Datamanagement: Eurostat Example"
 knitr::opts_chunk$set(echo = TRUE,warning = FALSE)
 ```
 
-Download the script [here](https://raw.githubusercontent.com/LuMesserschmidt/stats_TUM/master/Files/Course%20Scripts/R_code_CoronaNet_1.R)
+Download the script [here](https://raw.githubusercontent.com/LuMesserschmidt/stats_CoronaNet/master/Files/Course%20Scripts/R_code_CoronaNet_1.R)
 
 
 ***
