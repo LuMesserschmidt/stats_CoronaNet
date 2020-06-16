@@ -58,13 +58,20 @@ The website is built on the following structure
 This is a list of videos that we recorded especially for the application to the CoronaNet data: 
 
 * Introduction to R & Data Management (by Luca Messerschmidt)
-    + https://tum-conf.zoom.us/rec/share/we1EDp-qxz1OXav8sn72B6UvGtvdeaa8h3Mc-_oInkw8zknHAezu5EJmlUyzf04Q (Password: 6X$7a7*h)
+    + https://tum-conf.zoom.us/rec/share/we1EDp-qxz1OXav8sn72B6UvGtvdeaa8h3Mc-_oInkw8zknHAezu5EJmlUyzf04Q (Password: 6X$7a7*h). Dropbox-Link: https://www.dropbox.com/sh/15wy12q0njymgme/AADwSM1q-Q4eEC43HwemPmdNa?dl=0
 
 * Import CoronaNet Data and filter (by Cindy Cheng) 
     + https://tum-conf.zoom.us/rec/share/_vBVAJ-30WJJXYHc9GLzB7wGBLbIX6a8gChM-KYEFnG6KWTCgwT14JMzWxgszA (Password: 4Y.^x+$G)
 
-* Descriptive, bi- and multivariate Statistics (by Luca)
-    + LINK: Forthcoming
+* Descriptive, bivariate Statistics (by Luca)
+    + https://tum-conf.zoom.us/rec/share/-5EtF4jy0CBIW5Ho8Fjxa4AeI7Tfeaa813UdrvMOz0gO9g7dURggaearXEpBeC9O (Password: 7Q!643nA)
+    
+* Multivariate Statistics (by Luca)
+    + forthcoming
+
+* Data Visualization (by Luca)
+    + forthcoming
+
 
 
 
