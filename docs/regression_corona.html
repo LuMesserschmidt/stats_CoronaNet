@@ -491,7 +491,11 @@ dataAgg = data %&gt;%
             gdpPPP = mean(gdpPPP))
 
 dataAgg$gdpDum = ifelse(dataAgg$gdpPPP &gt; mean(dataAgg$gdpPPP, na.rm = TRUE), &quot;Above Average GDP&quot;, &quot;Below Average GDP&quot;)
-dataAgg = dataAgg %&gt;% filter(!is.na(gdpDum))</code></pre>
+dataAgg = dataAgg %&gt;% filter(!is.na(gdpDum))
+
+businessRestrictAgg = businessRestrict %&gt;% 
+  group_by(date_announced, country) %&gt;% 
+  summarise(numBusinessRestrictions = n())</code></pre>
 </div>
 <div id="run-regression" class="section level1" number="3">
 <h1 number="3"><span class="header-section-number">3</span> Run Regression</h1>
@@ -571,6 +575,44 @@ summary(model2)</code></pre>
 ## F Statistic             5.044** (df = 1; 48) 2.496* (df = 2; 47)
 ## ================================================================
 ## Note:                                *p&lt;0.1; **p&lt;0.05; ***p&lt;0.01</code></pre>
+<hr />
+</div>
+<div id="outlier-analysis" class="section level1" number="5">
+<h1 number="5"><span class="header-section-number">5</span> Outlier Analysis</h1>
+<pre class="r"><code># Plot of data with outliers.
+par(mfrow=c(1, 2))
+plot(dataAgg$gdpPPP,dataAgg$numBusinessRestrictions, main=&quot;With Outliers&quot;, xlab=&quot;GDP&quot;,ylim=c(0,500), ylab=&quot;Policies&quot;, pch=&quot;*&quot;, col=&quot;red&quot;, cex=2)
+abline(lm(numBusinessRestrictions ~ gdpPPP , data=dataAgg), col=&quot;blue&quot;, lwd=3, lty=2)
+
+# Plot of original data without outliers. Note the change in slope (angle) of best fit line.
+
+dataAgg_2&lt;- dataAgg[dataAgg$numBusinessRestrictions&lt;80,]
+
+plot(dataAgg_2$gdpPPP,dataAgg_2$numBusinessRestrictions, main=&quot;Without Outliers&quot;, ylim=c(0,500),xlab=&quot;GDP&quot;, ylab=&quot;Policies&quot;, pch=&quot;*&quot;, col=&quot;red&quot;, cex=2)
+abline(lm(numBusinessRestrictions ~ gdpPPP , data=dataAgg_2), col=&quot;blue&quot;, lwd=3, lty=2)</code></pre>
+<p><img src="regression_corona_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<pre class="r"><code>#Detect Outliers 
+
+par(mfrow=c(1, 1))
+outlier_values &lt;- boxplot.stats(dataAgg$numBusinessRestrictions)  # outlier values.
+boxplot(dataAgg$numBusinessRestrictions, main=&quot;Outliers&quot;, boxwex=0.1)
+mtext(paste(&quot;Outliers: &quot;, paste(outlier_values, collapse=&quot;, &quot;)), cex=0.6)</code></pre>
+<p><img src="regression_corona_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<pre class="r"><code>#Bivariate approach
+
+# For categorical variable
+boxplot(numBusinessRestrictions ~ date_announced, data=businessRestrictAgg,main=&quot;Ozone reading across months&quot;)  # clear pattern is noticeable.</code></pre>
+<p><img src="regression_corona_files/figure-html/unnamed-chunk-6-2.png" width="672" /></p>
+<pre class="r"><code>#Multivariate Model Approach
+
+##Cooks distance
+mod &lt;- lm(numBusinessRestrictions ~ gdpPPP, data=dataAgg)
+cooksd &lt;- cooks.distance(mod)
+
+plot(cooksd, pch=&quot;*&quot;, cex=2, main=&quot;Influential Obs by Cooks distance&quot;)  # plot cook&#39;s distance
+abline(h = 4*mean(cooksd, na.rm=T), col=&quot;red&quot;)  # add cutoff line
+text(x=1:length(cooksd)+1, y=cooksd, labels=ifelse(cooksd&gt;4*mean(cooksd, na.rm=T),names(cooksd),&quot;&quot;), col=&quot;red&quot;)  # add labels</code></pre>
+<p><img src="regression_corona_files/figure-html/unnamed-chunk-6-3.png" width="672" /></p>
 </div>
 
 

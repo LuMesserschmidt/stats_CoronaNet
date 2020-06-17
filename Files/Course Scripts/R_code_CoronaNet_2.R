@@ -381,4 +381,50 @@ summary(model2)
 stargazer::stargazer(model1,model2, type = "text")
 
 
+# ---- Outlier Analysis ----
+
+borderRestrict = coronaNet %>% filter(type %in% c("External Border Restrictions"))
+
+dataAgg_2 = borderRestrict %>% 
+  group_by(country) %>% 
+  summarise(numBorderRestrictions = n())
+
+dataAgg_2<- dataAgg[dataAgg$numBusinessRestrictions<80,]
+
+# Plot of data with outliers.
+par(mfrow=c(1, 2))
+plot(dataAgg$gdpPPP,dataAgg$numBusinessRestrictions, main="With Outliers", xlab="GDP",ylim=c(0,500), ylab="Policies", pch="*", col="red", cex=2)
+abline(lm(numBusinessRestrictions ~ gdpPPP , data=dataAgg), col="blue", lwd=3, lty=2)
+
+# Plot of original data without outliers. Note the change in slope (angle) of best fit line.
+
+plot(dataAgg_2$gdpPPP,dataAgg_2$numBusinessRestrictions, main="Without Outliers", ylim=c(0,500),xlab="GDP", ylab="Policies", pch="*", col="red", cex=2)
+abline(lm(numBusinessRestrictions ~ gdpPPP , data=dataAgg_2), col="blue", lwd=3, lty=2)
+
+
+
+#Detect Outliers 
+
+par(mfrow=c(1, 1))
+outlier_values <- boxplot.stats(dataAgg$numBusinessRestrictions)  # outlier values.
+boxplot(dataAgg$numBusinessRestrictions, main="Outliers", boxwex=0.1)
+mtext(paste("Outliers: ", paste(outlier_values, collapse=", ")), cex=0.6)
+
+#Bivariate approach
+
+# For categorical variable
+boxplot(numBusinessRestrictions ~ date_announced, data=businessRestrictAgg,main="Ozone reading across months")  # clear pattern is noticeable.
+
+#Multivariate Model Approach
+
+##Cooks distance
+mod <- lm(numBusinessRestrictions ~ gdpPPP, data=dataAgg)
+cooksd <- cooks.distance(mod)
+
+plot(cooksd, pch="*", cex=2, main="Influential Obs by Cooks distance")  # plot cook's distance
+abline(h = 4*mean(cooksd, na.rm=T), col="red")  # add cutoff line
+text(x=1:length(cooksd)+1, y=cooksd, labels=ifelse(cooksd>4*mean(cooksd, na.rm=T),names(cooksd),""), col="red")  # add labels
+
+
+
 
