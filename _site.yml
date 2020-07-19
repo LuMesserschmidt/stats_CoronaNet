@@ -26,8 +26,6 @@ navbar:
         href: datamanagement_corona.html
       - text: "Data Examples"
         href: datamanagement_others.html
-      - text: "Eurostat Example"
-        href: datamanagement_eurostat.html
   - text: Descriptives and Bivariate
     href: descriptives.html
     menu:
@@ -53,8 +51,6 @@ navbar:
         href: dataviz.html
       - text: "CoronaNet Example"
         href: dataviz_corona.html
-      - text: "Eurostat Example"
-        href: dataviz_eurostat.html
       - text: "Map Example"
         href: dataviz_map.html
   - text: About
