@@ -66,11 +66,8 @@ This is a list of videos that we recorded especially for the application to the 
 * Descriptive, bivariate Statistics (by Luca)
     + https://tum-conf.zoom.us/rec/share/-5EtF4jy0CBIW5Ho8Fjxa4AeI7Tfeaa813UdrvMOz0gO9g7dURggaearXEpBeC9O (Password: 7Q!643nA)
     
-* Multivariate Statistics (by Luca)
-    + forthcoming
-
-* Data Visualization (by Luca)
-    + forthcoming
+* Multivariate Statistics and Data Visualization (by Luca)
+    + https://tum-conf.zoom.us/rec/share/1eMlJKPb0HlLGo3AyFvCWZcHBZ30eaa8hicX-qJemkzYxOUkICaXoFZ2OTNb9TGB (Password: 6k^!3+Jw)
 
 
 
