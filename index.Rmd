@@ -67,7 +67,11 @@ This is a list of videos that we recorded especially for the application to the 
     + https://tum-conf.zoom.us/rec/share/-5EtF4jy0CBIW5Ho8Fjxa4AeI7Tfeaa813UdrvMOz0gO9g7dURggaearXEpBeC9O (Password: 7Q!643nA)
     
 * Multivariate Statistics (by Luca)
-    + forthcoming
+    + * Multivariate Statistics and Data Visualization (by Luca)
+    + https://tum-conf.zoom.us/rec/share/1eMlJKPb0HlLGo3AyFvCWZcHBZ30eaa8hicX-qJemkzYxOUkICaXoFZ2OTNb9TGB (Password: 6k^!3+Jw)
+    
+* Difference-in-Difference and Regression Discontinuity Designs (by Luca)
+    + https://tum-conf.zoom.us/rec/share/_5JHI4PXqGBJE7Pc1V_RfLY5PLrCeaa80Skd_qIPzUYgpvJO-75R15J__AG81GgO Password: .^g@57z! 
 
 
 

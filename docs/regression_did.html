@@ -411,6 +411,9 @@ div.tocify {
       <a href="other_outlier.html">Outlier Analysis</a>
     </li>
     <li>
+      <a href="regression_did.html">Dif-in-Dif and Discontinuity Designs</a>
+    </li>
+    <li>
       <a href="regression_corona.html">CoronaNet Example</a>
     </li>
   </ul>
@@ -455,8 +458,8 @@ div.tocify {
 
 <p>Download the script <a href="https://raw.githubusercontent.com/LuMesserschmidt/stats_CoronaNet/master/Files/Course%20Scripts/R_code_CoronaNet_3.R">here</a></p>
 <hr />
-<div id="discontonuity-and-dif-in-dif-designs" class="section level1" number="1">
-<h1 number="1"><span class="header-section-number">1</span> Discontonuity and Dif-in-Dif Designs</h1>
+<div id="discontinuity-and-dif-in-dif-designs" class="section level1" number="1">
+<h1 number="1"><span class="header-section-number">1</span> Discontinuity and Dif-in-Dif Designs</h1>
 <p>One interesting question is: How have things changed from before to after COVID-19. For example, one could be interested how environmental policies have shaped the air quality before and after corona. Hereby, we would need to distinct between a period before and after a specific point. Two methods, the difference-in-difference and the regression discontinuity design are both regression models that allow us to do so.</p>
 <p>Given many limitations (read more <a href="https://conjointly.com/kb/regression-discontinuity-design/">here</a> and <a href="http://www.nber.org/WNE/lect_10_diffindiffs.pdf">here</a>), this section should give you an overview on how to potentially use the data.</p>
 <p>Be cautious, the underlying examples are not meant to make sense but just show you how to use the methods via R.</p>
@@ -523,7 +526,7 @@ businessRestrictFull$time = ifelse(businessRestrictFull$date_announced &gt;= &qu
 
 
 
-# Create a dummy variable to identify the group exposed to the treatment. In this example lets assumed that countries Italy, Iran and China exprienced hard COVID-Waves (=1). Other countries did not (=0). 
+# Create a dummy variable to identify the group exposed to the treatment. In this example lets assumed that countries Italy, Iran and China experienced hard COVID-Waves (=1). Other countries did not (=0). 
 
 businessRestrictFull$treated = ifelse(businessRestrictFull$country == &quot;Italy&quot; | businessRestrictFull$country == &quot;China&quot; | businessRestrictFull$country == &quot;Iran&quot;, 1, 0)</code></pre>
 <p>Now, we want to create an interaction effect that allows us to understand how treatment groups differ in their reaction over time:</p>

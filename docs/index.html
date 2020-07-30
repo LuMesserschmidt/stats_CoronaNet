@@ -9,12 +9,12 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content=" Benedikt Fritz | Luca Messerschmidt | Cindy Cheng" />
+<meta name="author" content="Benedikt Fritz | Cindy Cheng | Luca Messerschmidt" />
 
 
 <title>Introduction</title>
 
-<script src="site_libs/header-attrs-2.1/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.3/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
@@ -378,9 +378,6 @@ div.tocify {
     <li>
       <a href="datamanagement_others.html">Data Examples</a>
     </li>
-    <li>
-      <a href="datamanagement_eurostat.html">Eurostat Example</a>
-    </li>
   </ul>
 </li>
 <li class="dropdown">
@@ -415,6 +412,9 @@ div.tocify {
       <a href="other_outlier.html">Outlier Analysis</a>
     </li>
     <li>
+      <a href="regression_did.html">Dif-in-Dif and Discontinuity Designs</a>
+    </li>
+    <li>
       <a href="regression_corona.html">CoronaNet Example</a>
     </li>
   </ul>
@@ -431,9 +431,6 @@ div.tocify {
     </li>
     <li>
       <a href="dataviz_corona.html">CoronaNet Example</a>
-    </li>
-    <li>
-      <a href="dataviz_eurostat.html">Eurostat Example</a>
     </li>
     <li>
       <a href="dataviz_map.html">Map Example</a>
@@ -456,7 +453,7 @@ div.tocify {
 
 
 <h1 class="title toc-ignore">Introduction</h1>
-<h4 class="author">Benedikt Fritz | Luca Messerschmidt | Cindy Cheng</h4>
+<h4 class="author">Benedikt Fritz | Cindy Cheng | Luca Messerschmidt</h4>
 <h4 class="date">June 2020</h4>
 
 </div>
@@ -513,7 +510,14 @@ div.tocify {
 </ul></li>
 <li>Multivariate Statistics (by Luca)
 <ul>
-<li>forthcoming</li>
+<li><ul>
+<li>Multivariate Statistics and Data Visualization (by Luca)</li>
+</ul></li>
+<li><a href="https://tum-conf.zoom.us/rec/share/1eMlJKPb0HlLGo3AyFvCWZcHBZ30eaa8hicX-qJemkzYxOUkICaXoFZ2OTNb9TGB" class="uri">https://tum-conf.zoom.us/rec/share/1eMlJKPb0HlLGo3AyFvCWZcHBZ30eaa8hicX-qJemkzYxOUkICaXoFZ2OTNb9TGB</a> (Password: 6k^!3+Jw)</li>
+</ul></li>
+<li>Difference-in-Difference and Regression Discontinuity Designs (by Luca)
+<ul>
+<li><a href="https://tum-conf.zoom.us/rec/share/_5JHI4PXqGBJE7Pc1V_RfLY5PLrCeaa80Skd_qIPzUYgpvJO-75R15J__AG81GgO" class="uri">https://tum-conf.zoom.us/rec/share/_5JHI4PXqGBJE7Pc1V_RfLY5PLrCeaa80Skd_qIPzUYgpvJO-75R15J__AG81GgO</a> Password: .^<a href="mailto:g@57z" class="email">g@57z</a>!</li>
 </ul></li>
 </ul>
 <hr />
@@ -699,7 +703,7 @@ $(document).ready(function ()  {
       theme: "bootstrap3",
       context: '.toc-content',
       hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
       },
       ignoreSelector: ".toc-ignore",
       scrollTo: 0

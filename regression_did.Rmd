@@ -11,7 +11,7 @@ Download the script [here](https://raw.githubusercontent.com/LuMesserschmidt/sta
 
 ***
 
-# Discontonuity and Dif-in-Dif Designs
+# Discontinuity and Dif-in-Dif Designs
 
 One interesting question is: How have things changed from before to after COVID-19. For example, one could be interested how environmental policies have shaped the air quality before and after corona. Hereby, we would need to distinct between a period before and after a specific point. Two methods, the difference-in-difference and the regression discontinuity design are both regression models that allow us to do so. 
 
@@ -95,7 +95,7 @@ businessRestrictFull$time = ifelse(businessRestrictFull$date_announced >= "2020-
 
 
 
-# Create a dummy variable to identify the group exposed to the treatment. In this example lets assumed that countries Italy, Iran and China exprienced hard COVID-Waves (=1). Other countries did not (=0). 
+# Create a dummy variable to identify the group exposed to the treatment. In this example lets assumed that countries Italy, Iran and China experienced hard COVID-Waves (=1). Other countries did not (=0). 
 
 businessRestrictFull$treated = ifelse(businessRestrictFull$country == "Italy" | businessRestrictFull$country == "China" | businessRestrictFull$country == "Iran", 1, 0)
 

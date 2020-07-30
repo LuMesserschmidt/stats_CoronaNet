@@ -42,6 +42,8 @@ navbar:
         href: other_regressions.html
       - text: Outlier Analysis
         href: other_outlier.html
+      - text: "Dif-in-Dif and Discontinuity Designs"
+        href: regression_did.html
       - text: "CoronaNet Example"
         href: regression_corona.html
   - text: Data Viz
