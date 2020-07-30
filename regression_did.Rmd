@@ -1,9 +1,26 @@
-#------------------------------------------------
-# Difference in Difference & Regression Discontinuity Designs
-# Author: Luca Messerschmidt
-# Contributions: Princeton.edu: http://www.princeton.edu/~otorres/DID101R.pdf
+---
+title: "Tracking Differences through Regression: Dif-in-Dif and Discontonuity Design"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,warning = FALSE)
+```
+
+Download the script [here](https://raw.githubusercontent.com/LuMesserschmidt/stats_CoronaNet/master/Files/Course%20Scripts/R_code_CoronaNet_3.R)
 
 
+***
+
+# Discontonuity and Dif-in-Dif Designs
+
+One interesting question is: How have things changed from before to after COVID-19. For example, one could be interested how environmental policies have shaped the air quality before and after corona. Hereby, we would need to distinct between a period before and after a specific point. Two methods, the difference-in-difference and the regression discontinuity design are both regression models that allow us to do so. 
+
+Given many limitations (read more [here](https://conjointly.com/kb/regression-discontinuity-design/) and [here](http://www.nber.org/WNE/lect_10_diffindiffs.pdf)), this section should give you an overview on how to potentially use the data. 
+
+Be cautious, the underlying examples are not meant to make sense but just show you how to use the methods via R. 
+
+
+```{r, message=FALSE}
 # -------------------------------------------------
 # load packages 
 # -------------------------------------------------
@@ -57,10 +74,19 @@ businessRestrictFull$numpolicies = ifelse(is.na(businessRestrictFull$numpolicies
 
 businessRestrictFull$ratio<-businessRestrictFull$numBusinessRestrictions/businessRestrictFull$numpolicies
 
-# -------------------------------------------------
-# CoronaNet Example
-# -------------------------------------------------
-#We want to know if countries that experienced Corona early on have a higher number of business restrictions
+```
+
+***
+
+# Difference in Difference Regression
+
+In our case, we want to know if countries that experienced Corona early on have a higher number of business restrictions. One could also ask how air pollution has changed pre and post corona. But for now, we focus on the sole number of policies and the ratio of business restrictions and all policies. We are interested if countries that experiences Corona infections at the beginning have more business restrictions compared to other countries before the first of April. 
+Doing so, we need to generate two dummies: One about the treatment group. Hereby, we take Italy, China, and Iran as those countries that experienced hard impacts and set the others to 0. 
+For the time dummy, we set all dates before April 1st to 0 and the others to 1.
+
+
+
+```{r, eval=T}
 
 
 # Create a dummy variable to indicate the time when the treatment started. Lets assume the Corona crisis started April 2020. In this case, days before April 2020 will have a value of 0 and April+ a 1. 
@@ -73,28 +99,53 @@ businessRestrictFull$time = ifelse(businessRestrictFull$date_announced >= "2020-
 
 businessRestrictFull$treated = ifelse(businessRestrictFull$country == "Italy" | businessRestrictFull$country == "China" | businessRestrictFull$country == "Iran", 1, 0)
 
+
+
+```
+
+
+Now, we want to create an interaction effect that allows us to understand how treatment groups differ in their reaction over time:
+
+
+```{r, eval=T}
+
 # Create an interaction between time and treated. We will call this interaction ‘did’.
 
 businessRestrictFull$did = businessRestrictFull$time * businessRestrictFull$treated
 
+
+
+```
+
+Estimating the difference-in-difference estimator is now only a single line of lm regression:
+
+
+```{r, eval=T, message=FALSE}
 # Estimating the DID estimator
 
 didreg = lm(numBusinessRestrictions ~ treated + time + did, data = businessRestrictFull)
 
 summary(didreg)
-
+library(arm)
 coefplot(didreg)
 
-# The coefficient for ‘did’ is the differences-in-differences estimator. The effect is not significant with the treatment having a positive effect on business restrictions
+```
+
+*The coefficient for ‘did’ is the differences-in-differences estimator. The effect is not significant with the treatment having a positive effect on business restrictions between the two time dimensions*
+
+The problem is - as a matter of design -that we can not clearly identify countries that received the treatment (early cases). We would need to have a better distinction between the groups. Also, it is quite arbitrary to choose the first of April. What makes more sense is to analyze how things have changed pre- and post-corona. But this is something you should be able to do with this tutorial ;)
 
 
-#The problem is that we can not clearly identify countries that received the treatment (early cases) and does that did not as countries policies. 
+*** 
+# Regression Discontinuity Design
+
+With the regression discontinuity design we forget about country differences and have one treatment group. We are interested: How things change after one (or multiple) time periods. Again, this assumes that everything is equal except the influence of the shock. Nonetheless, this is quite a good way for COVID-19 analyses. 
+
+```{r, eval=T, echo=T}
 
 
 # With the Regression Discontinuity Design, we loose the Control/Treatment group character and focus on the time difference.
 # In our preliminary example, we want to check the influence of cases on the number of policies (be careful: This is only an example to illustrate the stats and does not make a lot of sense)
-
-names(coronaNet)
 
 download.file("https://covid.ourworldindata.org/data/ecdc/total_cases.csv", "./data/cases.csv")
 cases <- read_csv("data/cases.csv")
@@ -107,11 +158,20 @@ cases<-cases[,-1]
 
 test<- left_join(businessRestrictFull,cases, by=c("country","date_announced"))
 
-didreg = lm(numpolicies ~ ration + time + I(ratio * time), data = test)
+
+
+```
+
+
+
+```{r, eval=T, echo=T}
+
+didreg = lm(numpolicies ~ ration + time + I(ration * time), data = test)
 
 summary(didreg)
 library(arm)
 
 coefplot(didreg)
 
+```
 
